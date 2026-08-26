@@ -119,8 +119,10 @@
 
   <div class="max-w-7xl mx-auto space-y-6">
 
+    <!-- Header Navigation -->
     <header class="glass-panel rounded-3xl p-4 md:p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border border-white/10">
       <div class="flex items-center gap-4">
+        <!-- Logo Image Container -->
         <div class="w-16 h-16 rounded-full bg-black border border-white/20 flex items-center justify-center overflow-hidden shadow-2xl shrink-0 p-0.5">
           <img src="v_logo.png" alt="Virtue Print LA Logo" class="w-full h-full object-contain rounded-full">
         </div>
@@ -153,6 +155,7 @@
       </div>
     </header>
 
+    <!-- MODULE 1: INTAKE & PROOFING -->
     <div id="moduleIntake" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
       <div class="lg:col-span-5 glass-panel rounded-3xl p-6 space-y-6 border border-white/5">
         <div class="flex items-center justify-between border-b border-white/5 pb-4">
@@ -369,6 +372,7 @@
       </div>
     </div>
 
+    <!-- MODULE 2: ORDERS BACKLOG -->
     <div id="moduleBacklog" class="hidden space-y-6">
       <div class="glass-panel rounded-3xl p-6 space-y-5 border border-white/5">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-white/5 pb-4 gap-4">
@@ -407,6 +411,7 @@
       </div>
     </div>
 
+    <!-- MODULE 3: LIVE SHOP FLOOR -->
     <div id="moduleTelemetry" class="hidden space-y-6">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="glass-panel p-5 rounded-3xl border border-white/5">
@@ -443,6 +448,7 @@
       </div>
     </div>
 
+    <!-- MODULE 4: WMS & SHIPPING -->
     <div id="moduleWMS" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
       <div class="lg:col-span-7 glass-panel rounded-3xl p-6 space-y-4 border border-white/5">
         <h2 class="text-base font-bold text-white uppercase tracking-wider border-b border-white/5 pb-3">
@@ -493,6 +499,7 @@
 
   </div>
 
+  <!-- ORDER DETAILS MODAL -->
   <div id="orderDetailsModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
     <div class="glass-panel max-w-2xl w-full rounded-3xl p-6 border border-white/10 space-y-5 relative max-h-[90vh] overflow-y-auto">
       <button onclick="closeOrderModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white font-bold text-lg">✕</button>
