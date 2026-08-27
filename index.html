@@ -1044,7 +1044,7 @@
     </div>
   </div>
 
-  <!-- PRODUCTION FLOOR VIEW-ONLY DETAILS MODAL (OPTIMIZED FOR IPAD FLOOR VIEWING: ONLY COMMENTS, SIZING, AND FILE) -->
+  <!-- PRODUCTION FLOOR VIEW-ONLY DETAILS MODAL (OPTIMIZED FOR ACTIVE PRODUCTION TAB: COMMENTS, SIZING, VIEW FILE, & STATUS REVERT CONTROLS) -->
   <div id="productionOrderModal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 no-print">
     <div class="app-panel max-w-xl w-full p-6 space-y-5 relative max-h-[90vh] overflow-y-auto shadow-2xl border border-zinc-700">
       <button onclick="closeProductionOrderModal()" class="absolute top-6 right-6 text-zinc-400 hover:text-white transition-colors p-2">
@@ -1057,6 +1057,17 @@
           <span id="prodModalStatusBadge" class="px-2.5 py-0.5 rounded text-[10px] font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 uppercase">QUEUED</span>
         </div>
         <p id="prodModalGarment" class="text-sm text-zinc-300 font-medium mt-1">Independent Trading Company Heavy Hoodie</p>
+      </div>
+
+      <!-- STATUS REVERT / CHANGE CONTROL FOR MISCLICKS -->
+      <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-2">
+        <span class="text-zinc-400 font-medium text-[11px] uppercase tracking-wider block">Operational Status Control (Revert / Change Stage)</span>
+        <div class="grid grid-cols-4 gap-2 text-xs">
+          <button onclick="updateProdModalStatus('QUEUED')" class="btn-pro-secondary py-1.5 text-blue-400 border-blue-500/30 hover:bg-blue-500/10">Queued</button>
+          <button onclick="updateProdModalStatus('IN_PRODUCTION')" class="btn-pro-secondary py-1.5 text-indigo-400 border-indigo-500/30 hover:bg-indigo-500/10">In Production</button>
+          <button onclick="updateProdModalStatus('PRODUCED')" class="btn-pro-secondary py-1.5 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/10">Produced</button>
+          <button onclick="updateProdModalStatus('PENDING')" class="btn-pro-secondary py-1.5 text-amber-400 border-amber-500/30 hover:bg-amber-500/10">Pending</button>
+        </div>
       </div>
 
       <!-- 1. COMMENTS FIELD (VIEW ONLY) -->
@@ -1073,7 +1084,7 @@
         </div>
       </div>
 
-      <!-- 3. THE FILE / ARTWORK TECHPACK VIEW (VIEW ONLY & DOWNLOAD) -->
+      <!-- 3. THE FILE / ARTWORK TECHPACK VIEW (VIEW FILE BUTTON INSTEAD OF DOWNLOAD) -->
       <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-3">
         <span class="text-zinc-400 font-medium text-[11px] uppercase tracking-wider block">Artwork File & Techpack Asset</span>
         <div class="flex items-center justify-between bg-zinc-950 p-3 rounded-md border border-zinc-800">
@@ -1087,15 +1098,37 @@
             </div>
           </div>
 
-          <button onclick="downloadProdArtworkFile()" class="btn-pro-secondary text-xs flex items-center gap-1.5 py-2 px-3">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-            Download File
+          <button onclick="viewProdArtworkFile()" class="btn-pro-secondary text-xs flex items-center gap-1.5 py-2 px-3">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+            View File
           </button>
         </div>
       </div>
 
       <div class="pt-2 flex justify-end">
         <button onclick="closeProductionOrderModal()" class="btn-pro-primary text-xs px-6 py-2">Close View</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARTWORK PREVIEW MODAL (OPENS FILE ONLY FOR VIEWING) -->
+  <div id="artworkPreviewModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 no-print">
+    <div class="app-panel max-w-3xl w-full p-6 space-y-4 relative shadow-2xl border border-zinc-700 flex flex-col items-center">
+      <button onclick="closeArtworkPreviewModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white transition-colors p-2">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+      
+      <div class="w-full border-b border-zinc-800 pb-3">
+        <h3 id="previewModalTitle" class="text-base font-semibold text-white">Artwork File Viewer</h3>
+        <p class="text-xs text-zinc-400 mt-0.5">High resolution production asset preview.</p>
+      </div>
+
+      <div class="w-full h-96 bg-zinc-950 rounded-lg border border-zinc-800 flex items-center justify-center p-4 relative overflow-hidden">
+        <img id="previewModalImage" src="" class="max-w-full max-h-full object-contain" alt="Artwork Preview">
+      </div>
+
+      <div class="w-full flex justify-end pt-2">
+        <button onclick="closeArtworkPreviewModal()" class="btn-pro-secondary text-xs px-6 py-2">Close Viewer</button>
       </div>
     </div>
   </div>
@@ -1917,7 +1950,7 @@
       document.getElementById('orderDetailsModal').classList.remove('hidden');
     }
 
-    /* PRODUCTION FLOOR IPAD VIEW-ONLY MODAL LOGIC */
+    /* PRODUCTION FLOOR VIEW-ONLY DETAILS MODAL (OPTIMIZED FOR ACTIVE PRODUCTION TAB: COMMENTS, SIZING, VIEW FILE, & STATUS REVERT CONTROLS) */
     function openProductionOrderModal(orderId) {
       selectedProductionOrder = ordersBacklog.find(o => o.id === orderId);
       if (!selectedProductionOrder) return;
@@ -1941,7 +1974,7 @@
         <div class="bg-zinc-800 p-2.5 rounded-md border border-zinc-700"><span class="text-zinc-400 text-[10px] uppercase block mb-1">2XL</span><span class="font-bold text-white text-sm">${selectedProductionOrder.sizes.DoubleExtraLarge}</span></div>
       `;
 
-      // 3. THE FILE
+      // 3. THE FILE NAME
       document.getElementById('prodModalFileName').innerText = selectedProductionOrder.artworkName || "Production_Artwork.png";
 
       document.getElementById('productionOrderModal').classList.remove('hidden');
@@ -1951,21 +1984,32 @@
       document.getElementById('productionOrderModal').classList.add('hidden');
     }
 
-    function downloadProdArtworkFile() {
+    function updateProdModalStatus(newStatus) {
+      if (!selectedProductionOrder) return;
+      selectedProductionOrder.status = newStatus;
+      saveSystemData();
+      updatePendingBadge();
+      updateDashboardMetrics();
+      applyBacklogFilters();
+      renderProductionFloor();
+      renderWarehouseModule();
+      renderNotificationLogs();
+      openProductionOrderModal(selectedProductionOrder.id);
+      alert("Order status successfully updated to " + newStatus + ".");
+    }
+
+    function viewProdArtworkFile() {
       if (!selectedProductionOrder || !selectedProductionOrder.artworkData) {
         alert("No artwork file attached to this order record.");
         return;
       }
-      try {
-        const link = document.createElement('a');
-        link.href = selectedProductionOrder.artworkData;
-        link.download = selectedProductionOrder.artworkName || "Production_Artwork.png";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } catch (err) {
-        alert("Download process initiated.");
-      }
+      document.getElementById('previewModalTitle').innerText = "Artwork File Viewer - " + (selectedProductionOrder.artworkName || "Production_Artwork.png");
+      document.getElementById('previewModalImage').src = selectedProductionOrder.artworkData;
+      document.getElementById('artworkPreviewModal').classList.remove('hidden');
+    }
+
+    function closeArtworkPreviewModal() {
+      document.getElementById('artworkPreviewModal').classList.add('hidden');
     }
 
     function copyProofLink() {
