@@ -946,7 +946,7 @@
     </div>
   </main>
 
-  <!-- ORDER DETAILS MODAL -->
+  <!-- ORDER DETAILS MODAL (ADMIN / BACKLOG VIEW) -->
   <div id="orderDetailsModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 no-print">
     <div class="app-panel max-w-2xl w-full p-6 space-y-6 relative max-h-[90vh] overflow-y-auto shadow-2xl">
       <button onclick="closeOrderModal()" class="absolute top-6 right-6 text-zinc-400 hover:text-white transition-colors">
@@ -1040,6 +1040,62 @@
         <span id="modalStatusBadge" class="px-3 py-1 text-xs font-semibold rounded-md bg-amber-500/10 text-amber-500">PENDING APPROVAL</span>
         <div id="modalActionButtons" class="flex gap-3">
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCTION FLOOR VIEW-ONLY DETAILS MODAL (OPTIMIZED FOR IPAD FLOOR VIEWING: ONLY COMMENTS, SIZING, AND FILE) -->
+  <div id="productionOrderModal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 no-print">
+    <div class="app-panel max-w-xl w-full p-6 space-y-5 relative max-h-[90vh] overflow-y-auto shadow-2xl border border-zinc-700">
+      <button onclick="closeProductionOrderModal()" class="absolute top-6 right-6 text-zinc-400 hover:text-white transition-colors p-2">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+      
+      <div class="border-b border-zinc-800 pb-3 pr-10">
+        <div class="flex items-center gap-3">
+          <span id="prodModalOrderId" class="text-blue-400 font-mono font-bold text-lg">VirtuePrint-2026-8818</span>
+          <span id="prodModalStatusBadge" class="px-2.5 py-0.5 rounded text-[10px] font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 uppercase">QUEUED</span>
+        </div>
+        <p id="prodModalGarment" class="text-sm text-zinc-300 font-medium mt-1">Independent Trading Company Heavy Hoodie</p>
+      </div>
+
+      <!-- 1. COMMENTS FIELD (VIEW ONLY) -->
+      <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-1.5">
+        <span class="text-zinc-400 font-medium text-[11px] uppercase tracking-wider block">Production Comments & Specifications</span>
+        <p id="prodModalNotes" class="text-sm text-zinc-200 italic leading-relaxed">Center chest print, 3 inches below collar. Pantone Matching System 286 Blue ink.</p>
+      </div>
+
+      <!-- 2. SIZING MATRIX (VIEW ONLY) -->
+      <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-2">
+        <span class="text-zinc-400 font-medium text-[11px] uppercase tracking-wider block">Sizing Breakdown</span>
+        <div id="prodModalSizeMatrix" class="grid grid-cols-5 gap-2 text-center">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- 3. THE FILE / ARTWORK TECHPACK VIEW (VIEW ONLY & DOWNLOAD) -->
+      <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-3">
+        <span class="text-zinc-400 font-medium text-[11px] uppercase tracking-wider block">Artwork File & Techpack Asset</span>
+        <div class="flex items-center justify-between bg-zinc-950 p-3 rounded-md border border-zinc-800">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-md bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+            </div>
+            <div>
+              <div id="prodModalFileName" class="text-sm font-medium text-zinc-200">NavyHoodie_Design.png</div>
+              <div class="text-xs text-zinc-500 font-mono">Ready for Press Floor</div>
+            </div>
+          </div>
+
+          <button onclick="downloadProdArtworkFile()" class="btn-pro-secondary text-xs flex items-center gap-1.5 py-2 px-3">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            Download File
+          </button>
+        </div>
+      </div>
+
+      <div class="pt-2 flex justify-end">
+        <button onclick="closeProductionOrderModal()" class="btn-pro-primary text-xs px-6 py-2">Close View</button>
       </div>
     </div>
   </div>
@@ -1228,6 +1284,7 @@
     let currentCalculatedTotal = "$0.00";
     let currentArtworkDataUrl = "";
     let selectedModalOrder = null;
+    let selectedProductionOrder = null;
     let currentBacklogStatusFilter = 'ALL';
     let selectedCalendarDate = "";
     let selectedIntakeDate = "";
@@ -1860,6 +1917,57 @@
       document.getElementById('orderDetailsModal').classList.remove('hidden');
     }
 
+    /* PRODUCTION FLOOR IPAD VIEW-ONLY MODAL LOGIC */
+    function openProductionOrderModal(orderId) {
+      selectedProductionOrder = ordersBacklog.find(o => o.id === orderId);
+      if (!selectedProductionOrder) return;
+
+      document.getElementById('prodModalOrderId').innerText = selectedProductionOrder.id;
+      document.getElementById('prodModalGarment').innerText = selectedProductionOrder.garment + " (" + selectedProductionOrder.color + " - " + (selectedProductionOrder.pantone || 'PMS 286 C') + ")";
+      
+      let statBadge = document.getElementById('prodModalStatusBadge');
+      statBadge.innerText = selectedProductionOrder.status;
+
+      // 1. COMMENTS FIELD
+      document.getElementById('prodModalNotes').innerText = selectedProductionOrder.notes || "No special production comments or instructions provided for this run.";
+
+      // 2. SIZING MATRIX (VIEW ONLY)
+      const matrix = document.getElementById('prodModalSizeMatrix');
+      matrix.innerHTML = `
+        <div class="bg-zinc-800 p-2.5 rounded-md border border-zinc-700"><span class="text-zinc-400 text-[10px] uppercase block mb-1">Small</span><span class="font-bold text-white text-sm">${selectedProductionOrder.sizes.Small}</span></div>
+        <div class="bg-zinc-800 p-2.5 rounded-md border border-zinc-700"><span class="text-zinc-400 text-[10px] uppercase block mb-1">Medium</span><span class="font-bold text-white text-sm">${selectedProductionOrder.sizes.Medium}</span></div>
+        <div class="bg-zinc-800 p-2.5 rounded-md border border-zinc-700"><span class="text-zinc-400 text-[10px] uppercase block mb-1">Large</span><span class="font-bold text-white text-sm">${selectedProductionOrder.sizes.Large}</span></div>
+        <div class="bg-zinc-800 p-2.5 rounded-md border border-zinc-700"><span class="text-zinc-400 text-[10px] uppercase block mb-1">Extra Large</span><span class="font-bold text-white text-sm">${selectedProductionOrder.sizes.ExtraLarge}</span></div>
+        <div class="bg-zinc-800 p-2.5 rounded-md border border-zinc-700"><span class="text-zinc-400 text-[10px] uppercase block mb-1">2XL</span><span class="font-bold text-white text-sm">${selectedProductionOrder.sizes.DoubleExtraLarge}</span></div>
+      `;
+
+      // 3. THE FILE
+      document.getElementById('prodModalFileName').innerText = selectedProductionOrder.artworkName || "Production_Artwork.png";
+
+      document.getElementById('productionOrderModal').classList.remove('hidden');
+    }
+
+    function closeProductionOrderModal() {
+      document.getElementById('productionOrderModal').classList.add('hidden');
+    }
+
+    function downloadProdArtworkFile() {
+      if (!selectedProductionOrder || !selectedProductionOrder.artworkData) {
+        alert("No artwork file attached to this order record.");
+        return;
+      }
+      try {
+        const link = document.createElement('a');
+        link.href = selectedProductionOrder.artworkData;
+        link.download = selectedProductionOrder.artworkName || "Production_Artwork.png";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (err) {
+        alert("Download process initiated.");
+      }
+    }
+
     function copyProofLink() {
       if(!selectedModalOrder) return;
       const text = "https://proof.virtueprintla.com/review?token=" + selectedModalOrder.id;
@@ -1893,23 +2001,6 @@
       } catch (errorDetails) {
         alert("File download process initiated.");
       }
-    }
-
-    function printModalInvoice() {
-      if (!selectedModalOrder) return;
-      document.getElementById('printOrderId').innerText = selectedModalOrder.id;
-      document.getElementById('printDate').innerText = new Date().toLocaleDateString();
-      document.getElementById('printCustomerName').innerText = selectedModalOrder.customerName;
-      document.getElementById('printCustomerEmail').innerText = selectedModalOrder.customerEmail;
-      document.getElementById('printCustomerAddress').innerText = "Address: " + (selectedModalOrder.customerAddress || 'Not Provided');
-      document.getElementById('printWishDate').innerText = selectedModalOrder.wishDate;
-      document.getElementById('printGarment').innerText = selectedModalOrder.garment;
-      document.getElementById('printColorPantone').innerText = selectedModalOrder.color + " - " + (selectedModalOrder.pantone || 'PMS 286 C');
-      document.getElementById('printQty').innerText = selectedModalOrder.quantity;
-      document.getElementById('printPrice').innerText = selectedModalOrder.price;
-      document.getElementById('printNotes').innerText = (selectedModalOrder.notes || "No special notes provided.") + (selectedModalOrder.proofApproved ? " [Client Digital Proof Verified & Signed]" : "");
-      
-      window.print();
     }
 
     function closeOrderModal() {
@@ -2166,7 +2257,7 @@
             <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 flex justify-between items-center">
               <div>
                 <span class="text-xs text-zinc-400 block mb-1">Order Reference:</span>
-                <button onclick="openOrderModal('${o.id}')" class="font-mono font-medium text-blue-400 hover:underline text-left cursor-pointer focus:outline-none text-sm">${o.id}</button>
+                <button onclick="openProductionOrderModal('${o.id}')" class="font-mono font-medium text-blue-400 hover:underline text-left cursor-pointer focus:outline-none text-sm">${o.id} (View Details)</button>
                 <span class="text-zinc-400 text-xs mt-1 block">${o.garment} - ${o.quantity} Pieces</span>
                 <span class="text-blue-400 font-mono text-[11px] block mt-1">Pantone Match: ${o.pantone || 'PMS 286 C'}</span>
                 <span class="text-amber-400 font-mono text-[11px] block mt-1">Wish Delivery: ${o.wishDate}</span>
@@ -2185,7 +2276,7 @@
             <div class="bg-indigo-950/30 p-4 rounded-lg border border-indigo-500/30 flex justify-between items-center">
               <div>
                 <span class="text-xs text-indigo-300/70 block mb-1">Running Order Reference:</span>
-                <button onclick="openOrderModal('${o.id}')" class="font-mono font-medium text-blue-400 hover:underline text-left cursor-pointer focus:outline-none text-sm">${o.id}</button>
+                <button onclick="openProductionOrderModal('${o.id}')" class="font-mono font-medium text-blue-400 hover:underline text-left cursor-pointer focus:outline-none text-sm">${o.id} (View Details)</button>
                 <span class="text-zinc-400 text-xs mt-1 block">${o.garment} - ${o.quantity} Pieces</span>
                 <span class="text-blue-400 font-mono text-[11px] block mt-1">Pantone Match: ${o.pantone || 'PMS 286 C'}</span>
                 <span class="text-amber-400 font-mono text-[11px] block mt-1">Wish Delivery: ${o.wishDate}</span>
@@ -2204,7 +2295,7 @@
             <div class="bg-zinc-900 p-3 rounded-lg border border-zinc-800 flex justify-between items-center">
               <div>
                 <span class="text-xs text-zinc-500 block mb-0.5">Completed Reference:</span>
-                <button onclick="openOrderModal('${o.id}')" class="font-mono font-medium text-blue-400 hover:underline text-left cursor-pointer focus:outline-none text-xs">${o.id}</button>
+                <button onclick="openProductionOrderModal('${o.id}')" class="font-mono font-medium text-blue-400 hover:underline text-left cursor-pointer focus:outline-none text-xs">${o.id} (View Details)</button>
                 <span class="text-zinc-500 text-xs mt-0.5 block">${o.quantity} Pieces successfully printed. (Wish: ${o.wishDate})</span>
               </div>
               <span class="px-2 py-1 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-medium text-[10px] rounded">PRODUCED</span>
