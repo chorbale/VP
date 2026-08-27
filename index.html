@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Virtue Print Los Angeles - Master Digital Production Operating System</title>
+  <link rel="icon" type="image/png" href="v_logo.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
@@ -468,11 +469,12 @@
                 <p class="text-sm text-zinc-400 mt-1">Review pending jobs and approve them to the production queue.</p>
               </div>
 
-              <!-- Top Filters: Status and Calendar Filter -->
+              <!-- Top Filters: Status and Calendar Filter with Calendar Picker Icon -->
               <div class="flex flex-wrap items-center gap-3">
                 <div class="flex items-center gap-2 bg-zinc-900 px-3 py-1.5 rounded-lg border border-zinc-800">
+                  <svg class="w-4 h-4 text-zinc-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                   <label class="text-xs text-zinc-400 font-medium">Wish Delivery Date:</label>
-                  <input type="date" id="backlogCalendarFilter" onchange="applyBacklogFilters()" class="input-pro text-xs px-2 py-1">
+                  <input type="date" id="backlogCalendarFilter" onchange="applyBacklogFilters()" class="input-pro text-xs px-2 py-1 cursor-pointer">
                   <button onclick="clearBacklogCalendarFilter()" class="text-xs text-blue-400 hover:underline ml-1">Clear</button>
                 </div>
 
