@@ -2165,7 +2165,8 @@
           queuedContainer.innerHTML += `
             <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 flex justify-between items-center">
               <div>
-                <span class="font-semibold text-sm text-zinc-100 block">Order Reference: ${o.id}</span>
+                <span class="text-xs text-zinc-400 block mb-1">Order Reference:</span>
+                <button onclick="openOrderModal('${o.id}')" class="font-mono font-medium text-blue-400 hover:underline text-left cursor-pointer focus:outline-none text-sm">${o.id}</button>
                 <span class="text-zinc-400 text-xs mt-1 block">${o.garment} - ${o.quantity} Pieces</span>
                 <span class="text-blue-400 font-mono text-[11px] block mt-1">Pantone Match: ${o.pantone || 'PMS 286 C'}</span>
                 <span class="text-amber-400 font-mono text-[11px] block mt-1">Wish Delivery: ${o.wishDate}</span>
@@ -2183,7 +2184,8 @@
           activeContainer.innerHTML += `
             <div class="bg-indigo-950/30 p-4 rounded-lg border border-indigo-500/30 flex justify-between items-center">
               <div>
-                <span class="font-semibold text-sm text-indigo-300 block">Running Order Reference: ${o.id}</span>
+                <span class="text-xs text-indigo-300/70 block mb-1">Running Order Reference:</span>
+                <button onclick="openOrderModal('${o.id}')" class="font-mono font-medium text-blue-400 hover:underline text-left cursor-pointer focus:outline-none text-sm">${o.id}</button>
                 <span class="text-zinc-400 text-xs mt-1 block">${o.garment} - ${o.quantity} Pieces</span>
                 <span class="text-blue-400 font-mono text-[11px] block mt-1">Pantone Match: ${o.pantone || 'PMS 286 C'}</span>
                 <span class="text-amber-400 font-mono text-[11px] block mt-1">Wish Delivery: ${o.wishDate}</span>
@@ -2201,7 +2203,8 @@
           completedContainer.innerHTML += `
             <div class="bg-zinc-900 p-3 rounded-lg border border-zinc-800 flex justify-between items-center">
               <div>
-                <span class="font-semibold text-sm text-zinc-300 block">Completed Reference: ${o.id}</span>
+                <span class="text-xs text-zinc-500 block mb-0.5">Completed Reference:</span>
+                <button onclick="openOrderModal('${o.id}')" class="font-mono font-medium text-blue-400 hover:underline text-left cursor-pointer focus:outline-none text-xs">${o.id}</button>
                 <span class="text-zinc-500 text-xs mt-0.5 block">${o.quantity} Pieces successfully printed. (Wish: ${o.wishDate})</span>
               </div>
               <span class="px-2 py-1 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-medium text-[10px] rounded">PRODUCED</span>
