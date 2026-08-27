@@ -229,6 +229,11 @@
               </div>
             </div>
 
+            <div>
+              <label class="block text-xs font-medium text-zinc-400 mb-1.5 mandatory-label">Wish Delivery Date</label>
+              <input type="date" id="wishDeliveryDate" class="input-pro w-full px-3 py-2 text-sm cursor-pointer">
+            </div>
+
             <div class="space-y-2">
               <label class="block text-xs font-medium text-zinc-400 mandatory-label">Garment Supply Mode</label>
               <div class="grid grid-cols-2 gap-2 text-sm">
@@ -457,17 +462,26 @@
         <!-- ORDER BACKLOG MODULE -->
         <div id="moduleBacklog" class="hidden space-y-6">
           <div class="app-panel p-6 space-y-5">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-zinc-800 pb-5 gap-4">
+            <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center border-b border-zinc-800 pb-5 gap-4">
               <div>
                 <h3 class="text-base font-semibold text-white">Order Backlog and Approval Terminal</h3>
                 <p class="text-sm text-zinc-400 mt-1">Review pending jobs and approve them to the production queue.</p>
               </div>
 
-              <div class="flex items-center gap-2 text-sm bg-zinc-900 p-1 rounded-lg border border-zinc-800">
-                <button onclick="filterBacklog('ALL')" class="px-3 py-1.5 rounded-md text-zinc-300 hover:text-white hover:bg-zinc-800 font-medium transition-all">Show All</button>
-                <button onclick="filterBacklog('PENDING')" class="px-3 py-1.5 rounded-md bg-amber-500/10 text-amber-500 font-medium transition-all">Pending Review</button>
-                <button onclick="filterBacklog('QUEUED')" class="px-3 py-1.5 rounded-md bg-blue-500/10 text-blue-500 font-medium transition-all">Queued for Production</button>
-                <button onclick="filterBacklog('REJECTED')" class="px-3 py-1.5 rounded-md bg-red-500/10 text-red-500 font-medium transition-all">Rejected</button>
+              <!-- Top Filters: Status and Calendar Filter -->
+              <div class="flex flex-wrap items-center gap-3">
+                <div class="flex items-center gap-2 bg-zinc-900 px-3 py-1.5 rounded-lg border border-zinc-800">
+                  <label class="text-xs text-zinc-400 font-medium">Wish Delivery Date:</label>
+                  <input type="date" id="backlogCalendarFilter" onchange="applyBacklogFilters()" class="input-pro text-xs px-2 py-1">
+                  <button onclick="clearBacklogCalendarFilter()" class="text-xs text-blue-400 hover:underline ml-1">Clear</button>
+                </div>
+
+                <div class="flex items-center gap-1 text-sm bg-zinc-900 p-1 rounded-lg border border-zinc-800">
+                  <button onclick="filterBacklogStatus('ALL')" id="filterBtnALL" class="px-3 py-1.5 rounded-md bg-zinc-800 text-white font-medium transition-all">Show All</button>
+                  <button onclick="filterBacklogStatus('PENDING')" id="filterBtnPENDING" class="px-3 py-1.5 rounded-md text-amber-500 hover:bg-zinc-800 font-medium transition-all">Pending Review</button>
+                  <button onclick="filterBacklogStatus('QUEUED')" id="filterBtnQUEUED" class="px-3 py-1.5 rounded-md text-blue-400 hover:bg-zinc-800 font-medium transition-all">Queued for Production</button>
+                  <button onclick="filterBacklogStatus('REJECTED')" id="filterBtnREJECTED" class="px-3 py-1.5 rounded-md text-red-400 hover:bg-zinc-800 font-medium transition-all">Rejected</button>
+                </div>
               </div>
             </div>
 
@@ -478,6 +492,7 @@
                     <th class="px-4 py-3 font-medium">Order Reference</th>
                     <th class="px-4 py-3 font-medium">Customer Information</th>
                     <th class="px-4 py-3 font-medium">Garment and Asset</th>
+                    <th class="px-4 py-3 font-medium text-center">Wish Delivery Date</th>
                     <th class="px-4 py-3 font-medium text-center">Total Quantity</th>
                     <th class="px-4 py-3 font-medium text-center">Financial Value</th>
                     <th class="px-4 py-3 font-medium text-center">Current Status</th>
@@ -579,6 +594,7 @@
                   <tr>
                     <th class="px-4 py-3 font-medium">Order Reference Identification</th>
                     <th class="px-4 py-3 font-medium">Customer Information</th>
+                    <th class="px-4 py-3 font-medium text-center">Wish Delivery Date</th>
                     <th class="px-4 py-3 font-medium text-center">Total Pieces Produced</th>
                     <th class="px-4 py-3 font-medium text-center">Warehouse Location</th>
                     <th class="px-4 py-3 font-medium text-right">Shipping Action</th>
@@ -592,7 +608,7 @@
         </div>
 
         <!-- DASHBOARD MODULE -->
-        <div id="moduleDashboard" class="space-y-6">
+        <div id="moduleDashboard" class="hidden space-y-6">
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="app-panel p-6 flex flex-col justify-between border-t-4 border-t-blue-500">
               <span class="text-xs font-medium text-zinc-400 uppercase tracking-wide">Total Financial Revenue</span>
@@ -693,9 +709,9 @@
         </div>
 
         <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-1">
-          <span class="text-zinc-500 font-medium text-[10px] uppercase tracking-wider block mb-2">Garment Supply Mode</span>
+          <span class="text-zinc-500 font-medium text-[10px] uppercase tracking-wider block mb-2">Garment and Schedule</span>
           <div id="modalGarmentName" class="font-semibold text-zinc-100 text-sm">Garment Details</div>
-          <div id="modalGarmentColor" class="text-zinc-400 text-xs">Fabric Color Detail</div>
+          <div id="modalWishDate" class="text-amber-400 font-mono text-xs mt-1">Wish Delivery Date: 2026-09-15</div>
         </div>
       </div>
 
@@ -745,12 +761,14 @@
     let currentCalculatedTotal = "$0.00";
     let currentArtworkDataUrl = "";
     let selectedModalOrder = null;
+    let currentBacklogStatusFilter = 'ALL';
 
     let ordersBacklog = [
       {
         id: "VP-2026-8818",
         customerName: "Nikol Ivanova",
         customerEmail: "nikol@example.com",
+        wishDate: "2026-09-10",
         garment: "Independent Trading Company Heavy Hoodie",
         color: "Navy",
         qty: 50,
@@ -765,6 +783,7 @@
         id: "VP-2026-8819",
         customerName: "Valentin Rizov",
         customerEmail: "valentin@example.com",
+        wishDate: "2026-09-15",
         garment: "Customer Provided Blanks",
         color: "White",
         qty: 150,
@@ -779,6 +798,7 @@
         id: "VP-2026-8817",
         customerName: "Zlatin",
         customerEmail: "zlatin@example.com",
+        wishDate: "2026-09-05",
         garment: "Shaka Wear 7.5 ounce Heavyweight",
         color: "Black",
         qty: 100,
@@ -830,7 +850,7 @@
         document.getElementById('moduleBacklog').classList.remove('hidden');
         document.getElementById('nav-backlog').classList.add('active');
         pageTitle = "Order Backlog and Workflow Terminal";
-        renderBacklogTable('ALL');
+        applyBacklogFilters();
       } else if (tabName === 'telemetry') {
         document.getElementById('moduleTelemetry').classList.remove('hidden');
         document.getElementById('nav-telemetry').classList.add('active');
@@ -952,6 +972,7 @@
     function resetIntakeForm() {
       document.getElementById('customerName').value = "";
       document.getElementById('customerEmail').value = "";
+      document.getElementById('wishDeliveryDate').value = "";
       document.getElementById('customerGarmentDetails').value = "";
       document.getElementById('artworkNotes').value = "";
 
@@ -988,9 +1009,10 @@
     function submitOrderToBacklog() {
       const name = document.getElementById('customerName').value;
       const email = document.getElementById('customerEmail').value;
+      const wishDate = document.getElementById('wishDeliveryDate').value;
 
-      if (!name || !email || !currentArtworkDataUrl) {
-        alert("Please fill out all mandatory fields including Customer Name, Customer Email, and Artwork Upload before submitting.");
+      if (!name || !email || !wishDate || !currentArtworkDataUrl) {
+        alert("Please fill out all mandatory fields including Customer Name, Customer Email, Wish Delivery Date, and Artwork Upload before submitting.");
         return;
       }
 
@@ -1015,6 +1037,7 @@
         id: currentOrderId,
         customerName: name,
         customerEmail: email,
+        wishDate: wishDate,
         garment: garmentName,
         color: currentColorType === 'dark' ? 'Black' : 'White',
         qty: totalUnits,
@@ -1034,14 +1057,41 @@
       switchTab('backlog');
     }
 
-    function renderBacklogTable(filter) {
+    function filterBacklogStatus(status) {
+      currentBacklogStatusFilter = status;
+      
+      ['ALL', 'PENDING', 'QUEUED', 'REJECTED'].forEach(s => {
+        const btn = document.getElementById('filterBtn' + s);
+        if(btn) {
+          if(s === status) {
+            btn.className = "px-3 py-1.5 rounded-md bg-zinc-800 text-white font-medium transition-all";
+          } else {
+            btn.className = "px-3 py-1.5 rounded-md text-zinc-400 hover:bg-zinc-800 font-medium transition-all";
+          }
+        }
+      });
+
+      applyBacklogFilters();
+    }
+
+    function clearBacklogCalendarFilter() {
+      document.getElementById('backlogCalendarFilter').value = "";
+      applyBacklogFilters();
+    }
+
+    function applyBacklogFilters() {
+      const calendarDate = document.getElementById('backlogCalendarFilter').value;
       const tbody = document.getElementById('backlogTableBody');
       tbody.innerHTML = "";
 
-      const filtered = ordersBacklog.filter(o => filter === 'ALL' || o.status === filter);
+      let filtered = ordersBacklog.filter(o => {
+        const matchesStatus = (currentBacklogStatusFilter === 'ALL' || o.status === currentBacklogStatusFilter);
+        const matchesDate = (!calendarDate || o.wishDate === calendarDate);
+        return matchesStatus && matchesDate;
+      });
 
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-zinc-500 font-mono text-sm">No orders matching filter selection.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center text-zinc-500 font-mono text-sm">No orders matching filter selection.</td></tr>`;
         return;
       }
 
@@ -1073,6 +1123,7 @@
                 ${o.artworkName}
               </div>
             </td>
+            <td class="px-4 py-4 text-center font-mono text-amber-400 text-xs">${o.wishDate}</td>
             <td class="px-4 py-4 text-center font-medium text-zinc-200">${o.qty} Pieces</td>
             <td class="px-4 py-4 text-center font-mono text-zinc-300">${o.price}</td>
             <td class="px-4 py-4 text-center">${statusBadge}</td>
@@ -1095,7 +1146,7 @@
       document.getElementById('modalCustomerName').innerText = selectedModalOrder.customerName;
       document.getElementById('modalCustomerEmail').innerText = selectedModalOrder.customerEmail;
       document.getElementById('modalGarmentName').innerText = selectedModalOrder.garment;
-      document.getElementById('modalGarmentColor').innerText = "Color Profile: " + (selectedModalOrder.color || "Black");
+      document.getElementById('modalWishDate').innerText = "Wish Delivery Date: " + selectedModalOrder.wishDate;
       document.getElementById('modalArtworkNotes').innerText = selectedModalOrder.notes || "No special artwork notes provided.";
       document.getElementById('modalFileName').innerText = selectedModalOrder.artworkName;
 
@@ -1169,7 +1220,7 @@
       
       updatePendingBadge();
       updateDashboardMetrics();
-      renderBacklogTable('ALL');
+      applyBacklogFilters();
       renderProductionFloor();
       renderWarehouseModule();
       closeOrderModal();
@@ -1223,6 +1274,7 @@
               <div>
                 <span class="font-semibold text-sm text-zinc-100 block">Order Reference: ${o.id}</span>
                 <span class="text-zinc-400 text-xs mt-1 block">${o.garment} - ${o.qty} Pieces</span>
+                <span class="text-amber-400 font-mono text-[11px] block mt-1">Wish Delivery: ${o.wishDate}</span>
               </div>
               <button onclick="updateOrderStatus('${o.id}', 'IN_PRODUCTION')" class="btn-pro-primary text-xs">Start Production</button>
             </div>
@@ -1239,6 +1291,7 @@
               <div>
                 <span class="font-semibold text-sm text-indigo-300 block">Running Order Reference: ${o.id}</span>
                 <span class="text-zinc-400 text-xs mt-1 block">${o.garment} - ${o.qty} Pieces</span>
+                <span class="text-amber-400 font-mono text-[11px] block mt-1">Wish Delivery: ${o.wishDate}</span>
               </div>
               <button onclick="updateOrderStatus('${o.id}', 'PRODUCED')" class="btn-emerald-solid text-xs">Mark Completed</button>
             </div>
@@ -1254,7 +1307,7 @@
             <div class="bg-zinc-900 p-3 rounded-lg border border-zinc-800 flex justify-between items-center">
               <div>
                 <span class="font-semibold text-sm text-zinc-300 block">Completed Reference: ${o.id}</span>
-                <span class="text-zinc-500 text-xs mt-0.5 block">${o.qty} Pieces successfully printed.</span>
+                <span class="text-zinc-500 text-xs mt-0.5 block">${o.qty} Pieces successfully printed. (Wish: ${o.wishDate})</span>
               </div>
               <span class="px-2 py-1 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-medium text-[10px] rounded">PRODUCED</span>
             </div>
@@ -1292,7 +1345,7 @@
       const finishedOrders = ordersBacklog.filter(o => o.status === 'PRODUCED');
 
       if (finishedOrders.length === 0) {
-        finishedTable.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-zinc-500 text-sm">No finished goods currently awaiting shipping.</td></tr>`;
+        finishedTable.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-zinc-500 text-sm">No finished goods currently awaiting shipping.</td></tr>`;
       } else {
         finishedOrders.forEach(o => {
           finishedTable.innerHTML += `
@@ -1302,6 +1355,7 @@
                 <div class="font-medium text-zinc-200">${o.customerName}</div>
                 <div class="text-[11px] text-zinc-500 mt-0.5">${o.customerEmail}</div>
               </td>
+              <td class="px-4 py-4 text-center font-mono text-amber-400 text-xs">${o.wishDate}</td>
               <td class="px-4 py-4 text-center font-medium text-emerald-400">${o.qty} Pieces</td>
               <td class="px-4 py-4 text-center font-mono text-zinc-400">Rack B-14</td>
               <td class="px-4 py-4 text-right">
@@ -1358,8 +1412,8 @@
       document.getElementById('totalCost').innerText = currentCalculatedTotal;
     }
 
-    // Initialize with Dashboard view active
-    switchTab('dashboard');
+    // Initialize with Order Specification Form view active as the landing page
+    switchTab('intake');
     updateTotalsFromSizes();
     updatePendingBadge();
     updateDashboardMetrics();
