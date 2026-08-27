@@ -230,11 +230,6 @@
         <span id="pendingBadge" class="bg-blue-500/20 text-blue-400 py-0.5 px-2 rounded-full text-[10px] font-bold border border-blue-500/30">0</span>
       </button>
 
-      <button id="nav-archive" onclick="switchTab('archive')" class="nav-item w-full text-left">
-        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
-        <span>Archived Orders</span>
-      </button>
-
       <button id="nav-telemetry" onclick="switchTab('telemetry')" class="nav-item w-full text-left">
         <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
         <span>Live Production Floor</span>
@@ -252,7 +247,7 @@
 
       <button id="nav-dashboard" onclick="switchTab('dashboard')" class="nav-item w-full text-left">
         <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-        <span>Dashboard & Analytics</span>
+        <span>Dashboard and Analytics</span>
       </button>
     </nav>
 
@@ -641,102 +636,111 @@
           </div>
         </div>
 
-        <!-- ORDER BACKLOG MODULE -->
+        <!-- ORDER BACKLOG MODULE WITH SUB-TABS -->
         <div id="moduleBacklog" class="hidden h-full flex flex-col flex-1 w-full">
           <div class="app-panel p-6 space-y-5 flex-1 flex flex-col w-full">
-            <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center border-b border-zinc-800 pb-5 gap-4 shrink-0">
-              <div>
-                <h3 class="text-base font-semibold text-white">Order Backlog and Approval Terminal</h3>
-                <p class="text-sm text-zinc-400 mt-1">Review pending jobs, verify client proof digital sign-off, and approve them to the production queue. Archive completed or outdated submissions to keep the backlog clean.</p>
-              </div>
+            
+            <!-- BACKLOG INTERNAL SUB-TABS -->
+            <div class="flex items-center gap-2 border-b border-zinc-800 pb-4">
+              <button id="backlogSubTabBtnActive" onclick="switchBacklogSubTab('active')" class="sub-tab-btn active">Active Backlog & Approval</button>
+              <button id="backlogSubTabBtnArchive" onclick="switchBacklogSubTab('archive')" class="sub-tab-btn">Archived Orders Terminal</button>
+            </div>
 
-              <div class="flex flex-wrap items-center gap-3">
-                <div class="relative">
-                  <div onclick="toggleCalendarDropdown()" class="flex items-center justify-between bg-zinc-900 px-3 py-1.5 rounded-lg border border-zinc-700 hover:border-blue-500 cursor-pointer w-48 shadow-sm">
-                    <span id="calendarDisplayText" class="text-xs font-mono text-zinc-200">Select Date</span>
-                    <div class="p-1 rounded hover:bg-zinc-800 text-blue-400">
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            <!-- SUB-TAB 1: ACTIVE BACKLOG -->
+            <div id="backlogSubTabActive" class="flex-1 flex flex-col space-y-5">
+              <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center border-b border-zinc-800 pb-5 gap-4 shrink-0">
+                <div>
+                  <h3 class="text-base font-semibold text-white">Order Backlog and Approval Terminal</h3>
+                  <p class="text-sm text-zinc-400 mt-1">Review pending jobs, verify client proof digital sign-off, and approve them to the production queue.</p>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-3">
+                  <div class="relative">
+                    <div onclick="toggleCalendarDropdown()" class="flex items-center justify-between bg-zinc-900 px-3 py-1.5 rounded-lg border border-zinc-700 hover:border-blue-500 cursor-pointer w-48 shadow-sm">
+                      <span id="calendarDisplayText" class="text-xs font-mono text-zinc-200">Select Date</span>
+                      <div class="p-1 rounded hover:bg-zinc-800 text-blue-400">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                      </div>
+                    </div>
+
+                    <div id="calendarDropdown" class="hidden absolute right-0 mt-2 z-50 bg-[#18181b] border border-zinc-700 rounded-2xl shadow-2xl p-4 w-72 space-y-3">
+                      <div class="flex items-center justify-between text-zinc-300 px-1">
+                        <button type="button" onclick="event.stopPropagation(); changeMonth(-1);" class="p-1.5 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white">&lt;</button>
+                        <span id="calendarMonthYear" class="text-xs font-semibold text-white">August 2026</span>
+                        <button type="button" onclick="event.stopPropagation(); changeMonth(1);" class="p-1.5 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white">&gt;</button>
+                      </div>
+
+                      <div class="grid grid-cols-7 text-center text-[10px] font-semibold text-zinc-500 uppercase">
+                        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                      </div>
+
+                      <div id="calendarDaysGrid" class="grid grid-cols-7 gap-1 text-center text-xs">
+                      </div>
+
+                      <div class="flex justify-between pt-2 border-t border-zinc-800 text-xs">
+                        <button type="button" onclick="clearBacklogCalendarFilter()" class="text-blue-400 hover:underline">Clear Filter</button>
+                        <button type="button" onclick="toggleCalendarDropdown()" class="text-zinc-400 hover:text-white">Close</button>
+                      </div>
                     </div>
                   </div>
 
-                  <div id="calendarDropdown" class="hidden absolute right-0 mt-2 z-50 bg-[#18181b] border border-zinc-700 rounded-2xl shadow-2xl p-4 w-72 space-y-3">
-                    <div class="flex items-center justify-between text-zinc-300 px-1">
-                      <button type="button" onclick="event.stopPropagation(); changeMonth(-1);" class="p-1.5 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white">&lt;</button>
-                      <span id="calendarMonthYear" class="text-xs font-semibold text-white">August 2026</span>
-                      <button type="button" onclick="event.stopPropagation(); changeMonth(1);" class="p-1.5 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white">&gt;</button>
-                    </div>
-
-                    <div class="grid grid-cols-7 text-center text-[10px] font-semibold text-zinc-500 uppercase">
-                      <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
-                    </div>
-
-                    <div id="calendarDaysGrid" class="grid grid-cols-7 gap-1 text-center text-xs">
-                    </div>
-
-                    <div class="flex justify-between pt-2 border-t border-zinc-800 text-xs">
-                      <button type="button" onclick="clearBacklogCalendarFilter()" class="text-blue-400 hover:underline">Clear Filter</button>
-                      <button type="button" onclick="toggleCalendarDropdown()" class="text-zinc-400 hover:text-white">Close</button>
-                    </div>
+                  <div class="flex items-center gap-1 text-sm bg-zinc-900 p-1 rounded-lg border border-zinc-800">
+                    <button onclick="filterBacklogStatus('ALL')" id="filterBtnALL" class="px-3 py-1.5 rounded-md bg-zinc-800 text-white font-medium transition-all">Show All Active</button>
+                    <button onclick="filterBacklogStatus('PENDING')" id="filterBtnPENDING" class="px-3 py-1.5 rounded-md text-amber-500 hover:bg-zinc-800 font-medium transition-all">Pending Review</button>
+                    <button onclick="filterBacklogStatus('QUEUED')" id="filterBtnQUEUED" class="px-3 py-1.5 rounded-md text-blue-400 hover:bg-zinc-800 font-medium transition-all">Queued for Production</button>
+                    <button onclick="filterBacklogStatus('REJECTED')" id="filterBtnREJECTED" class="px-3 py-1.5 rounded-md text-red-400 hover:bg-zinc-800 font-medium transition-all">Rejected</button>
                   </div>
                 </div>
+              </div>
 
-                <div class="flex items-center gap-1 text-sm bg-zinc-900 p-1 rounded-lg border border-zinc-800">
-                  <button onclick="filterBacklogStatus('ALL')" id="filterBtnALL" class="px-3 py-1.5 rounded-md bg-zinc-800 text-white font-medium transition-all">Show All Active</button>
-                  <button onclick="filterBacklogStatus('PENDING')" id="filterBtnPENDING" class="px-3 py-1.5 rounded-md text-amber-500 hover:bg-zinc-800 font-medium transition-all">Pending Review</button>
-                  <button onclick="filterBacklogStatus('QUEUED')" id="filterBtnQUEUED" class="px-3 py-1.5 rounded-md text-blue-400 hover:bg-zinc-800 font-medium transition-all">Queued for Production</button>
-                  <button onclick="filterBacklogStatus('REJECTED')" id="filterBtnREJECTED" class="px-3 py-1.5 rounded-md text-red-400 hover:bg-zinc-800 font-medium transition-all">Rejected</button>
+              <div class="overflow-x-auto overflow-y-auto rounded-lg border border-zinc-800 flex-1 w-full">
+                <table class="w-full text-left text-sm">
+                  <thead class="bg-zinc-900 border-b border-zinc-800 text-zinc-400 sticky top-0 z-10">
+                    <tr>
+                      <th class="px-6 py-3.5 font-medium">Order Reference</th>
+                      <th class="px-6 py-3.5 font-medium">Customer Information</th>
+                      <th class="px-6 py-3.5 font-medium">Garment, Pantone & Asset</th>
+                      <th class="px-6 py-3.5 font-medium text-center">Digital Proof Status</th>
+                      <th class="px-6 py-3.5 font-medium text-center">Wish Delivery Date</th>
+                      <th class="px-6 py-3.5 font-medium text-center">Financial Value</th>
+                      <th class="px-6 py-3.5 font-medium text-center">Current Status</th>
+                      <th class="px-6 py-3.5 font-medium text-right">Action Hint</th>
+                    </tr>
+                  </thead>
+                  <tbody id="backlogTableBody" class="divide-y divide-zinc-800 text-zinc-200">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- SUB-TAB 2: ARCHIVED ORDERS -->
+            <div id="backlogSubTabArchive" class="hidden flex-1 flex flex-col space-y-5">
+              <div class="flex justify-between items-center border-b border-zinc-800 pb-5">
+                <div>
+                  <h3 class="text-base font-semibold text-white">Archived Orders Terminal</h3>
+                  <p class="text-sm text-zinc-400 mt-1">Review archived historical submissions and restore them if necessary.</p>
                 </div>
+                <button onclick="archiveAllCompletedOrders()" class="btn-pro-secondary text-xs">Auto-Archive All Completed Orders</button>
+              </div>
+
+              <div class="overflow-x-auto overflow-y-auto rounded-lg border border-zinc-800 flex-1 w-full">
+                <table class="w-full text-left text-sm">
+                  <thead class="bg-zinc-900 border-b border-zinc-800 text-zinc-400 sticky top-0 z-10">
+                    <tr>
+                      <th class="px-6 py-3.5 font-medium">Order Reference</th>
+                      <th class="px-6 py-3.5 font-medium">Customer Information</th>
+                      <th class="px-6 py-3.5 font-medium">Garment & Asset</th>
+                      <th class="px-6 py-3.5 font-medium text-center">Wish Delivery Date</th>
+                      <th class="px-6 py-3.5 font-medium text-center">Financial Value</th>
+                      <th class="px-6 py-3.5 font-medium text-right">Restore Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="archiveTableBody" class="divide-y divide-zinc-800 text-zinc-200">
+                  </tbody>
+                </table>
               </div>
             </div>
 
-            <div class="overflow-x-auto overflow-y-auto rounded-lg border border-zinc-800 flex-1 w-full">
-              <table class="w-full text-left text-sm">
-                <thead class="bg-zinc-900 border-b border-zinc-800 text-zinc-400 sticky top-0 z-10">
-                  <tr>
-                    <th class="px-6 py-3.5 font-medium">Order Reference</th>
-                    <th class="px-6 py-3.5 font-medium">Customer Information</th>
-                    <th class="px-6 py-3.5 font-medium">Garment, Pantone & Asset</th>
-                    <th class="px-6 py-3.5 font-medium text-center">Digital Proof Status</th>
-                    <th class="px-6 py-3.5 font-medium text-center">Wish Delivery Date</th>
-                    <th class="px-6 py-3.5 font-medium text-center">Financial Value</th>
-                    <th class="px-6 py-3.5 font-medium text-center">Current Status</th>
-                    <th class="px-6 py-3.5 font-medium text-right">Action Hint</th>
-                  </tr>
-                </thead>
-                <tbody id="backlogTableBody" class="divide-y divide-zinc-800 text-zinc-200">
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <!-- ARCHIVED ORDERS MODULE -->
-        <div id="moduleArchive" class="hidden h-full flex flex-col flex-1 w-full">
-          <div class="app-panel p-6 space-y-5 flex-1 flex flex-col w-full">
-            <div class="flex justify-between items-center border-b border-zinc-800 pb-5">
-              <div>
-                <h3 class="text-base font-semibold text-white">Archived Orders Terminal</h3>
-                <p class="text-sm text-zinc-400 mt-1">Review archived historical submissions and restore them if necessary.</p>
-              </div>
-              <button onclick="archiveAllCompletedOrders()" class="btn-pro-secondary text-xs">Auto-Archive All Completed Orders</button>
-            </div>
-
-            <div class="overflow-x-auto overflow-y-auto rounded-lg border border-zinc-800 flex-1 w-full">
-              <table class="w-full text-left text-sm">
-                <thead class="bg-zinc-900 border-b border-zinc-800 text-zinc-400 sticky top-0 z-10">
-                  <tr>
-                    <th class="px-6 py-3.5 font-medium">Order Reference</th>
-                    <th class="px-6 py-3.5 font-medium">Customer Information</th>
-                    <th class="px-6 py-3.5 font-medium">Garment & Asset</th>
-                    <th class="px-6 py-3.5 font-medium text-center">Wish Delivery Date</th>
-                    <th class="px-6 py-3.5 font-medium text-center">Financial Value</th>
-                    <th class="px-6 py-3.5 font-medium text-right">Restore Action</th>
-                  </tr>
-                </thead>
-                <tbody id="archiveTableBody" class="divide-y divide-zinc-800 text-zinc-200">
-                </tbody>
-              </table>
-            </div>
           </div>
         </div>
 
@@ -1182,29 +1186,25 @@
     </div>
   </div>
 
-  <!-- ARTWORK PREVIEW MODAL -->
-  <div id="artworkPreviewModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 no-print">
-    <div class="app-panel max-w-3xl w-full p-6 space-y-4 relative shadow-2xl border border-zinc-700 flex flex-col items-center">
-      <button onclick="closeArtworkPreviewModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white transition-colors p-2">
+  <!-- ARTWORK PREVIEW MODAL (FULL SCREEN REVIEWER) -->
+  <div id="artworkPreviewModal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col p-4 no-print">
+    <div class="app-panel w-full h-full flex flex-col p-6 space-y-4 relative shadow-2xl border border-zinc-700 items-center rounded-none">
+      <button onclick="closeArtworkPreviewModal()" class="absolute top-6 right-6 text-zinc-400 hover:text-white transition-colors p-2 z-20">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
       </button>
       
-      <div class="w-full border-b border-zinc-800 pb-3">
+      <div class="w-full border-b border-zinc-800 pb-3 pr-12">
         <h3 id="previewModalTitle" class="text-base font-semibold text-white">Artwork File Viewer</h3>
-        <p class="text-xs text-zinc-400 mt-0.5">High resolution production asset preview.</p>
+        <p class="text-xs text-zinc-400 mt-0.5">Full screen high resolution production asset reviewer.</p>
       </div>
 
-      <div class="w-full h-96 bg-zinc-950 rounded-lg border border-zinc-800 flex items-center justify-center p-4 relative overflow-hidden">
+      <div class="w-full flex-1 bg-zinc-950 rounded-lg border border-zinc-800 flex items-center justify-center p-2 relative overflow-hidden">
         <img id="previewModalImage" src="" class="max-w-full max-h-full object-contain" alt="Artwork Preview">
-        <div id="previewModalPdfContainer" class="hidden w-full h-full flex flex-col items-center justify-center text-center">
-          <svg class="w-16 h-16 text-blue-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-          <span id="previewModalPdfName" class="text-sm font-mono font-bold text-white">Document.pdf</span>
-          <p class="text-xs text-zinc-400 mt-1">Portable Document Format asset verified and ready for production.</p>
-        </div>
+        <iframe id="previewModalPdfFrame" src="" class="hidden w-full h-full border-0 rounded-lg bg-white" title="PDF Document Reviewer"></iframe>
       </div>
 
       <div class="w-full flex justify-end pt-2">
-        <button onclick="closeArtworkPreviewModal()" class="btn-pro-secondary text-xs px-6 py-2">Close Viewer</button>
+        <button onclick="closeArtworkPreviewModal()" class="btn-pro-secondary text-xs px-6 py-2">Close Full Screen Viewer</button>
       </div>
     </div>
   </div>
@@ -1716,7 +1716,6 @@
       document.getElementById('moduleDashboard').classList.add('hidden');
       document.getElementById('moduleIntake').classList.add('hidden');
       document.getElementById('moduleBacklog').classList.add('hidden');
-      document.getElementById('moduleArchive').classList.add('hidden');
       document.getElementById('moduleTelemetry').classList.add('hidden');
       document.getElementById('moduleWMS').classList.add('hidden');
       document.getElementById('moduleCRM').classList.add('hidden');
@@ -1724,7 +1723,6 @@
       document.getElementById('nav-dashboard').classList.remove('active');
       document.getElementById('nav-intake').classList.remove('active');
       document.getElementById('nav-backlog').classList.remove('active');
-      document.getElementById('nav-archive').classList.remove('active');
       document.getElementById('nav-telemetry').classList.remove('active');
       document.getElementById('nav-wms').classList.remove('active');
       document.getElementById('nav-crm').classList.remove('active');
@@ -1745,12 +1743,7 @@
         document.getElementById('moduleBacklog').classList.remove('hidden');
         document.getElementById('nav-backlog').classList.add('active');
         pageTitle = "Order Backlog and Workflow Terminal";
-        applyBacklogFilters();
-      } else if (tabName === 'archive') {
-        document.getElementById('moduleArchive').classList.remove('hidden');
-        document.getElementById('nav-archive').classList.add('active');
-        pageTitle = "Archived Orders Terminal";
-        renderArchiveModule();
+        switchBacklogSubTab('active');
       } else if (tabName === 'telemetry') {
         document.getElementById('moduleTelemetry').classList.remove('hidden');
         document.getElementById('nav-telemetry').classList.add('active');
@@ -1769,6 +1762,24 @@
       }
 
       document.getElementById('pageTitle').innerText = pageTitle;
+    }
+
+    function switchBacklogSubTab(subTabName) {
+      document.getElementById('backlogSubTabActive').classList.add('hidden');
+      document.getElementById('backlogSubTabArchive').classList.add('hidden');
+
+      document.getElementById('backlogSubTabBtnActive').classList.remove('active');
+      document.getElementById('backlogSubTabBtnArchive').classList.remove('active');
+
+      if (subTabName === 'active') {
+        document.getElementById('backlogSubTabActive').classList.remove('hidden');
+        document.getElementById('backlogSubTabBtnActive').classList.add('active');
+        applyBacklogFilters();
+      } else if (subTabName === 'archive') {
+        document.getElementById('backlogSubTabArchive').classList.remove('hidden');
+        document.getElementById('backlogSubTabBtnArchive').classList.add('active');
+        renderArchiveModule();
+      }
     }
 
     function switchWarehouseSubTab(subTabName) {
@@ -1998,6 +2009,7 @@
         successBanner.classList.add('hidden');
         resetIntakeForm();
         switchTab('backlog');
+        switchBacklogSubTab('active');
       }, 1500);
     }
 
@@ -2323,14 +2335,15 @@
     function viewDataUrlFile(fileName, dataUrl, isPdf) {
       document.getElementById('previewModalTitle').innerText = "File Viewer - " + fileName;
       const img = document.getElementById('previewModalImage');
-      const pdfContainer = document.getElementById('previewModalPdfContainer');
+      const pdfFrame = document.getElementById('previewModalPdfFrame');
       
       if (isPdf || fileName.toLowerCase().endsWith('.pdf')) {
         img.classList.add('hidden');
-        pdfContainer.classList.remove('hidden');
-        document.getElementById('previewModalPdfName').innerText = fileName;
+        pdfFrame.src = dataUrl;
+        pdfFrame.classList.remove('hidden');
       } else {
-        pdfContainer.classList.add('hidden');
+        pdfFrame.classList.add('hidden');
+        pdfFrame.src = "";
         img.src = dataUrl;
         img.classList.remove('hidden');
       }
@@ -2339,6 +2352,7 @@
 
     function closeArtworkPreviewModal() {
       document.getElementById('artworkPreviewModal').classList.add('hidden');
+      document.getElementById('previewModalPdfFrame').src = "";
     }
 
     function copyProofLink() {
@@ -2865,7 +2879,7 @@
             <td class="px-4 py-4 text-center font-mono text-zinc-300">${c.ordersCount} Orders</td>
             <td class="px-4 py-4 text-center font-mono text-emerald-400 font-semibold">$${c.lifetimeRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
             <td class="px-4 py-4 text-right">
-              <button onclick="switchTab('backlog')" class="btn-pro-secondary text-xs">View Client Backlog</button>
+              <button onclick="switchTab('backlog'); switchBacklogSubTab('active');" class="btn-pro-secondary text-xs">View Client Backlog</button>
             </td>
           </tr>
         `;
