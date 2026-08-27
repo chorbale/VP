@@ -230,6 +230,11 @@
         <span id="pendingBadge" class="bg-blue-500/20 text-blue-400 py-0.5 px-2 rounded-full text-[10px] font-bold border border-blue-500/30">0</span>
       </button>
 
+      <button id="nav-archive" onclick="switchTab('archive')" class="nav-item w-full text-left">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
+        <span>Archived Orders</span>
+      </button>
+
       <button id="nav-telemetry" onclick="switchTab('telemetry')" class="nav-item w-full text-left">
         <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
         <span>Live Production Floor</span>
@@ -283,6 +288,9 @@
         <div id="moduleIntake" class="grid grid-cols-1 lg:grid-cols-12 gap-6 max-w-7xl mx-auto w-full">
           
           <div class="lg:col-span-5 app-panel p-6 space-y-6">
+            <!-- SUCCESS NOTIFICATION BANNER -->
+            <div id="intakeSuccessBanner" class="hidden bg-emerald-500/10 border border-emerald-500/40 p-4 rounded-lg text-emerald-400 text-sm font-medium"></div>
+
             <div class="border-b border-zinc-800 pb-4">
               <h3 class="text-sm font-semibold text-white">Job Parameters and Sizing Matrix</h3>
               <p class="text-xs text-zinc-400 mt-1">Fields marked with an asterisk are required for submission.</p>
@@ -486,9 +494,9 @@
               <div class="flex items-center justify-between border-b border-zinc-800 pb-4">
                 <div>
                   <h3 class="text-sm font-semibold text-white mandatory-label">Artwork Asset Ingestion</h3>
-                  <p class="text-xs text-zinc-400 mt-1">Upload production ready vector formats or high resolution image formats.</p>
+                  <p class="text-xs text-zinc-400 mt-1">Upload production ready vector formats, high resolution image formats, or portable document format files.</p>
                 </div>
-                <span class="text-xs text-zinc-500 font-mono bg-zinc-900 px-2 py-1 rounded border border-zinc-800">Vector and Image Formats</span>
+                <span class="text-xs text-zinc-500 font-mono bg-zinc-900 px-2 py-1 rounded border border-zinc-800">Vector, Image & PDF Formats</span>
               </div>
 
               <div id="dragDropArea" class="border-2 border-dashed border-zinc-700 rounded-lg p-8 text-center hover:border-blue-500/50 transition-all bg-zinc-900/50 cursor-pointer group relative">
@@ -498,13 +506,13 @@
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                   </div>
                   <div>
-                    <p id="fileLabel" class="text-sm font-medium text-zinc-200">Click or drag and drop to upload production artwork</p>
+                    <p id="fileLabel" class="text-sm font-medium text-zinc-200">Click or drag and drop to upload production artwork or portable document format</p>
                     <p class="text-xs text-zinc-500 mt-1">Automated Resolution Check and Preflight Verification</p>
                   </div>
                 </div>
               </div>
 
-              <!-- EXTRA MULTIPLE FILES CONTAINER -->
+              <!-- EXTRA MULTIPLE FILES CONTAINER WITH UPLOAD LOADING BAR -->
               <div class="border-t border-zinc-800 pt-5 space-y-3">
                 <div class="flex justify-between items-center">
                   <div>
@@ -514,6 +522,18 @@
                   <span class="text-[10px] font-mono text-zinc-500 bg-zinc-900 px-2 py-1 rounded border border-zinc-800">Multiple Supported</span>
                 </div>
                 <input type="file" id="extraFilesInput" multiple accept=".pdf,.ai,.eps,.svg,image/*" onchange="handleExtraFilesSelection(this)" class="input-pro w-full px-3 py-2 text-xs text-zinc-300 cursor-pointer">
+                
+                <!-- UPLOAD LOADING BAR WRAPPER -->
+                <div id="extraFilesProgressWrapper" class="hidden space-y-1.5 bg-zinc-900 p-3 rounded border border-zinc-800">
+                  <div class="flex justify-between text-[11px] text-zinc-300">
+                    <span id="extraFilesProgressTitle" class="font-medium">Uploading specification files...</span>
+                    <span id="extraFilesProgressText" class="font-mono text-blue-400">0 percent</span>
+                  </div>
+                  <div class="w-full bg-zinc-950 h-2 rounded-full overflow-hidden border border-zinc-800">
+                    <div id="extraFilesProgressBar" class="bg-blue-500 h-full w-0 transition-all duration-150"></div>
+                  </div>
+                </div>
+
                 <div id="extraFilesListContainer" class="space-y-1.5"></div>
               </div>
 
@@ -542,7 +562,7 @@
               
               <div class="app-panel p-5 flex flex-col items-center">
                 <h3 class="text-xs font-semibold text-zinc-400 uppercase tracking-wider w-full border-b border-zinc-800 pb-3 mb-4 text-center">
-                  Virtual Platen Render
+                  Virtual Platen Render (iPad Viewport)
                 </h3>
 
                 <div id="garmentViewport" class="w-full h-64 bg-zinc-950 rounded-md border border-zinc-800 flex items-center justify-center relative overflow-hidden">
@@ -552,7 +572,13 @@
                     
                     <div id="platenBoundary" class="w-28 h-36 border border-dashed border-zinc-500/50 rounded flex flex-col items-center justify-center p-1 relative z-10 overflow-hidden bg-zinc-900/30 backdrop-blur-sm shadow-xl select-none">
                       <span id="artworkPlaceholder" class="text-[10px] text-zinc-300 font-medium text-center leading-tight">Standard Platen Boundary<br>(12 inches by 15 inches)<br><br>Drag to Position</span>
+                      <!-- Image or PDF Canvas Preview Render -->
                       <img id="artworkRender" class="hidden max-w-full max-h-full object-contain filter drop-shadow-md select-none" alt="Virtual Proof Render" draggable="false">
+                      <div id="pdfPlatenPreview" class="hidden w-full h-full bg-blue-950/90 border border-blue-500/40 rounded flex flex-col items-center justify-center p-2 text-center select-none">
+                        <svg class="w-8 h-8 text-blue-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                        <span class="text-[10px] font-mono font-bold text-blue-200">PORTABLE DOCUMENT FORMAT</span>
+                        <span id="pdfPlatenName" class="text-[9px] text-zinc-300 truncate w-full mt-0.5">document.pdf</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -621,7 +647,7 @@
             <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center border-b border-zinc-800 pb-5 gap-4 shrink-0">
               <div>
                 <h3 class="text-base font-semibold text-white">Order Backlog and Approval Terminal</h3>
-                <p class="text-sm text-zinc-400 mt-1">Review pending jobs, verify client proof digital sign-off, and approve them to the production queue.</p>
+                <p class="text-sm text-zinc-400 mt-1">Review pending jobs, verify client proof digital sign-off, and approve them to the production queue. Archive completed or outdated submissions to keep the backlog clean.</p>
               </div>
 
               <div class="flex flex-wrap items-center gap-3">
@@ -655,7 +681,7 @@
                 </div>
 
                 <div class="flex items-center gap-1 text-sm bg-zinc-900 p-1 rounded-lg border border-zinc-800">
-                  <button onclick="filterBacklogStatus('ALL')" id="filterBtnALL" class="px-3 py-1.5 rounded-md bg-zinc-800 text-white font-medium transition-all">Show All</button>
+                  <button onclick="filterBacklogStatus('ALL')" id="filterBtnALL" class="px-3 py-1.5 rounded-md bg-zinc-800 text-white font-medium transition-all">Show All Active</button>
                   <button onclick="filterBacklogStatus('PENDING')" id="filterBtnPENDING" class="px-3 py-1.5 rounded-md text-amber-500 hover:bg-zinc-800 font-medium transition-all">Pending Review</button>
                   <button onclick="filterBacklogStatus('QUEUED')" id="filterBtnQUEUED" class="px-3 py-1.5 rounded-md text-blue-400 hover:bg-zinc-800 font-medium transition-all">Queued for Production</button>
                   <button onclick="filterBacklogStatus('REJECTED')" id="filterBtnREJECTED" class="px-3 py-1.5 rounded-md text-red-400 hover:bg-zinc-800 font-medium transition-all">Rejected</button>
@@ -684,7 +710,37 @@
           </div>
         </div>
 
-        <!-- LIVE PRODUCTION FLOOR MODULE WITH OVERALL STATUS CHANGE CONTROLS -->
+        <!-- ARCHIVED ORDERS MODULE -->
+        <div id="moduleArchive" class="hidden h-full flex flex-col flex-1 w-full">
+          <div class="app-panel p-6 space-y-5 flex-1 flex flex-col w-full">
+            <div class="flex justify-between items-center border-b border-zinc-800 pb-5">
+              <div>
+                <h3 class="text-base font-semibold text-white">Archived Orders Terminal</h3>
+                <p class="text-sm text-zinc-400 mt-1">Review archived historical submissions and restore them if necessary.</p>
+              </div>
+              <button onclick="archiveAllCompletedOrders()" class="btn-pro-secondary text-xs">Auto-Archive All Completed Orders</button>
+            </div>
+
+            <div class="overflow-x-auto overflow-y-auto rounded-lg border border-zinc-800 flex-1 w-full">
+              <table class="w-full text-left text-sm">
+                <thead class="bg-zinc-900 border-b border-zinc-800 text-zinc-400 sticky top-0 z-10">
+                  <tr>
+                    <th class="px-6 py-3.5 font-medium">Order Reference</th>
+                    <th class="px-6 py-3.5 font-medium">Customer Information</th>
+                    <th class="px-6 py-3.5 font-medium">Garment & Asset</th>
+                    <th class="px-6 py-3.5 font-medium text-center">Wish Delivery Date</th>
+                    <th class="px-6 py-3.5 font-medium text-center">Financial Value</th>
+                    <th class="px-6 py-3.5 font-medium text-right">Restore Action</th>
+                  </tr>
+                </thead>
+                <tbody id="archiveTableBody" class="divide-y divide-zinc-800 text-zinc-200">
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- LIVE PRODUCTION FLOOR MODULE -->
         <div id="moduleTelemetry" class="hidden space-y-6">
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div class="app-panel p-6 flex flex-col justify-center border-l-4 border-l-amber-500">
@@ -722,22 +778,22 @@
 
             <div class="app-panel p-6 space-y-4">
               <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4">
-                Active Production Floor
+                Active Production Floor & History Produced
               </h3>
               <div id="activeProductionContainer" class="space-y-3">
               </div>
               
               <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4 mt-8">
-                Recently Produced
+                History Produced (Completed Runs)
               </h3>
-              <div id="completedProductionContainer" class="space-y-3 opacity-70">
+              <div id="completedProductionContainer" class="space-y-3">
               </div>
             </div>
 
           </div>
         </div>
 
-        <!-- WAREHOUSE MANAGEMENT SYSTEM MODULE WITH LOGICAL SCANNER WORKFLOW -->
+        <!-- WAREHOUSE MANAGEMENT SYSTEM MODULE -->
         <div id="moduleWMS" class="hidden space-y-6">
           <div class="flex items-center gap-2 border-b border-zinc-800 pb-4">
             <button id="warehouseSubTabBtnScanner" onclick="switchWarehouseSubTab('scanner')" class="sub-tab-btn active">Barcode Scanner & Packing</button>
@@ -959,7 +1015,7 @@
     </div>
   </main>
 
-  <!-- ORDER DETAILS MODAL (ADMIN / BACKLOG VIEW) -->
+  <!-- ORDER DETAILS MODAL -->
   <div id="orderDetailsModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 no-print">
     <div class="app-panel max-w-2xl w-full p-6 space-y-6 relative max-h-[90vh] overflow-y-auto shadow-2xl">
       <button onclick="closeOrderModal()" class="absolute top-6 right-6 text-zinc-400 hover:text-white transition-colors">
@@ -974,10 +1030,13 @@
           </h2>
           <p class="text-sm text-zinc-400 mt-1">Review parameters, manage digital proof sign-off, and view shipping address.</p>
         </div>
-        <button onclick="printModalInvoice()" class="btn-pro-secondary text-xs flex items-center gap-2 py-1.5">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-          Print Invoice Document
-        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="archiveCurrentModalOrder()" class="btn-pro-secondary text-xs text-amber-400 border-amber-500/30 hover:bg-amber-500/10">Archive Order</button>
+          <button onclick="printModalInvoice()" class="btn-pro-secondary text-xs flex items-center gap-2 py-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+            Print Invoice
+          </button>
+        </div>
       </div>
 
       <div class="grid grid-cols-2 gap-4">
@@ -1049,7 +1108,6 @@
         </div>
       </div>
 
-      <!-- ADDITIONAL SPECIFICATION FILES SECTION IN MODAL -->
       <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-3">
         <span class="text-zinc-500 font-medium text-[10px] uppercase tracking-wider block mb-2">Additional Specification Documents</span>
         <div id="modalExtraFilesList" class="space-y-2">
@@ -1065,7 +1123,7 @@
     </div>
   </div>
 
-  <!-- PRODUCTION FLOOR VIEW-ONLY DETAILS MODAL (COMMENTS, SIZING, VIEW FILE) -->
+  <!-- PRODUCTION FLOOR VIEW-ONLY DETAILS MODAL -->
   <div id="productionOrderModal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 no-print">
     <div class="app-panel max-w-xl w-full p-6 space-y-5 relative max-h-[90vh] overflow-y-auto shadow-2xl border border-zinc-700">
       <button onclick="closeProductionOrderModal()" class="absolute top-6 right-6 text-zinc-400 hover:text-white transition-colors p-2">
@@ -1080,20 +1138,17 @@
         <p id="prodModalGarment" class="text-sm text-zinc-300 font-medium mt-1">Independent Trading Company Heavy Hoodie</p>
       </div>
 
-      <!-- 1. COMMENTS FIELD (VIEW ONLY) -->
       <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-1.5">
         <span class="text-zinc-400 font-medium text-[11px] uppercase tracking-wider block">Production Comments & Specifications</span>
         <p id="prodModalNotes" class="text-sm text-zinc-200 italic leading-relaxed">Center chest print, 3 inches below collar. Pantone Matching System 286 Blue ink.</p>
       </div>
 
-      <!-- 2. SIZING MATRIX (VIEW ONLY) -->
       <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-2">
         <span class="text-zinc-400 font-medium text-[11px] uppercase tracking-wider block">Sizing Breakdown</span>
         <div id="prodModalSizeMatrix" class="grid grid-cols-5 gap-2 text-center">
         </div>
       </div>
 
-      <!-- 3. THE FILE / ARTWORK TECHPACK VIEW (VIEW FILE BUTTON) -->
       <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-3">
         <span class="text-zinc-400 font-medium text-[11px] uppercase tracking-wider block">Artwork File & Techpack Asset</span>
         <div class="flex items-center justify-between bg-zinc-950 p-3 rounded-md border border-zinc-800">
@@ -1114,7 +1169,6 @@
         </div>
       </div>
 
-      <!-- ADDITIONAL SPECIFICATION FILES IN PRODUCTION MODAL -->
       <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-3">
         <span class="text-zinc-400 font-medium text-[11px] uppercase tracking-wider block">Additional Specification Documents</span>
         <div id="prodModalExtraFilesList" class="space-y-2">
@@ -1128,7 +1182,7 @@
     </div>
   </div>
 
-  <!-- ARTWORK PREVIEW MODAL (OPENS FILE ONLY FOR VIEWING) -->
+  <!-- ARTWORK PREVIEW MODAL -->
   <div id="artworkPreviewModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 no-print">
     <div class="app-panel max-w-3xl w-full p-6 space-y-4 relative shadow-2xl border border-zinc-700 flex flex-col items-center">
       <button onclick="closeArtworkPreviewModal()" class="absolute top-4 right-4 text-zinc-400 hover:text-white transition-colors p-2">
@@ -1142,6 +1196,11 @@
 
       <div class="w-full h-96 bg-zinc-950 rounded-lg border border-zinc-800 flex items-center justify-center p-4 relative overflow-hidden">
         <img id="previewModalImage" src="" class="max-w-full max-h-full object-contain" alt="Artwork Preview">
+        <div id="previewModalPdfContainer" class="hidden w-full h-full flex flex-col items-center justify-center text-center">
+          <svg class="w-16 h-16 text-blue-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+          <span id="previewModalPdfName" class="text-sm font-mono font-bold text-white">Document.pdf</span>
+          <p class="text-xs text-zinc-400 mt-1">Portable Document Format asset verified and ready for production.</p>
+        </div>
       </div>
 
       <div class="w-full flex justify-end pt-2">
@@ -1260,7 +1319,7 @@
         artworkName: "NavyHoodie_Design.png",
         artworkData: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><circle cx='100' cy='100' r='80' fill='%232563eb'/></svg>",
         extraFiles: [
-          { name: "Hoodie_Specs_Sheet.pdf", data: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><rect width='200' height='200' fill='%233b82f6'/><text x='20' y='100' fill='white' font-size='16'>Spec Sheet PDF</text></svg>" }
+          { name: "Hoodie_Specs_Sheet.pdf", data: "data:application/pdf;base64,JVBERi0xLjMK..." }
         ]
       },
       {
@@ -1318,6 +1377,7 @@
     let notificationLogs = JSON.parse(localStorage.getItem('virtuePrintNotifications')) || DEFAULT_NOTIFICATIONS;
     let scanSessionLogs = [];
     let currentExtraFilesSession = [];
+    let isUploadingExtraFiles = false;
 
     function saveSystemData() {
       localStorage.setItem('virtuePrintOrders', JSON.stringify(ordersBacklog));
@@ -1339,6 +1399,7 @@
     let currentOrderId = "";
     let currentCalculatedTotal = "$0.00";
     let currentArtworkDataUrl = "";
+    let currentArtworkIsPdf = false;
     let selectedModalOrder = null;
     let selectedProductionOrder = null;
     let currentBacklogStatusFilter = 'ALL';
@@ -1381,12 +1442,25 @@
     function processFileSelection(file) {
       if (!file) return;
       document.getElementById('fileLabel').innerText = file.name;
+      const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+      currentArtworkIsPdf = isPdf;
+
       const reader = new FileReader();
       reader.onload = function(e) {
         currentArtworkDataUrl = e.target.result;
         const imgElement = document.getElementById('artworkRender');
-        imgElement.src = currentArtworkDataUrl;
-        imgElement.classList.remove('hidden');
+        const pdfPreview = document.getElementById('pdfPlatenPreview');
+        
+        if (isPdf) {
+          imgElement.classList.add('hidden');
+          pdfPreview.classList.remove('hidden');
+          document.getElementById('pdfPlatenName').innerText = file.name;
+        } else {
+          pdfPreview.classList.add('hidden');
+          imgElement.src = currentArtworkDataUrl;
+          imgElement.classList.remove('hidden');
+        }
+        
         document.getElementById('artworkPlaceholder').classList.add('hidden');
         resetArtworkPositioning();
       };
@@ -1398,26 +1472,61 @@
       document.getElementById('preflightIdle').classList.add('hidden');
       document.getElementById('preflightResults').classList.remove('hidden');
 
-      const btn = document.getElementById('submitToBacklogBtn');
-      btn.disabled = false;
+      if (!isUploadingExtraFiles) {
+        const btn = document.getElementById('submitToBacklogBtn');
+        btn.disabled = false;
+      }
     }
 
     function handleExtraFilesSelection(inputElement) {
       if (!inputElement.files || inputElement.files.length === 0) return;
-      const listContainer = document.getElementById('extraFilesListContainer');
       
-      for (let i = 0; i < inputElement.files.length; i++) {
-        const file = inputElement.files[i];
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          currentExtraFilesSession.push({
-            name: file.name,
-            data: e.target.result
-          });
-          renderExtraFilesListUI();
-        };
-        reader.readAsDataURL(file);
-      }
+      isUploadingExtraFiles = true;
+      const submitBtn = document.getElementById('submitToBacklogBtn');
+      submitBtn.disabled = true;
+      submitBtn.innerText = "Uploading Files...";
+
+      const progressWrapper = document.getElementById('extraFilesProgressWrapper');
+      const progressBar = document.getElementById('extraFilesProgressBar');
+      const progressText = document.getElementById('extraFilesProgressText');
+      progressWrapper.classList.remove('hidden');
+
+      let currentProgress = 0;
+      progressBar.style.width = "0%";
+      progressText.innerText = "0 percent";
+
+      const uploadInterval = setInterval(() => {
+        currentProgress += 15;
+        if (currentProgress > 100) currentProgress = 100;
+        progressBar.style.width = currentProgress + "%";
+        progressText.innerText = currentProgress + " percent";
+
+        if (currentProgress >= 100) {
+          clearInterval(uploadInterval);
+          setTimeout(() => {
+            progressWrapper.classList.add('hidden');
+            isUploadingExtraFiles = false;
+            if (currentOrderId) {
+              submitBtn.disabled = false;
+            }
+            submitBtn.innerText = "Submit Order to Backlog";
+
+            for (let i = 0; i < inputElement.files.length; i++) {
+              const file = inputElement.files[i];
+              const reader = new FileReader();
+              reader.onload = function(e) {
+                currentExtraFilesSession.push({
+                  name: file.name,
+                  data: e.target.result,
+                  isPdf: file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')
+                });
+                renderExtraFilesListUI();
+              };
+              reader.readAsDataURL(file);
+            }
+          }, 300);
+        }
+      }, 120);
     }
 
     function renderExtraFilesListUI() {
@@ -1480,8 +1589,9 @@
     function applyArtworkTransforms() {
       const scaleValue = artScaleSlider.value / 100;
       const opacityValue = artOpacitySlider.value / 100;
-      artworkRender.style.transform = `translate(${currentPosX}px, ${currentPosY}px) scale(${scaleValue})`;
-      artworkRender.style.opacity = opacityValue;
+      const targetPlaten = document.getElementById('platenBoundary');
+      targetPlaten.style.transform = `translate(${currentPosX}px, ${currentPosY}px) scale(${scaleValue})`;
+      targetPlaten.style.opacity = opacityValue;
     }
 
     function resetArtworkPositioning() {
@@ -1601,6 +1711,7 @@
       document.getElementById('moduleDashboard').classList.add('hidden');
       document.getElementById('moduleIntake').classList.add('hidden');
       document.getElementById('moduleBacklog').classList.add('hidden');
+      document.getElementById('moduleArchive').classList.add('hidden');
       document.getElementById('moduleTelemetry').classList.add('hidden');
       document.getElementById('moduleWMS').classList.add('hidden');
       document.getElementById('moduleCRM').classList.add('hidden');
@@ -1608,6 +1719,7 @@
       document.getElementById('nav-dashboard').classList.remove('active');
       document.getElementById('nav-intake').classList.remove('active');
       document.getElementById('nav-backlog').classList.remove('active');
+      document.getElementById('nav-archive').classList.remove('active');
       document.getElementById('nav-telemetry').classList.remove('active');
       document.getElementById('nav-wms').classList.remove('active');
       document.getElementById('nav-crm').classList.remove('active');
@@ -1629,6 +1741,11 @@
         document.getElementById('nav-backlog').classList.add('active');
         pageTitle = "Order Backlog and Workflow Terminal";
         applyBacklogFilters();
+      } else if (tabName === 'archive') {
+        document.getElementById('moduleArchive').classList.remove('hidden');
+        document.getElementById('nav-archive').classList.add('active');
+        pageTitle = "Archived Orders Terminal";
+        renderArchiveModule();
       } else if (tabName === 'telemetry') {
         document.getElementById('moduleTelemetry').classList.remove('hidden');
         document.getElementById('nav-telemetry').classList.add('active');
@@ -1766,24 +1883,28 @@
       document.getElementById('colorCount').selectedIndex = 1;
 
       document.getElementById('fileInput').value = "";
-      document.getElementById('fileLabel').innerText = "Click or drag and drop to upload production artwork";
+      document.getElementById('fileLabel').innerText = "Click or drag and drop to upload production artwork or portable document format";
       document.getElementById('extraFilesInput').value = "";
       currentExtraFilesSession = [];
       renderExtraFilesListUI();
 
       const imgElement = document.getElementById('artworkRender');
+      const pdfPreview = document.getElementById('pdfPlatenPreview');
       imgElement.src = "";
       imgElement.classList.add('hidden');
+      pdfPreview.classList.add('hidden');
       document.getElementById('artworkPlaceholder').classList.remove('hidden');
 
       currentOrderId = "";
       currentArtworkDataUrl = "";
+      currentArtworkIsPdf = false;
       document.getElementById('activeOrderBadge').innerText = "DRAFT-SESSION";
       document.getElementById('preflightIdle').classList.remove('hidden');
       document.getElementById('preflightResults').classList.add('hidden');
 
       const btn = document.getElementById('submitToBacklogBtn');
       btn.disabled = true;
+      btn.innerText = "Submit Order to Backlog";
 
       updateTotalsFromSizes();
       resetArtworkPositioning();
@@ -1798,6 +1919,11 @@
     }
 
     function submitOrderToBacklog() {
+      if (isUploadingExtraFiles) {
+        alert("Please wait until specification files finish uploading before submitting.");
+        return;
+      }
+
       const name = document.getElementById('customerName').value;
       const email = document.getElementById('customerEmail').value;
       const address = document.getElementById('customerAddress').value;
@@ -1808,6 +1934,10 @@
         alert("Please fill out all mandatory fields including Customer Name, Customer Email, Shipping Address, Wish Delivery Date, and Artwork Upload before submitting.");
         return;
       }
+
+      const submitBtn = document.getElementById('submitToBacklogBtn');
+      submitBtn.disabled = true;
+      submitBtn.innerText = "Submitting Order...";
 
       let garmentName = "";
       if (currentSupplyMode === 'catalog') {
@@ -1839,10 +1969,12 @@
         sizes: { Small: smallAmount, Medium: mediumAmount, Large: largeAmount, ExtraLarge: extraLargeAmount, DoubleExtraLarge: doubleExtraLargeAmount },
         price: currentCalculatedTotal,
         status: "PENDING",
+        isArchived: false,
         proofApproved: false,
         notes: notes,
         artworkName: document.getElementById('fileLabel').innerText,
-        artworkData: currentArtworkDataUrl || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><rect width='200' height='200' fill='%232563eb'/></svg>",
+        artworkData: currentArtworkDataUrl,
+        artworkIsPdf: currentArtworkIsPdf,
         extraFiles: [...currentExtraFilesSession]
       });
 
@@ -1850,10 +1982,18 @@
       saveSystemData();
       updatePendingBadge();
       updateDashboardMetrics();
-      alert("Order Reference " + currentOrderId + " for " + name + " successfully submitted to the Backlog.");
 
-      resetIntakeForm();
-      switchTab('backlog');
+      const successBanner = document.getElementById('intakeSuccessBanner');
+      if (successBanner) {
+        successBanner.classList.remove('hidden');
+        successBanner.innerText = "Success - Order Reference " + currentOrderId + " for " + name + " successfully submitted to the backlog and all form spaces have been cleaned.";
+      }
+
+      setTimeout(() => {
+        successBanner.classList.add('hidden');
+        resetIntakeForm();
+        switchTab('backlog');
+      }, 1500);
     }
 
     function filterBacklogStatus(status) {
@@ -1873,13 +2013,15 @@
       tbody.innerHTML = "";
 
       let filtered = ordersBacklog.filter(o => {
+        if (o.isArchived) return false;
+        if (o.status === 'PRODUCED') return false;
         const matchesStatus = (currentBacklogStatusFilter === 'ALL' || o.status === currentBacklogStatusFilter);
         const matchesDate = (!selectedCalendarDate || o.wishDate <= selectedCalendarDate);
         return matchesStatus && matchesDate;
       });
 
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center text-zinc-500 font-mono text-sm">No orders matching filter selection.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center text-zinc-500 font-mono text-sm">No orders matching filter selection. Completed productions are automatically routed to production history.</td></tr>`;
         return;
       }
 
@@ -1888,7 +2030,6 @@
         if (o.status === 'PENDING') statusBadge = `<span class="px-2.5 py-1 bg-amber-500/10 text-amber-500 border border-amber-500/20 rounded-md font-medium text-xs">PENDING</span>`;
         else if (o.status === 'QUEUED') statusBadge = `<span class="px-2.5 py-1 bg-blue-500/10 text-blue-500 border border-blue-500/20 rounded-md font-medium text-xs">QUEUED</span>`;
         else if (o.status === 'IN_PRODUCTION') statusBadge = `<span class="px-2.5 py-1 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-md font-medium text-xs">RUNNING</span>`;
-        else if (o.status === 'PRODUCED') statusBadge = `<span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 rounded-md font-medium text-xs">PRODUCED</span>`;
         else if (o.status === 'REJECTED') statusBadge = `<span class="px-2.5 py-1 bg-red-500/10 text-red-500 border border-red-500/20 rounded-md font-medium text-xs">REJECTED</span>`;
 
         let proofBadge = o.proofApproved ? 
@@ -1918,12 +2059,88 @@
             <td class="px-6 py-4 text-center font-mono text-zinc-300">${o.price}</td>
             <td class="px-6 py-4 text-center">${statusBadge}</td>
             <td class="px-6 py-4 text-right">
-              <span class="text-xs text-zinc-500 font-mono">Click ID to Inspect</span>
+              <button onclick="archiveOrder('${o.id}')" class="btn-pro-secondary text-xs py-1 px-2.5">Archive</button>
             </td>
           </tr>
         `;
         tbody.innerHTML += row;
       });
+    }
+
+    function renderArchiveModule() {
+      const tbody = document.getElementById('archiveTableBody');
+      tbody.innerHTML = "";
+
+      let archivedOrders = ordersBacklog.filter(o => o.isArchived);
+
+      if (archivedOrders.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-zinc-500 font-mono text-sm">No orders in archive.</td></tr>`;
+        return;
+      }
+
+      archivedOrders.forEach(o => {
+        tbody.innerHTML += `
+          <tr class="hover:bg-zinc-800/50 transition-colors">
+            <td class="px-6 py-4 font-mono font-medium text-blue-400">${o.id}</td>
+            <td class="px-6 py-4">
+              <div class="font-medium text-zinc-200">${o.customerName}</div>
+              <div class="text-[11px] text-zinc-500 mt-0.5">${o.customerEmail}</div>
+            </td>
+            <td class="px-6 py-4">
+              <div class="font-medium text-zinc-200">${o.garment}</div>
+              <div class="text-[11px] text-zinc-500 mt-0.5">${o.artworkName}</div>
+            </td>
+            <td class="px-6 py-4 text-center font-mono text-amber-400 text-xs">${o.wishDate}</td>
+            <td class="px-6 py-4 text-center font-mono text-zinc-300">${o.price}</td>
+            <td class="px-6 py-4 text-right">
+              <button onclick="restoreOrder('${o.id}')" class="btn-pro-secondary text-xs py-1 px-2.5">Restore</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function archiveOrder(orderId) {
+      const order = ordersBacklog.find(o => o.id === orderId);
+      if (!order) return;
+      order.isArchived = true;
+      saveSystemData();
+      applyBacklogFilters();
+      updatePendingBadge();
+      alert("Order " + orderId + " successfully moved to archive.");
+    }
+
+    function restoreOrder(orderId) {
+      const order = ordersBacklog.find(o => o.id === orderId);
+      if (!order) return;
+      order.isArchived = false;
+      saveSystemData();
+      renderArchiveModule();
+      updatePendingBadge();
+      alert("Order " + orderId + " successfully restored from archive.");
+    }
+
+    function archiveCurrentModalOrder() {
+      if (!selectedModalOrder) return;
+      selectedModalOrder.isArchived = true;
+      saveSystemData();
+      closeOrderModal();
+      applyBacklogFilters();
+      updatePendingBadge();
+      alert("Order successfully archived.");
+    }
+
+    function archiveAllCompletedOrders() {
+      let count = 0;
+      ordersBacklog.forEach(o => {
+        if (o.status === 'PRODUCED' && !o.isArchived) {
+          o.isArchived = true;
+          count++;
+        }
+      });
+      saveSystemData();
+      renderArchiveModule();
+      alert(count + " completed orders successfully archived.");
     }
 
     function openOrderModal(orderId) {
@@ -1975,7 +2192,6 @@
 
       document.getElementById('modalFileName').innerText = selectedModalOrder.artworkName;
 
-      // Render extra files in modal
       const modalExtraList = document.getElementById('modalExtraFilesList');
       modalExtraList.innerHTML = "";
       if (selectedModalOrder.extraFiles && selectedModalOrder.extraFiles.length > 0) {
@@ -1983,7 +2199,7 @@
           modalExtraList.innerHTML += `
             <div class="flex items-center justify-between bg-zinc-950 p-2.5 rounded border border-zinc-800 text-xs font-mono">
               <span class="text-zinc-200">${fileObj.name}</span>
-              <button onclick="viewDataUrlFile('${fileObj.name}', '${fileObj.data}')" class="btn-pro-secondary text-xs py-1 px-2.5">View File</button>
+              <button onclick="viewDataUrlFile('${fileObj.name}', '${fileObj.data}', ${fileObj.isPdf})" class="btn-pro-secondary text-xs py-1 px-2.5">View File</button>
             </div>
           `;
         });
@@ -2031,7 +2247,6 @@
       document.getElementById('orderDetailsModal').classList.remove('hidden');
     }
 
-    /* PRODUCTION FLOOR VIEW-ONLY DETAILS MODAL (COMMENTS, SIZING, VIEW FILE) */
     function openProductionOrderModal(orderId) {
       selectedProductionOrder = ordersBacklog.find(o => o.id === orderId);
       if (!selectedProductionOrder) return;
@@ -2042,10 +2257,8 @@
       let statBadge = document.getElementById('prodModalStatusBadge');
       statBadge.innerText = selectedProductionOrder.status;
 
-      // 1. COMMENTS FIELD
       document.getElementById('prodModalNotes').innerText = selectedProductionOrder.notes || "No special production comments or instructions provided for this run.";
 
-      // 2. SIZING MATRIX (VIEW ONLY)
       const matrix = document.getElementById('prodModalSizeMatrix');
       matrix.innerHTML = `
         <div class="bg-zinc-800 p-2.5 rounded-md border border-zinc-700"><span class="text-zinc-400 text-[10px] uppercase block mb-1">Small</span><span class="font-bold text-white text-sm">${selectedProductionOrder.sizes.Small}</span></div>
@@ -2055,10 +2268,8 @@
         <div class="bg-zinc-800 p-2.5 rounded-md border border-zinc-700"><span class="text-zinc-400 text-[10px] uppercase block mb-1">2XL</span><span class="font-bold text-white text-sm">${selectedProductionOrder.sizes.DoubleExtraLarge}</span></div>
       `;
 
-      // 3. THE FILE NAME
       document.getElementById('prodModalFileName').innerText = selectedProductionOrder.artworkName || "Production_Artwork.png";
 
-      // Render extra files in production modal
       const prodModalExtraList = document.getElementById('prodModalExtraFilesList');
       prodModalExtraList.innerHTML = "";
       if (selectedProductionOrder.extraFiles && selectedProductionOrder.extraFiles.length > 0) {
@@ -2066,7 +2277,7 @@
           prodModalExtraList.innerHTML += `
             <div class="flex items-center justify-between bg-zinc-950 p-2.5 rounded border border-zinc-800 text-xs font-mono">
               <span class="text-zinc-200">${fileObj.name}</span>
-              <button onclick="viewDataUrlFile('${fileObj.name}', '${fileObj.data}')" class="btn-pro-secondary text-xs py-1 px-2.5">View File</button>
+              <button onclick="viewDataUrlFile('${fileObj.name}', '${fileObj.data}', ${fileObj.isPdf})" class="btn-pro-secondary text-xs py-1 px-2.5">View File</button>
             </div>
           `;
         });
@@ -2081,7 +2292,6 @@
       document.getElementById('productionOrderModal').classList.add('hidden');
     }
 
-    // STATUS CHANGE / REVERT CONTROLS DIRECTLY ON THE LIVE PRODUCTION FLOOR
     function updateOrderStatusFromFloor(orderId, newStatus) {
       const order = ordersBacklog.find(o => o.id === orderId);
       if (!order) return;
@@ -2102,13 +2312,23 @@
         alert("No artwork file attached to this order record.");
         return;
       }
-      viewDataUrlFile(selectedProductionOrder.artworkName || "Production_Artwork.png", selectedProductionOrder.artworkData);
+      viewDataUrlFile(selectedProductionOrder.artworkName || "Production_Artwork.png", selectedProductionOrder.artworkData, selectedProductionOrder.artworkIsPdf);
     }
 
-    function viewDataUrlFile(fileName, dataUrl) {
+    function viewDataUrlFile(fileName, dataUrl, isPdf) {
       document.getElementById('previewModalTitle').innerText = "File Viewer - " + fileName;
       const img = document.getElementById('previewModalImage');
-      img.src = dataUrl;
+      const pdfContainer = document.getElementById('previewModalPdfContainer');
+      
+      if (isPdf || fileName.toLowerCase().endsWith('.pdf')) {
+        img.classList.add('hidden');
+        pdfContainer.classList.remove('hidden');
+        document.getElementById('previewModalPdfName').innerText = fileName;
+      } else {
+        pdfContainer.classList.add('hidden');
+        img.src = dataUrl;
+        img.classList.remove('hidden');
+      }
       document.getElementById('artworkPreviewModal').classList.remove('hidden');
     }
 
@@ -2319,30 +2539,30 @@
 
         logBody.innerHTML += `
           <tr class="hover:bg-zinc-800/50 transition-colors">
-            <td class="px-4 py-3 font-mono text-xs text-zinc-400">${log.time}</td>
-            <td class="px-4 py-3 font-mono text-blue-400 font-medium">${log.ref}</td>
-            <td class="px-4 py-3 text-xs text-zinc-300">${customerInfo}</td>
-            <td class="px-4 py-3 text-center font-semibold text-xs ${log.color}">${log.result}</td>
+            <td class="px-4 py-4 font-mono text-xs text-zinc-400">${log.time}</td>
+            <td class="px-4 py-4 font-mono text-blue-400 font-medium">${log.ref}</td>
+            <td class="px-4 py-4 text-xs text-zinc-300">${customerInfo}</td>
+            <td class="px-4 py-4 text-center font-semibold text-xs ${log.color}">${log.result}</td>
           </tr>
         `;
       });
     }
 
     function updatePendingBadge() {
-      const count = ordersBacklog.filter(o => o.status === 'PENDING').length;
+      const count = ordersBacklog.filter(o => !o.isArchived && o.status === 'PENDING').length;
       document.getElementById('pendingBadge').innerText = count;
     }
 
     function updateDashboardMetrics() {
-      const pendingCount = ordersBacklog.filter(o => o.status === 'PENDING').length;
-      const activeVolume = ordersBacklog.filter(o => o.status === 'IN_PRODUCTION').reduce((sum, o) => sum + o.quantity, 0);
-      const producedVolume = ordersBacklog.filter(o => o.status === 'PRODUCED').reduce((sum, o) => sum + o.quantity, 0);
-      const queuedPieces = ordersBacklog.filter(o => o.status === 'QUEUED').reduce((sum, o) => sum + o.quantity, 0);
+      const pendingCount = ordersBacklog.filter(o => !o.isArchived && o.status === 'PENDING').length;
+      const activeVolume = ordersBacklog.filter(o => !o.isArchived && o.status === 'IN_PRODUCTION').reduce((sum, o) => sum + o.quantity, 0);
+      const producedVolume = ordersBacklog.filter(o => !o.isArchived && o.status === 'PRODUCED').reduce((sum, o) => sum + o.quantity, 0);
+      const queuedPieces = ordersBacklog.filter(o => !o.isArchived && o.status === 'QUEUED').reduce((sum, o) => sum + o.quantity, 0);
 
       let totalRevenue = 0;
       let totalEstCost = 0;
       ordersBacklog.forEach(o => {
-        if(o.status !== 'REJECTED') {
+        if(!o.isArchived && o.status !== 'REJECTED') {
           const rev = parseFloat(o.price.replace('$', '').replace(',', '')) || 0;
           totalRevenue += rev;
           totalEstCost += rev * 0.58; 
@@ -2356,7 +2576,7 @@
       document.getElementById('dashPendingCount').innerText = pendingCount;
       document.getElementById('dashActiveVolume').innerText = activeVolume + " Pieces";
       document.getElementById('dashProducedVolume').innerText = producedVolume + " Pieces";
-      document.getElementById('dashTotalOrders').innerText = ordersBacklog.length;
+      document.getElementById('dashTotalOrders').innerText = ordersBacklog.filter(o => !o.isArchived).length;
       document.getElementById('dashQueuedPieces').innerText = queuedPieces + " Pieces";
       
       document.getElementById('kpiQueuedCount').innerText = queuedPieces;
@@ -2393,9 +2613,9 @@
       activeContainer.innerHTML = "";
       completedContainer.innerHTML = "";
 
-      const queuedOrders = ordersBacklog.filter(o => o.status === 'QUEUED');
-      const activeOrders = ordersBacklog.filter(o => o.status === 'IN_PRODUCTION');
-      const completedOrders = ordersBacklog.filter(o => o.status === 'PRODUCED');
+      const queuedOrders = ordersBacklog.filter(o => !o.isArchived && o.status === 'QUEUED');
+      const activeOrders = ordersBacklog.filter(o => !o.isArchived && o.status === 'IN_PRODUCTION');
+      const completedOrders = ordersBacklog.filter(o => !o.isArchived && o.status === 'PRODUCED');
 
       if (queuedOrders.length === 0) {
         queuedContainer.innerHTML = `<div class="text-sm text-zinc-500 py-4">No orders waiting in the production queue.</div>`;
@@ -2414,7 +2634,7 @@
                 <button onclick="updateOrderStatus('${o.id}', 'IN_PRODUCTION')" class="btn-pro-primary text-xs">Start Production</button>
               </div>
               <div class="pt-2 border-t border-zinc-800 flex items-center justify-between text-xs">
-                <span class="text-zinc-500">Revert / Change Stage:</span>
+                <span class="text-zinc-500">Change Stage:</span>
                 <div class="flex gap-2">
                   <button onclick="updateOrderStatusFromFloor('${o.id}', 'PENDING')" class="text-amber-400 hover:underline">Pending</button>
                   <span class="text-zinc-600">-</span>
@@ -2447,7 +2667,7 @@
                 <button onclick="updateOrderStatus('${o.id}', 'PRODUCED')" class="btn-emerald-solid text-xs">Mark Completed</button>
               </div>
               <div class="pt-2 border-t border-indigo-500/20 flex items-center justify-between text-xs">
-                <span class="text-zinc-400">Revert / Change Stage:</span>
+                <span class="text-zinc-400">Change Stage:</span>
                 <div class="flex gap-2">
                   <button onclick="updateOrderStatusFromFloor('${o.id}', 'PENDING')" class="text-amber-400 hover:underline">Pending</button>
                   <span class="text-zinc-600">-</span>
@@ -2464,21 +2684,24 @@
       }
 
       if (completedOrders.length === 0) {
-        completedContainer.innerHTML = `<div class="text-sm text-zinc-500 py-4">No recent productions completed.</div>`;
+        completedContainer.innerHTML = `<div class="text-sm text-zinc-500 py-4">No completed production history recorded yet.</div>`;
       } else {
-        completedOrders.slice(0, 3).forEach(o => {
+        completedOrders.forEach(o => {
           completedContainer.innerHTML += `
             <div class="bg-zinc-900 p-3 rounded-lg border border-zinc-800 space-y-2">
               <div class="flex justify-between items-center">
                 <div>
-                  <span class="text-xs text-zinc-500 block mb-0.5">Completed Reference:</span>
+                  <span class="text-xs text-zinc-500 block mb-0.5">History Produced Reference:</span>
                   <button onclick="openProductionOrderModal('${o.id}')" class="font-mono font-medium text-blue-400 hover:underline text-left cursor-pointer focus:outline-none text-xs">${o.id} (View Details)</button>
-                  <span class="text-zinc-500 text-xs mt-0.5 block">${o.quantity} Pieces successfully printed. (Wish: ${o.wishDate})</span>
+                  <span class="text-zinc-500 text-xs mt-0.5 block">${o.customerName} - ${o.quantity} Pieces successfully printed. (Wish: ${o.wishDate})</span>
                 </div>
-                <span class="px-2 py-1 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-medium text-[10px] rounded">PRODUCED</span>
+                <div class="flex items-center gap-2">
+                  <span class="px-2 py-1 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-medium text-[10px] rounded">PRODUCED</span>
+                  <button onclick="archiveOrder('${o.id}')" class="btn-pro-secondary text-xs py-1 px-2">Archive</button>
+                </div>
               </div>
               <div class="pt-2 border-t border-zinc-800 flex items-center justify-between text-xs">
-                <span class="text-zinc-500">Revert / Change Stage:</span>
+                <span class="text-zinc-500">Change Stage:</span>
                 <div class="flex gap-2">
                   <button onclick="updateOrderStatusFromFloor('${o.id}', 'PENDING')" class="text-amber-400 hover:underline">Pending</button>
                   <span class="text-zinc-600">-</span>
@@ -2541,7 +2764,7 @@
       inventoryBlanks.forEach((blank, index) => {
         let allocatedCount = 0;
         ordersBacklog.forEach(order => {
-          if ((order.status === 'PENDING' || order.status === 'QUEUED' || order.status === 'IN_PRODUCTION') && order.garment.includes(blank.style.split(' ')[0])) {
+          if (!order.isArchived && (order.status === 'PENDING' || order.status === 'QUEUED' || order.status === 'IN_PRODUCTION') && order.garment.includes(blank.style.split(' ')[0])) {
             allocatedCount += order.quantity;
           }
         });
@@ -2568,7 +2791,7 @@
       });
 
       finishedTable.innerHTML = "";
-      const finishedOrders = ordersBacklog.filter(o => o.status === 'PRODUCED');
+      const finishedOrders = ordersBacklog.filter(o => !o.isArchived && o.status === 'PRODUCED');
 
       if (finishedOrders.length === 0) {
         finishedTable.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-zinc-500 text-sm">No finished goods currently awaiting shipping.</td></tr>`;
@@ -2600,22 +2823,24 @@
 
       const clientMap = {};
       ordersBacklog.forEach(o => {
-        if(!clientMap[o.customerEmail]) {
-          clientMap[o.customerEmail] = {
-            name: o.customerName,
-            email: o.customerEmail,
-            address: o.customerAddress,
-            ordersCount: 0,
-            lifetimeRevenue: 0,
-            orders: []
-          };
+        if(!o.isArchived) {
+          if(!clientMap[o.customerEmail]) {
+            clientMap[o.customerEmail] = {
+              name: o.customerName,
+              email: o.customerEmail,
+              address: o.customerAddress,
+              ordersCount: 0,
+              lifetimeRevenue: 0,
+              orders: []
+            };
+          }
+          clientMap[o.customerEmail].ordersCount++;
+          const rev = parseFloat(o.price.replace('$', '').replace(',', '')) || 0;
+          if(o.status !== 'REJECTED') {
+            clientMap[o.customerEmail].lifetimeRevenue += rev;
+          }
+          clientMap[o.customerEmail].orders.push(o);
         }
-        clientMap[o.customerEmail].ordersCount++;
-        const rev = parseFloat(o.price.replace('$', '').replace(',', '')) || 0;
-        if(o.status !== 'REJECTED') {
-          clientMap[o.customerEmail].lifetimeRevenue += rev;
-        }
-        clientMap[o.customerEmail].orders.push(o);
       });
 
       const clients = Object.values(clientMap);
