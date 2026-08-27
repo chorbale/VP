@@ -219,6 +219,11 @@
         <span>Warehouse Management System</span>
       </button>
 
+      <button id="nav-crm" onclick="switchTab('crm')" class="nav-item w-full text-left">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+        <span>Customer Relationship Management</span>
+      </button>
+
       <button id="nav-dashboard" onclick="switchTab('dashboard')" class="nav-item w-full text-left">
         <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
         <span>Dashboard & Analytics</span>
@@ -271,6 +276,11 @@
                 <label class="block text-xs font-medium text-zinc-400 mb-1.5 mandatory-label">Customer Email Address</label>
                 <input type="email" id="customerEmail" placeholder="Enter Email Address" class="input-pro w-full px-3 py-2 text-sm">
               </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-medium text-zinc-400 mb-1.5 mandatory-label">Shipping Street Address</label>
+              <input type="text" id="customerAddress" placeholder="Enter Street Address, City, State, Zip" class="input-pro w-full px-3 py-2 text-sm">
             </div>
 
             <div>
@@ -577,7 +587,7 @@
             <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center border-b border-zinc-800 pb-5 gap-4">
               <div>
                 <h3 class="text-base font-semibold text-white">Order Backlog and Approval Terminal</h3>
-                <p class="text-sm text-zinc-400 mt-1">Review pending jobs and approve them to the production queue.</p>
+                <p class="text-sm text-zinc-400 mt-1">Review pending jobs, verify client proof digital sign-off, and approve them to the production queue.</p>
               </div>
 
               <div class="flex flex-wrap items-center gap-3">
@@ -626,8 +636,8 @@
                     <th class="px-4 py-3 font-medium">Order Reference</th>
                     <th class="px-4 py-3 font-medium">Customer Information</th>
                     <th class="px-4 py-3 font-medium">Garment, Pantone & Asset</th>
+                    <th class="px-4 py-3 font-medium text-center">Digital Proof Status</th>
                     <th class="px-4 py-3 font-medium text-center">Wish Delivery Date</th>
-                    <th class="px-4 py-3 font-medium text-center">Total Quantity</th>
                     <th class="px-4 py-3 font-medium text-center">Financial Value</th>
                     <th class="px-4 py-3 font-medium text-center">Current Status</th>
                     <th class="px-4 py-3 font-medium text-right">Available Actions</th>
@@ -709,19 +719,21 @@
           </div>
 
           <div class="app-panel p-6 space-y-4">
-            <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4">
-              Raw Material Blanks Inventory
+            <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4 flex justify-between items-center">
+              <span>Multi-Location Inventory Transfer & Storage Bin Management</span>
+              <button onclick="openBinTransferModal()" class="btn-pro-secondary text-xs">Transfer Bin Stock</button>
             </h3>
-            <p class="text-sm text-zinc-400">Inventory levels adjust dynamically as orders are queued and enter production. Enter numbers in the receive fields to increase stock levels.</p>
+            <p class="text-sm text-zinc-400">Manage storage bins and rack locations across multiple facility zones.</p>
             <div class="overflow-x-auto rounded-lg border border-zinc-800 mt-4">
               <table class="w-full text-left text-sm">
                 <thead class="bg-zinc-900 border-b border-zinc-800 text-zinc-400">
                   <tr>
                     <th class="px-4 py-3 font-medium">Garment Style Description</th>
+                    <th class="px-4 py-3 font-medium text-center">Storage Bin Location</th>
                     <th class="px-4 py-3 font-medium text-center">Total On Hand</th>
                     <th class="px-4 py-3 font-medium text-center">Allocated for Production</th>
                     <th class="px-4 py-3 font-medium text-center">Available for Sale</th>
-                    <th class="px-4 py-3 font-medium text-right">Receive Inventory Supply</th>
+                    <th class="px-4 py-3 font-medium text-right">Receive Supply</th>
                   </tr>
                 </thead>
                 <tbody id="blanksInventoryTable" class="divide-y divide-zinc-800 text-zinc-200">
@@ -732,7 +744,7 @@
 
           <div class="app-panel p-6 space-y-4 mt-6">
             <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4 flex justify-between items-center">
-              <span>Finished Goods Inventory</span>
+              <span>Finished Goods Inventory & Shipping Address Manifest</span>
             </h3>
             <p class="text-sm text-zinc-400">Completed production runs awaiting warehouse packing and carrier dispatch.</p>
             <div class="overflow-x-auto rounded-lg border border-zinc-800 mt-4">
@@ -740,7 +752,7 @@
                 <thead class="bg-zinc-900 border-b border-zinc-800 text-zinc-400">
                   <tr>
                     <th class="px-4 py-3 font-medium">Order Reference Identification</th>
-                    <th class="px-4 py-3 font-medium">Customer Information</th>
+                    <th class="px-4 py-3 font-medium">Customer Information & Shipping Address</th>
                     <th class="px-4 py-3 font-medium text-center">Wish Delivery Date</th>
                     <th class="px-4 py-3 font-medium text-center">Total Pieces Produced</th>
                     <th class="px-4 py-3 font-medium text-center">Warehouse Location</th>
@@ -748,6 +760,32 @@
                   </tr>
                 </thead>
                 <tbody id="finishedGoodsTable" class="divide-y divide-zinc-800 text-zinc-200">
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- CUSTOMER RELATIONSHIP MANAGEMENT MODULE -->
+        <div id="moduleCRM" class="hidden space-y-6">
+          <div class="app-panel p-6 space-y-4">
+            <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4">
+              Customer Relationship Management & Communication History Tracker
+            </h3>
+            <p class="text-sm text-zinc-400">Review past orders, customer addresses, interaction notes, and uploaded artwork assets per client account.</p>
+            
+            <div class="overflow-x-auto rounded-lg border border-zinc-800 mt-4">
+              <table class="w-full text-left text-sm">
+                <thead class="bg-zinc-900 border-b border-zinc-800 text-zinc-400">
+                  <tr>
+                    <th class="px-4 py-3 font-medium">Client Name</th>
+                    <th class="px-4 py-3 font-medium">Email & Shipping Address</th>
+                    <th class="px-4 py-3 font-medium text-center">Total Orders Placed</th>
+                    <th class="px-4 py-3 font-medium text-center">Total Lifetime Revenue</th>
+                    <th class="px-4 py-3 font-medium text-right">Account Management Action</th>
+                  </tr>
+                </thead>
+                <tbody id="crmTableBody" class="divide-y divide-zinc-800 text-zinc-200">
                 </tbody>
               </table>
             </div>
@@ -845,6 +883,7 @@
     </div>
   </main>
 
+  <!-- ORDER DETAILS MODAL -->
   <div id="orderDetailsModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 no-print">
     <div class="app-panel max-w-2xl w-full p-6 space-y-6 relative max-h-[90vh] overflow-y-auto shadow-2xl">
       <button onclick="closeOrderModal()" class="absolute top-6 right-6 text-zinc-400 hover:text-white transition-colors">
@@ -857,7 +896,7 @@
             Order Detail View
             <span id="modalOrderId" class="text-blue-500 font-mono text-lg bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">VirtuePrint-2026-8820</span>
           </h2>
-          <p class="text-sm text-zinc-400 mt-1">Review parameters and manage order details.</p>
+          <p class="text-sm text-zinc-400 mt-1">Review parameters, manage digital proof sign-off, and view shipping address.</p>
         </div>
         <button onclick="printModalInvoice()" class="btn-pro-secondary text-xs flex items-center gap-2 py-1.5">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
@@ -867,16 +906,35 @@
 
       <div class="grid grid-cols-2 gap-4">
         <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-1">
-          <span class="text-zinc-500 font-medium text-[10px] uppercase tracking-wider block mb-2">Customer Profile</span>
+          <span class="text-zinc-500 font-medium text-[10px] uppercase tracking-wider block mb-2">Customer Profile & Address</span>
           <div id="modalCustomerName" class="font-semibold text-zinc-100 text-sm">Client Name</div>
           <div id="modalCustomerEmail" class="text-zinc-400 text-xs">client@example.com</div>
+          <div id="modalCustomerAddress" class="text-zinc-300 text-xs font-mono mt-1 pt-1 border-t border-zinc-800">Address: 123 Main St</div>
         </div>
 
         <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-1">
-          <span class="text-zinc-500 font-medium text-[10px] uppercase tracking-wider block mb-2">Garment and Schedule</span>
+          <span class="text-zinc-500 font-medium text-[10px] uppercase tracking-wider block mb-2">Garment, Pantone & Schedule</span>
           <div id="modalGarmentName" class="font-semibold text-zinc-100 text-sm">Garment Details</div>
           <div id="modalPantone" class="text-blue-400 font-mono text-xs mt-1">Pantone Match: PMS 286 C</div>
           <div id="modalWishDate" class="text-amber-400 font-mono text-xs mt-1">Wish Delivery Date: 2026-09-15</div>
+        </div>
+      </div>
+
+      <!-- CLIENT DIGITAL PROOF APPROVAL PORTAL WIDGET -->
+      <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-3">
+        <div class="flex justify-between items-center">
+          <span class="text-zinc-500 font-medium text-[10px] uppercase tracking-wider">Client Digital Proof Approval Portal</span>
+          <span id="modalProofBadge" class="px-2.5 py-0.5 rounded text-[11px] font-semibold bg-amber-500/10 text-amber-500 border border-amber-500/30">PENDING CLIENT SIGN-OFF</span>
+        </div>
+        <div class="flex items-center justify-between bg-zinc-950 p-3 rounded border border-zinc-800 text-xs">
+          <div>
+            <span class="text-zinc-400 block mb-0.5">Secure External Proof Link:</span>
+            <span id="modalProofLinkText" class="font-mono text-blue-400 select-all">https://proof.virtueprintla.com/review?token=VP-8820</span>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="copyProofLink()" class="btn-pro-secondary text-xs py-1.5">Copy Link</button>
+            <button onclick="simulateClientSignOff()" class="btn-emerald-solid text-xs py-1.5">Simulate Client Sign-Off</button>
+          </div>
         </div>
       </div>
 
@@ -923,11 +981,44 @@
     </div>
   </div>
 
+  <!-- BIN TRANSFER MODAL -->
+  <div id="binTransferModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 no-print">
+    <div class="app-panel max-w-md w-full p-6 space-y-4 relative shadow-2xl">
+      <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-3">Transfer Stock Between Storage Bins</h3>
+      <div>
+        <label class="block text-xs font-medium text-zinc-400 mb-1">Select Garment Style</label>
+        <select id="transferGarmentSelect" class="input-pro w-full px-3 py-2 text-sm">
+          <option value="Shaka Wear">Shaka Wear 7.5 ounce Heavyweight Maximum Heavy Shirt</option>
+          <option value="Independent Trading">Independent Trading Company Heavy Hoodie</option>
+          <option value="Bella Canvas">Bella Canvas 3001 Unisex Jersey Shirt</option>
+        </select>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-medium text-zinc-400 mb-1">From Bin Location</label>
+          <input type="text" id="fromBin" value="Rack A-01" class="input-pro w-full px-3 py-2 text-sm font-mono">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-zinc-400 mb-1">To Bin Location</label>
+          <input type="text" id="toBin" value="Rack B-14" class="input-pro w-full px-3 py-2 text-sm font-mono">
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-zinc-400 mb-1">Transfer Quantity</label>
+        <input type="number" id="transferQty" min="1" value="50" class="input-pro w-full px-3 py-2 text-sm font-mono">
+      </div>
+      <div class="flex justify-end gap-3 pt-3 border-t border-zinc-800">
+        <button onclick="closeBinTransferModal()" class="btn-pro-secondary text-xs">Cancel</button>
+        <button onclick="executeBinTransfer()" class="btn-pro-primary text-xs">Execute Transfer</button>
+      </div>
+    </div>
+  </div>
+
   <div id="printInvoiceContainer" class="hidden">
     <div style="display: flex; justify-content: space-between; border-bottom: 2px solid #e5e7eb; padding-bottom: 1rem; margin-bottom: 2rem;">
       <div>
         <h1 style="font-size: 24px; font-weight: bold;">Virtue Print Los Angeles</h1>
-        <p style="color: #6b7280; font-size: 12px;">Production Operating System Invoice Document</p>
+        <p style="color: #6b7280; font-size: 12px;">Production Operating System Invoice & Shipping Manifest</p>
       </div>
       <div style="text-align: right;">
         <h2 style="font-size: 18px; font-weight: bold; font-family: monospace;" id="printOrderId">VirtuePrint-2026-8820</h2>
@@ -937,9 +1028,10 @@
 
     <div style="display: flex; justify-content: space-between; margin-bottom: 2rem;">
       <div>
-        <h3 style="font-size: 14px; font-weight: bold; color: #374151; margin-bottom: 0.5rem; text-transform: uppercase;">Customer Information</h3>
+        <h3 style="font-size: 14px; font-weight: bold; color: #374151; margin-bottom: 0.5rem; text-transform: uppercase;">Customer Information & Shipping Address</h3>
         <p id="printCustomerName" style="font-weight: 500;">Client Name</p>
         <p id="printCustomerEmail" style="color: #6b7280; font-size: 14px;">email@example.com</p>
+        <p id="printCustomerAddress" style="font-family: monospace; font-size: 13px; color: #111827; margin-top: 0.25rem;">Address: 123 Main St</p>
       </div>
       <div style="text-align: right;">
         <h3 style="font-size: 14px; font-weight: bold; color: #374151; margin-bottom: 0.5rem; text-transform: uppercase;">Delivery Objective</h3>
@@ -970,7 +1062,7 @@
     </div>
 
     <div style="margin-bottom: 2rem; padding: 1rem; background-color: #f3f4f6; border-radius: 0.5rem;">
-      <h3 style="font-size: 12px; font-weight: bold; color: #6b7280; margin-bottom: 0.5rem; text-transform: uppercase;">Special Production Notes</h3>
+      <h3 style="font-size: 12px; font-weight: bold; color: #6b7280; margin-bottom: 0.5rem; text-transform: uppercase;">Special Production Notes & Digital Proof Sign-Off</h3>
       <p id="printNotes" style="font-size: 14px; font-style: italic;">No special notes provided.</p>
     </div>
     
@@ -985,6 +1077,7 @@
         id: "VirtuePrint-2026-8818",
         customerName: "Nikol Ivanova",
         customerEmail: "nikol@example.com",
+        customerAddress: "1000 Wilshire Blvd, Los Angeles, CA 90017",
         wishDate: "2026-09-10",
         garment: "Independent Trading Company Heavy Hoodie",
         color: "Navy",
@@ -993,6 +1086,7 @@
         sizes: { Small: 5, Medium: 15, Large: 20, ExtraLarge: 8, DoubleExtraLarge: 2 },
         price: "$1,313.25",
         status: "QUEUED",
+        proofApproved: true,
         notes: "Center chest print, 3 inches below collar. Pantone Matching System 286 Blue ink.",
         artworkName: "NavyHoodie_Design.png",
         artworkData: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><circle cx='100' cy='100' r='80' fill='%232563eb'/></svg>"
@@ -1001,6 +1095,7 @@
         id: "VirtuePrint-2026-8819",
         customerName: "Valentin Rizov",
         customerEmail: "valentin@example.com",
+        customerAddress: "400 S Hope St, Los Angeles, CA 90071",
         wishDate: "2026-09-15",
         garment: "Customer Provided Blanks",
         color: "White",
@@ -1009,6 +1104,7 @@
         sizes: { Small: 25, Medium: 50, Large: 50, ExtraLarge: 20, DoubleExtraLarge: 5 },
         price: "$405.15",
         status: "IN_PRODUCTION",
+        proofApproved: true,
         notes: "Customer shipping custom garments directly to the shop floor.",
         artworkName: "WhiteShirt_Front.png",
         artworkData: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><rect width='200' height='200' fill='%2310b981'/></svg>"
@@ -1017,6 +1113,7 @@
         id: "VirtuePrint-2026-8817",
         customerName: "Zlatin",
         customerEmail: "zlatin@example.com",
+        customerAddress: "700 W 7th St, Los Angeles, CA 90017",
         wishDate: "2026-09-05",
         garment: "Shaka Wear 7.5 ounce Heavyweight Maximum Heavy Shirt",
         color: "Black",
@@ -1025,6 +1122,7 @@
         sizes: { Small: 10, Medium: 40, Large: 30, ExtraLarge: 15, DoubleExtraLarge: 5 },
         price: "$1,023.83",
         status: "PRODUCED",
+        proofApproved: true,
         notes: "Standard placement.",
         artworkName: "BlackShirt_Design.png",
         artworkData: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><rect width='200' height='200' fill='%23000000'/></svg>"
@@ -1032,9 +1130,9 @@
     ];
 
     const DEFAULT_INVENTORY = [
-      { style: "Shaka Wear 7.5 ounce Heavyweight Maximum Heavy Shirt (Black)", onHand: 1500 },
-      { style: "Independent Trading Company Heavy Hoodie (Navy)", onHand: 800 },
-      { style: "Bella Canvas 3001 Unisex Jersey Shirt (White)", onHand: 2500 }
+      { style: "Shaka Wear 7.5 ounce Heavyweight Maximum Heavy Shirt (Black)", bin: "Rack A-01", onHand: 1500 },
+      { style: "Independent Trading Company Heavy Hoodie (Navy)", bin: "Rack B-14", onHand: 800 },
+      { style: "Bella Canvas 3001 Unisex Jersey Shirt (White)", bin: "Rack C-03", onHand: 2500 }
     ];
 
     const DEFAULT_NOTIFICATIONS = [
@@ -1290,12 +1388,14 @@
       document.getElementById('moduleBacklog').classList.add('hidden');
       document.getElementById('moduleTelemetry').classList.add('hidden');
       document.getElementById('moduleWMS').classList.add('hidden');
+      document.getElementById('moduleCRM').classList.add('hidden');
 
       document.getElementById('nav-dashboard').classList.remove('active');
       document.getElementById('nav-intake').classList.remove('active');
       document.getElementById('nav-backlog').classList.remove('active');
       document.getElementById('nav-telemetry').classList.remove('active');
       document.getElementById('nav-wms').classList.remove('active');
+      document.getElementById('nav-crm').classList.remove('active');
 
       let pageTitle = "Dashboard";
 
@@ -1324,6 +1424,11 @@
         document.getElementById('nav-wms').classList.add('active');
         pageTitle = "Warehouse Management and Shipping System";
         renderWarehouseModule();
+      } else if (tabName === 'crm') {
+        document.getElementById('moduleCRM').classList.remove('hidden');
+        document.getElementById('nav-crm').classList.add('active');
+        pageTitle = "Customer Relationship Management";
+        renderCRMModule();
       }
 
       document.getElementById('pageTitle').innerText = pageTitle;
@@ -1402,6 +1507,7 @@
     function resetIntakeForm() {
       document.getElementById('customerName').value = "";
       document.getElementById('customerEmail').value = "";
+      document.getElementById('customerAddress').value = "";
       clearIntakeCalendarDate();
       document.getElementById('customerGarmentDetails').value = "";
       document.getElementById('artworkNotes').value = "";
@@ -1449,11 +1555,12 @@
     function submitOrderToBacklog() {
       const name = document.getElementById('customerName').value;
       const email = document.getElementById('customerEmail').value;
+      const address = document.getElementById('customerAddress').value;
       const wishDate = document.getElementById('wishDeliveryDate').value;
       const pantoneVal = document.getElementById('pantoneColor').value;
 
-      if (!name || !email || !wishDate || !currentArtworkDataUrl) {
-        alert("Please fill out all mandatory fields including Customer Name, Customer Email, Wish Delivery Date, and Artwork Upload before submitting.");
+      if (!name || !email || !address || !wishDate || !currentArtworkDataUrl) {
+        alert("Please fill out all mandatory fields including Customer Name, Customer Email, Shipping Address, Wish Delivery Date, and Artwork Upload before submitting.");
         return;
       }
 
@@ -1478,6 +1585,7 @@
         id: currentOrderId,
         customerName: name,
         customerEmail: email,
+        customerAddress: address,
         wishDate: wishDate,
         garment: garmentName,
         color: currentColorType === 'dark' ? 'Black' : 'White',
@@ -1486,6 +1594,7 @@
         sizes: { Small: smallAmount, Medium: mediumAmount, Large: largeAmount, ExtraLarge: extraLargeAmount, DoubleExtraLarge: doubleExtraLargeAmount },
         price: currentCalculatedTotal,
         status: "PENDING",
+        proofApproved: false,
         notes: notes,
         artworkName: document.getElementById('fileLabel').innerText,
         artworkData: currentArtworkDataUrl || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><rect width='200' height='200' fill='%232563eb'/></svg>"
@@ -1536,12 +1645,17 @@
         else if (o.status === 'PRODUCED') statusBadge = `<span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 rounded-md font-medium text-xs">PRODUCED</span>`;
         else if (o.status === 'REJECTED') statusBadge = `<span class="px-2.5 py-1 bg-red-500/10 text-red-500 border border-red-500/20 rounded-md font-medium text-xs">REJECTED</span>`;
 
+        let proofBadge = o.proofApproved ? 
+          `<span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded text-[10px] font-semibold">SIGNED & APPROVED</span>` : 
+          `<span class="px-2 py-0.5 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded text-[10px] font-semibold">AWAITING SIGN-OFF</span>`;
+
         const row = `
           <tr class="hover:bg-zinc-800/50 transition-colors">
             <td class="px-4 py-4 font-mono font-medium text-blue-400">${o.id}</td>
             <td class="px-4 py-4">
               <div class="font-medium text-zinc-200">${o.customerName}</div>
               <div class="text-[11px] text-zinc-500 mt-0.5">${o.customerEmail}</div>
+              <div class="text-[10px] font-mono text-zinc-400 mt-0.5">Addr: ${o.customerAddress || 'Not Provided'}</div>
             </td>
             <td class="px-4 py-4">
               <div class="font-medium text-zinc-200">${o.garment}</div>
@@ -1551,8 +1665,8 @@
                 ${o.artworkName}
               </div>
             </td>
+            <td class="px-4 py-4 text-center">${proofBadge}</td>
             <td class="px-4 py-4 text-center font-mono text-amber-400 text-xs">${o.wishDate}</td>
-            <td class="px-4 py-4 text-center font-medium text-zinc-200">${o.quantity} Pieces</td>
             <td class="px-4 py-4 text-center font-mono text-zinc-300">${o.price}</td>
             <td class="px-4 py-4 text-center">${statusBadge}</td>
             <td class="px-4 py-4 text-right">
@@ -1573,9 +1687,20 @@
       document.getElementById('modalOrderId').innerText = selectedModalOrder.id;
       document.getElementById('modalCustomerName').innerText = selectedModalOrder.customerName;
       document.getElementById('modalCustomerEmail').innerText = selectedModalOrder.customerEmail;
+      document.getElementById('modalCustomerAddress').innerText = "Address: " + (selectedModalOrder.customerAddress || 'Not Provided');
       document.getElementById('modalGarmentName').innerText = selectedModalOrder.garment;
       document.getElementById('modalPantone').innerText = "Pantone Match: " + (selectedModalOrder.pantone || 'PMS 286 C (Royal Blue)');
       document.getElementById('modalWishDate').innerText = "Wish Delivery Date: " + selectedModalOrder.wishDate;
+      document.getElementById('modalProofLinkText').innerText = "https://proof.virtueprintla.com/review?token=" + selectedModalOrder.id;
+
+      const proofBadge = document.getElementById('modalProofBadge');
+      if (selectedModalOrder.proofApproved) {
+        proofBadge.className = "px-2.5 py-0.5 rounded text-[11px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30";
+        proofBadge.innerText = "CLIENT SIGNED & APPROVED";
+      } else {
+        proofBadge.className = "px-2.5 py-0.5 rounded text-[11px] font-semibold bg-amber-500/10 text-amber-500 border border-amber-500/30";
+        proofBadge.innerText = "PENDING CLIENT SIGN-OFF";
+      }
       
       const notesDisplay = document.getElementById('modalArtworkNotes');
       const editInput = document.getElementById('editArtworkNotesInput');
@@ -1619,9 +1744,13 @@
       if (selectedModalOrder.status === 'PENDING') {
         statusBadge.className = "px-3 py-1 text-xs font-semibold rounded-md bg-amber-500/10 text-amber-500 border border-amber-500/20";
         statusBadge.innerText = "PENDING APPROVAL";
+        
+        const approveButtonDisabled = !selectedModalOrder.proofApproved ? "disabled" : "";
+        const approveButtonTooltip = !selectedModalOrder.proofApproved ? "title='Client digital proof sign-off required before queue approval'" : "";
+
         actionButtons.innerHTML = `
           <button onclick="updateOrderStatus('${selectedModalOrder.id}', 'REJECTED')" class="px-4 py-2 bg-zinc-900 border border-red-500/30 text-red-500 hover:bg-red-500/10 font-medium text-sm rounded-md transition-all">Reject Order</button>
-          <button onclick="updateOrderStatus('${selectedModalOrder.id}', 'QUEUED')" class="btn-pro-primary text-sm rounded-md transition-all">Approve to Production Queue</button>
+          <button ${approveButtonDisabled} ${approveButtonTooltip} onclick="updateOrderStatus('${selectedModalOrder.id}', 'QUEUED')" class="btn-pro-primary text-sm rounded-md transition-all">Approve to Production Queue</button>
         `;
       } else {
         if(selectedModalOrder.status === 'QUEUED') {
@@ -1638,6 +1767,22 @@
       }
 
       document.getElementById('orderDetailsModal').classList.remove('hidden');
+    }
+
+    function copyProofLink() {
+      if(!selectedModalOrder) return;
+      const text = "https://proof.virtueprintla.com/review?token=" + selectedModalOrder.id;
+      navigator.clipboard.writeText(text);
+      alert("Secure Client Proof Portal link copied to clipboard.");
+    }
+
+    function simulateClientSignOff() {
+      if(!selectedModalOrder) return;
+      selectedModalOrder.proofApproved = true;
+      saveSystemData();
+      openOrderModal(selectedModalOrder.id);
+      applyBacklogFilters();
+      alert("Client digital proof sign-off verified successfully.");
     }
 
     function downloadArtworkFile() {
@@ -1665,12 +1810,13 @@
       document.getElementById('printDate').innerText = new Date().toLocaleDateString();
       document.getElementById('printCustomerName').innerText = selectedModalOrder.customerName;
       document.getElementById('printCustomerEmail').innerText = selectedModalOrder.customerEmail;
+      document.getElementById('printCustomerAddress').innerText = "Address: " + (selectedModalOrder.customerAddress || 'Not Provided');
       document.getElementById('printWishDate').innerText = selectedModalOrder.wishDate;
       document.getElementById('printGarment').innerText = selectedModalOrder.garment;
       document.getElementById('printColorPantone').innerText = selectedModalOrder.color + " - " + (selectedModalOrder.pantone || 'PMS 286 C');
       document.getElementById('printQty').innerText = selectedModalOrder.quantity;
       document.getElementById('printPrice').innerText = selectedModalOrder.price;
-      document.getElementById('printNotes').innerText = selectedModalOrder.notes || "No special notes provided.";
+      document.getElementById('printNotes').innerText = (selectedModalOrder.notes || "No special notes provided.") + (selectedModalOrder.proofApproved ? " [Client Digital Proof Verified & Signed]" : "");
       
       window.print();
     }
@@ -1682,6 +1828,12 @@
     function updateOrderStatus(orderId, newStatus) {
       const order = ordersBacklog.find(o => o.id === orderId);
       if (!order) return;
+      
+      if(newStatus === 'QUEUED' && !order.proofApproved) {
+        alert("Cannot approve to production queue without client digital proof approval sign-off.");
+        return;
+      }
+
       order.status = newStatus;
       
       logNotification(order.customerEmail, order.id, newStatus);
@@ -1720,7 +1872,7 @@
         renderWarehouseModule();
         renderProductionFloor();
         renderNotificationLogs();
-        alert("Success: Handheld scanner registered " + order.id + ". Item marked as packed and dispatched.");
+        alert("Success: Handheld scanner registered " + order.id + ". Item marked as packed and dispatched to address: " + order.customerAddress);
       }
       codeInput.value = "";
     }
@@ -1742,11 +1894,11 @@
         if(o.status !== 'REJECTED') {
           const rev = parseFloat(o.price.replace('$', '').replace(',', '')) || 0;
           totalRevenue += rev;
-          totalEstCost += rev * 0.58; // estimating 58 percent baseline cost
+          totalEstCost += rev * 0.58; 
         }
       });
 
-      const totalActCost = totalEstCost * 0.96; // 4 percent variance savings from optimized waste
+      const totalActCost = totalEstCost * 0.96; 
       const varianceSavings = totalEstCost - totalActCost;
 
       document.getElementById('dashTotalRevenue').innerText = '$' + totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -1858,6 +2010,33 @@
       }
     }
 
+    function openBinTransferModal() {
+      document.getElementById('binTransferModal').classList.remove('hidden');
+    }
+
+    function closeBinTransferModal() {
+      document.getElementById('binTransferModal').classList.add('hidden');
+    }
+
+    function executeBinTransfer() {
+      const garmentQuery = document.getElementById('transferGarmentSelect').value;
+      const from = document.getElementById('fromBin').value;
+      const to = document.getElementById('toBin').value;
+      const qty = parseInt(document.getElementById('transferQty').value) || 0;
+
+      const item = inventoryBlanks.find(b => b.style.includes(garmentQuery));
+      if(!item) {
+        alert("Inventory item not found.");
+        return;
+      }
+
+      item.bin = to;
+      saveSystemData();
+      renderWarehouseModule();
+      closeBinTransferModal();
+      alert("Success: Transferred " + qty + " units of " + garmentQuery + " from bin " + from + " to bin " + to + ".");
+    }
+
     function renderWarehouseModule() {
       const blanksTable = document.getElementById('blanksInventoryTable');
       const finishedTable = document.getElementById('finishedGoodsTable');
@@ -1878,6 +2057,7 @@
         blanksTable.innerHTML += `
           <tr class="${rowClass}">
             <td class="px-4 py-4 font-medium text-zinc-200">${blank.style} ${alertLabel}</td>
+            <td class="px-4 py-4 text-center font-mono text-blue-400 font-semibold">${blank.bin}</td>
             <td class="px-4 py-4 text-center font-mono text-zinc-300">${blank.onHand}</td>
             <td class="px-4 py-4 text-center font-mono text-blue-400">${allocatedCount}</td>
             <td class="px-4 py-4 text-center font-mono font-bold text-white">${available}</td>
@@ -1904,6 +2084,7 @@
               <td class="px-4 py-4">
                 <div class="font-medium text-zinc-200">${o.customerName}</div>
                 <div class="text-[11px] text-zinc-500 mt-0.5">${o.customerEmail}</div>
+                <div class="text-[10px] font-mono text-amber-400 mt-0.5">Ship To: ${o.customerAddress}</div>
               </td>
               <td class="px-4 py-4 text-center font-mono text-amber-400 text-xs">${o.wishDate}</td>
               <td class="px-4 py-4 text-center font-medium text-emerald-400">${o.quantity} Pieces</td>
@@ -1915,6 +2096,55 @@
           `;
         });
       }
+    }
+
+    function renderCRMModule() {
+      const crmTable = document.getElementById('crmTableBody');
+      crmTable.innerHTML = "";
+
+      // Group orders by customer email
+      const clientMap = {};
+      ordersBacklog.forEach(o => {
+        if(!clientMap[o.customerEmail]) {
+          clientMap[o.customerEmail] = {
+            name: o.customerName,
+            email: o.customerEmail,
+            address: o.customerAddress,
+            ordersCount: 0,
+            lifetimeRevenue: 0,
+            orders: []
+          };
+        }
+        clientMap[o.customerEmail].ordersCount++;
+        const rev = parseFloat(o.price.replace('$', '').replace(',', '')) || 0;
+        if(o.status !== 'REJECTED') {
+          clientMap[o.customerEmail].lifetimeRevenue += rev;
+        }
+        clientMap[o.customerEmail].orders.push(o);
+      });
+
+      const clients = Object.values(clientMap);
+      if(clients.length === 0) {
+        crmTable.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-zinc-500 text-sm">No client accounts registered.</td></tr>`;
+        return;
+      }
+
+      clients.forEach(c => {
+        crmTable.innerHTML += `
+          <tr class="hover:bg-zinc-800/50 transition-colors">
+            <td class="px-4 py-4 font-medium text-zinc-200">${c.name}</td>
+            <td class="px-4 py-4">
+              <div class="text-xs text-zinc-300">${c.email}</div>
+              <div class="text-[11px] font-mono text-zinc-400 mt-0.5">Addr: ${c.address || 'Not Provided'}</div>
+            </td>
+            <td class="px-4 py-4 text-center font-mono text-zinc-300">${c.ordersCount} Orders</td>
+            <td class="px-4 py-4 text-center font-mono text-emerald-400 font-semibold">$${c.lifetimeRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+            <td class="px-4 py-4 text-right">
+              <button onclick="switchTab('backlog')" class="btn-pro-secondary text-xs">View Client Backlog</button>
+            </td>
+          </tr>
+        `;
+      });
     }
 
     function processBarcodeScanForId(orderId) {
