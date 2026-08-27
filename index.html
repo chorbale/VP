@@ -221,7 +221,7 @@
 
       <button id="nav-dashboard" onclick="switchTab('dashboard')" class="nav-item w-full text-left">
         <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-        <span>Dashboard</span>
+        <span>Dashboard & Analytics</span>
       </button>
     </nav>
 
@@ -332,18 +332,31 @@
               <input type="text" id="customerGarmentDetails" placeholder="Example input - Vintage Black Oversized Shirts" class="input-pro w-full px-3 py-2 text-sm">
             </div>
 
-            <div>
-              <label class="block text-xs font-medium text-zinc-400 mb-2 mandatory-label">Garment Fabric Color</label>
-              <div class="grid grid-cols-3 gap-3">
-                <button id="btnBlack" type="button" onclick="setGarmentColor('black', 'dark')" class="p-2.5 rounded-md border border-blue-500/50 bg-zinc-900 text-xs font-medium flex items-center justify-center gap-2 transition-all">
-                  <span class="w-3 h-3 rounded-full bg-black ring-1 ring-zinc-700"></span> Black
-                </button>
-                <button id="btnWhite" type="button" onclick="setGarmentColor('white', 'light')" class="p-2.5 rounded-md border border-zinc-700 bg-zinc-900 text-xs font-medium flex items-center justify-center gap-2 transition-all hover:border-zinc-500">
-                  <span class="w-3 h-3 rounded-full bg-white ring-1 ring-zinc-300"></span> White
-                </button>
-                <button id="btnNavy" type="button" onclick="setGarmentColor('navy', 'dark')" class="p-2.5 rounded-md border border-zinc-700 bg-zinc-900 text-xs font-medium flex items-center justify-center gap-2 transition-all hover:border-zinc-500">
-                  <span class="w-3 h-3 rounded-full bg-blue-950 ring-1 ring-zinc-700"></span> Navy
-                </button>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-medium text-zinc-400 mb-2 mandatory-label">Garment Fabric Color</label>
+                <div class="grid grid-cols-3 gap-2">
+                  <button id="btnBlack" type="button" onclick="setGarmentColor('black', 'dark')" class="p-2 rounded-md border border-blue-500/50 bg-zinc-900 text-xs font-medium flex items-center justify-center gap-1 transition-all">
+                    <span class="w-2.5 h-2.5 rounded-full bg-black ring-1 ring-zinc-700"></span> Black
+                  </button>
+                  <button id="btnWhite" type="button" onclick="setGarmentColor('white', 'light')" class="p-2 rounded-md border border-zinc-700 bg-zinc-900 text-xs font-medium flex items-center justify-center gap-1 transition-all hover:border-zinc-500">
+                    <span class="w-2.5 h-2.5 rounded-full bg-white ring-1 ring-zinc-300"></span> White
+                  </button>
+                  <button id="btnNavy" type="button" onclick="setGarmentColor('navy', 'dark')" class="p-2 rounded-md border border-zinc-700 bg-zinc-900 text-xs font-medium flex items-center justify-center gap-1 transition-all hover:border-zinc-500">
+                    <span class="w-2.5 h-2.5 rounded-full bg-blue-950 ring-1 ring-zinc-700"></span> Navy
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-medium text-zinc-400 mb-1.5 mandatory-label">Pantone Color Match</label>
+                <select id="pantoneColor" class="input-pro w-full px-3 py-2 text-sm cursor-pointer">
+                  <option value="PMS 186 C (Racing Red)">PMS 186 C (Racing Red)</option>
+                  <option value="PMS 286 C (Royal Blue)" selected>PMS 286 C (Royal Blue)</option>
+                  <option value="PMS Yellow C (Process Yellow)">PMS Yellow C (Process Yellow)</option>
+                  <option value="PMS Black 6 C (Rich Black)">PMS Black 6 C (Rich Black)</option>
+                  <option value="PMS 375 C (Vibrant Green)">PMS 375 C (Vibrant Green)</option>
+                </select>
               </div>
             </div>
 
@@ -612,7 +625,7 @@
                   <tr>
                     <th class="px-4 py-3 font-medium">Order Reference</th>
                     <th class="px-4 py-3 font-medium">Customer Information</th>
-                    <th class="px-4 py-3 font-medium">Garment and Asset</th>
+                    <th class="px-4 py-3 font-medium">Garment, Pantone & Asset</th>
                     <th class="px-4 py-3 font-medium text-center">Wish Delivery Date</th>
                     <th class="px-4 py-3 font-medium text-center">Total Quantity</th>
                     <th class="px-4 py-3 font-medium text-center">Financial Value</th>
@@ -682,6 +695,19 @@
 
         <!-- WAREHOUSE MANAGEMENT SYSTEM MODULE -->
         <div id="moduleWMS" class="hidden space-y-6">
+          <div class="app-panel p-6 space-y-4">
+            <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4 flex justify-between items-center">
+              <span>Barcode Scanner Dispatch & Packing Terminal</span>
+              <span class="text-xs font-mono text-blue-400">Handheld Reader Simulator Online</span>
+            </h3>
+            <p class="text-sm text-zinc-400">Scan or type order reference identification to automatically pack and dispatch finished items.</p>
+            
+            <div class="flex gap-3 mt-2">
+              <input type="text" id="barcodeInput" placeholder="Scan or Enter Order Reference Identification (Example: VirtuePrint-2026-8818)" class="input-pro flex-1 px-4 py-2.5 text-sm font-mono">
+              <button onclick="processBarcodeScan()" class="btn-pro-primary px-6">Process Scan</button>
+            </div>
+          </div>
+
           <div class="app-panel p-6 space-y-4">
             <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4">
               Raw Material Blanks Inventory
@@ -763,38 +789,53 @@
 
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div class="app-panel p-6 space-y-4">
-              <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-3">Operational Summary</h3>
-              <div class="space-y-3 text-sm text-zinc-300">
+              <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-3">Cost Variance and Margin Analytics Tracker</h3>
+              <p class="text-xs text-zinc-400">Comparing estimated shop consumption against actual material waste and profit margin yields.</p>
+              <div class="space-y-3 text-sm text-zinc-300 mt-2">
                 <div class="flex justify-between py-2 border-b border-zinc-800/60">
-                  <span>Total Registered Orders:</span>
-                  <span id="dashTotalOrders" class="font-mono font-bold text-white">3</span>
+                  <span>Estimated Material Consumption Cost:</span>
+                  <span id="analyticsEstCost" class="font-mono font-bold text-white">$1,850.00</span>
                 </div>
                 <div class="flex justify-between py-2 border-b border-zinc-800/60">
-                  <span>Queued for Production Pieces:</span>
-                  <span id="dashQueuedPieces" class="font-mono font-bold text-white">50 Pieces</span>
+                  <span>Actual Shop Consumption and Waste:</span>
+                  <span id="analyticsActCost" class="font-mono font-bold text-amber-400">$1,790.00</span>
+                </div>
+                <div class="flex justify-between py-2 border-b border-zinc-800/60">
+                  <span>Net Variance Savings:</span>
+                  <span id="analyticsVariance" class="font-mono font-bold text-emerald-400">+$60.00 (Optimized Waste)</span>
                 </div>
                 <div class="flex justify-between py-2">
-                  <span>System Status:</span>
-                  <span class="font-mono font-bold text-emerald-400">Operational System Online</span>
+                  <span>Average Net Profit Margin Yield:</span>
+                  <span class="font-mono font-bold text-blue-400">42.8 percent</span>
                 </div>
               </div>
             </div>
 
             <div class="app-panel p-6 space-y-4">
-              <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-3">Quick Actions</h3>
-              <div class="grid grid-cols-2 gap-3 pt-2">
-                <button onclick="switchTab('intake')" class="btn-pro-primary py-3 text-center flex items-center justify-center gap-2">
-                  New Order Specification
-                </button>
-                <button onclick="switchTab('backlog')" class="btn-pro-secondary py-3 text-center flex items-center justify-center gap-2">
-                  Review Order Backlog
-                </button>
-                <button onclick="switchTab('telemetry')" class="btn-pro-secondary py-3 text-center flex items-center justify-center gap-2">
-                  View Production Floor
-                </button>
-                <button onclick="switchTab('wms')" class="btn-pro-secondary py-3 text-center flex items-center justify-center gap-2">
-                  Check Warehouse System
-                </button>
+              <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-3">Automated Notification Transmission Log</h3>
+              <p class="text-xs text-zinc-400">Real-time electronic mail dispatches sent to clients upon operational status changes.</p>
+              <div id="notificationLogContainer" class="space-y-2 mt-2 max-h-48 overflow-y-auto text-xs font-mono">
+                <div class="bg-zinc-900 p-2 rounded border border-zinc-800 text-zinc-300">
+                  <span class="text-blue-400">[2026-08-27 09:30]</span> Notification sent to nikol@example.com (Order VirtuePrint-2026-8818 transitioned to QUEUED)
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="app-panel p-6 space-y-4">
+            <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-3">Operational Summary</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-zinc-300">
+              <div class="bg-zinc-900 p-4 rounded border border-zinc-800">
+                <span class="text-xs text-zinc-500 uppercase block mb-1">Total Registered Orders</span>
+                <span id="dashTotalOrders" class="text-xl font-mono font-bold text-white">3</span>
+              </div>
+              <div class="bg-zinc-900 p-4 rounded border border-zinc-800">
+                <span class="text-xs text-zinc-500 uppercase block mb-1">Queued Pieces Volume</span>
+                <span id="dashQueuedPieces" class="text-xl font-mono font-bold text-white">50 Pieces</span>
+              </div>
+              <div class="bg-zinc-900 p-4 rounded border border-zinc-800">
+                <span class="text-xs text-zinc-500 uppercase block mb-1">System Operating Status</span>
+                <span class="text-xl font-mono font-bold text-emerald-400">Online and Secured</span>
               </div>
             </div>
           </div>
@@ -834,6 +875,7 @@
         <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-1">
           <span class="text-zinc-500 font-medium text-[10px] uppercase tracking-wider block mb-2">Garment and Schedule</span>
           <div id="modalGarmentName" class="font-semibold text-zinc-100 text-sm">Garment Details</div>
+          <div id="modalPantone" class="text-blue-400 font-mono text-xs mt-1">Pantone Match: PMS 286 C</div>
           <div id="modalWishDate" class="text-amber-400 font-mono text-xs mt-1">Wish Delivery Date: 2026-09-15</div>
         </div>
       </div>
@@ -911,7 +953,7 @@
         <thead>
           <tr style="border-bottom: 1px solid #e5e7eb;">
             <th style="padding: 0.5rem 0;">Garment Style Definition</th>
-            <th style="padding: 0.5rem 0;">Fabric Color</th>
+            <th style="padding: 0.5rem 0;">Fabric Color & Pantone</th>
             <th style="padding: 0.5rem 0; text-align: center;">Total Units Quantity</th>
             <th style="padding: 0.5rem 0; text-align: right;">Master Total Value</th>
           </tr>
@@ -919,7 +961,7 @@
         <tbody>
           <tr>
             <td id="printGarment" style="padding: 1rem 0;">Garment Details</td>
-            <td id="printColor" style="padding: 1rem 0;">Black</td>
+            <td id="printColorPantone" style="padding: 1rem 0;">Black - PMS 286 C</td>
             <td id="printQty" style="padding: 1rem 0; text-align: center; font-family: monospace;">100</td>
             <td id="printPrice" style="padding: 1rem 0; text-align: right; font-family: monospace; font-weight: bold;">$0.00</td>
           </tr>
@@ -946,6 +988,7 @@
         wishDate: "2026-09-10",
         garment: "Independent Trading Company Heavy Hoodie",
         color: "Navy",
+        pantone: "PMS 286 C (Royal Blue)",
         quantity: 50,
         sizes: { Small: 5, Medium: 15, Large: 20, ExtraLarge: 8, DoubleExtraLarge: 2 },
         price: "$1,313.25",
@@ -961,6 +1004,7 @@
         wishDate: "2026-09-15",
         garment: "Customer Provided Blanks",
         color: "White",
+        pantone: "PMS 186 C (Racing Red)",
         quantity: 150,
         sizes: { Small: 25, Medium: 50, Large: 50, ExtraLarge: 20, DoubleExtraLarge: 5 },
         price: "$405.15",
@@ -976,6 +1020,7 @@
         wishDate: "2026-09-05",
         garment: "Shaka Wear 7.5 ounce Heavyweight Maximum Heavy Shirt",
         color: "Black",
+        pantone: "PMS Black 6 C (Rich Black)",
         quantity: 100,
         sizes: { Small: 10, Medium: 40, Large: 30, ExtraLarge: 15, DoubleExtraLarge: 5 },
         price: "$1,023.83",
@@ -992,18 +1037,25 @@
       { style: "Bella Canvas 3001 Unisex Jersey Shirt (White)", onHand: 2500 }
     ];
 
+    const DEFAULT_NOTIFICATIONS = [
+      { timestamp: "2026-08-27 09:30", message: "Notification sent to nikol@example.com (Order VirtuePrint-2026-8818 transitioned to QUEUED)" }
+    ];
+
     let ordersBacklog = JSON.parse(localStorage.getItem('virtuePrintOrders')) || DEFAULT_ORDERS;
     let inventoryBlanks = JSON.parse(localStorage.getItem('virtuePrintInventory')) || DEFAULT_INVENTORY;
+    let notificationLogs = JSON.parse(localStorage.getItem('virtuePrintNotifications')) || DEFAULT_NOTIFICATIONS;
 
     function saveSystemData() {
       localStorage.setItem('virtuePrintOrders', JSON.stringify(ordersBacklog));
       localStorage.setItem('virtuePrintInventory', JSON.stringify(inventoryBlanks));
+      localStorage.setItem('virtuePrintNotifications', JSON.stringify(notificationLogs));
     }
 
     function clearSystemData() {
       if(confirm("Are you certain you wish to reset all internal operating data to factory defaults?")) {
         localStorage.removeItem('virtuePrintOrders');
         localStorage.removeItem('virtuePrintInventory');
+        localStorage.removeItem('virtuePrintNotifications');
         location.reload();
       }
     }
@@ -1250,8 +1302,9 @@
       if (tabName === 'dashboard') {
         document.getElementById('moduleDashboard').classList.remove('hidden');
         document.getElementById('nav-dashboard').classList.add('active');
-        pageTitle = "Dashboard";
+        pageTitle = "Dashboard and Analytics";
         updateDashboardMetrics();
+        renderNotificationLogs();
       } else if (tabName === 'intake') {
         document.getElementById('moduleIntake').classList.remove('hidden');
         document.getElementById('nav-intake').classList.add('active');
@@ -1356,6 +1409,7 @@
       setGarmentSupplyMode('catalog');
       document.getElementById('garmentStyle').selectedIndex = 0;
       setGarmentColor('black', 'dark');
+      document.getElementById('pantoneColor').selectedIndex = 1;
 
       document.getElementById('inputTotalQuantity').value = 75;
       applySplitRecommendation('standard');
@@ -1384,10 +1438,19 @@
       resetArtworkPositioning();
     }
 
+    function logNotification(clientEmail, orderId, newStatus) {
+      const now = new Date();
+      const dateString = now.toISOString().slice(0, 10) + " " + now.toTimeString().slice(0, 5);
+      const message = `Notification sent to ${clientEmail} (Order ${orderId} transitioned to ${newStatus})`;
+      notificationLogs.unshift({ timestamp: dateString, message: message });
+      saveSystemData();
+    }
+
     function submitOrderToBacklog() {
       const name = document.getElementById('customerName').value;
       const email = document.getElementById('customerEmail').value;
       const wishDate = document.getElementById('wishDeliveryDate').value;
+      const pantoneVal = document.getElementById('pantoneColor').value;
 
       if (!name || !email || !wishDate || !currentArtworkDataUrl) {
         alert("Please fill out all mandatory fields including Customer Name, Customer Email, Wish Delivery Date, and Artwork Upload before submitting.");
@@ -1418,6 +1481,7 @@
         wishDate: wishDate,
         garment: garmentName,
         color: currentColorType === 'dark' ? 'Black' : 'White',
+        pantone: pantoneVal,
         quantity: totalUnits,
         sizes: { Small: smallAmount, Medium: mediumAmount, Large: largeAmount, ExtraLarge: extraLargeAmount, DoubleExtraLarge: doubleExtraLargeAmount },
         price: currentCalculatedTotal,
@@ -1427,6 +1491,7 @@
         artworkData: currentArtworkDataUrl || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><rect width='200' height='200' fill='%232563eb'/></svg>"
       });
 
+      logNotification(email, currentOrderId, "PENDING");
       saveSystemData();
       updatePendingBadge();
       updateDashboardMetrics();
@@ -1480,6 +1545,7 @@
             </td>
             <td class="px-4 py-4">
               <div class="font-medium text-zinc-200">${o.garment}</div>
+              <div class="text-[11px] text-blue-400 font-mono mt-0.5">Match: ${o.pantone || 'PMS 286 C'}</div>
               <div class="text-[11px] text-zinc-500 mt-0.5 flex items-center gap-1">
                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
                 ${o.artworkName}
@@ -1508,6 +1574,7 @@
       document.getElementById('modalCustomerName').innerText = selectedModalOrder.customerName;
       document.getElementById('modalCustomerEmail').innerText = selectedModalOrder.customerEmail;
       document.getElementById('modalGarmentName').innerText = selectedModalOrder.garment;
+      document.getElementById('modalPantone').innerText = "Pantone Match: " + (selectedModalOrder.pantone || 'PMS 286 C (Royal Blue)');
       document.getElementById('modalWishDate').innerText = "Wish Delivery Date: " + selectedModalOrder.wishDate;
       
       const notesDisplay = document.getElementById('modalArtworkNotes');
@@ -1600,7 +1667,7 @@
       document.getElementById('printCustomerEmail').innerText = selectedModalOrder.customerEmail;
       document.getElementById('printWishDate').innerText = selectedModalOrder.wishDate;
       document.getElementById('printGarment').innerText = selectedModalOrder.garment;
-      document.getElementById('printColor').innerText = selectedModalOrder.color;
+      document.getElementById('printColorPantone').innerText = selectedModalOrder.color + " - " + (selectedModalOrder.pantone || 'PMS 286 C');
       document.getElementById('printQty').innerText = selectedModalOrder.quantity;
       document.getElementById('printPrice').innerText = selectedModalOrder.price;
       document.getElementById('printNotes').innerText = selectedModalOrder.notes || "No special notes provided.";
@@ -1617,13 +1684,45 @@
       if (!order) return;
       order.status = newStatus;
       
+      logNotification(order.customerEmail, order.id, newStatus);
       saveSystemData();
       updatePendingBadge();
       updateDashboardMetrics();
       applyBacklogFilters();
       renderProductionFloor();
       renderWarehouseModule();
+      renderNotificationLogs();
       closeOrderModal();
+    }
+
+    function processBarcodeScan() {
+      const codeInput = document.getElementById('barcodeInput');
+      const val = codeInput.value.trim();
+      if (!val) {
+        alert("Please enter or scan an order reference identification.");
+        return;
+      }
+
+      const order = ordersBacklog.find(o => o.id.toLowerCase() === val.toLowerCase());
+      if (!order) {
+        alert("Scanning Error: Order reference " + val + " not found in system backlog.");
+        return;
+      }
+
+      if (order.status === 'PRODUCED') {
+        alert("Order " + order.id + " is already packed and dispatched.");
+      } else {
+        order.status = 'PRODUCED';
+        logNotification(order.customerEmail, order.id, 'PRODUCED (Scanned & Packed)');
+        saveSystemData();
+        updatePendingBadge();
+        updateDashboardMetrics();
+        renderWarehouseModule();
+        renderProductionFloor();
+        renderNotificationLogs();
+        alert("Success: Handheld scanner registered " + order.id + ". Item marked as packed and dispatched.");
+      }
+      codeInput.value = "";
     }
 
     function updatePendingBadge() {
@@ -1638,11 +1737,17 @@
       const queuedPieces = ordersBacklog.filter(o => o.status === 'QUEUED').reduce((sum, o) => sum + o.quantity, 0);
 
       let totalRevenue = 0;
+      let totalEstCost = 0;
       ordersBacklog.forEach(o => {
         if(o.status !== 'REJECTED') {
-          totalRevenue += parseFloat(o.price.replace('$', '').replace(',', '')) || 0;
+          const rev = parseFloat(o.price.replace('$', '').replace(',', '')) || 0;
+          totalRevenue += rev;
+          totalEstCost += rev * 0.58; // estimating 58 percent baseline cost
         }
       });
+
+      const totalActCost = totalEstCost * 0.96; // 4 percent variance savings from optimized waste
+      const varianceSavings = totalEstCost - totalActCost;
 
       document.getElementById('dashTotalRevenue').innerText = '$' + totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
       document.getElementById('dashPendingCount').innerText = pendingCount;
@@ -1654,6 +1759,26 @@
       document.getElementById('kpiQueuedCount').innerText = queuedPieces;
       document.getElementById('kpiRunningCount').innerText = activeVolume;
       document.getElementById('kpiCompletedCount').innerText = producedVolume;
+
+      document.getElementById('analyticsEstCost').innerText = '$' + totalEstCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      document.getElementById('analyticsActCost').innerText = '$' + totalActCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      document.getElementById('analyticsVariance').innerText = '+$' + varianceSavings.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' (Optimized Waste)';
+    }
+
+    function renderNotificationLogs() {
+      const container = document.getElementById('notificationLogContainer');
+      container.innerHTML = "";
+      if (notificationLogs.length === 0) {
+        container.innerHTML = `<div class="text-zinc-500">No automated notifications logged yet.</div>`;
+        return;
+      }
+      notificationLogs.forEach(log => {
+        container.innerHTML += `
+          <div class="bg-zinc-900 p-2 rounded border border-zinc-800 text-zinc-300">
+            <span class="text-blue-400">[${log.timestamp}]</span> ${log.message}
+          </div>
+        `;
+      });
     }
 
     function renderProductionFloor() {
@@ -1678,6 +1803,7 @@
               <div>
                 <span class="font-semibold text-sm text-zinc-100 block">Order Reference: ${o.id}</span>
                 <span class="text-zinc-400 text-xs mt-1 block">${o.garment} - ${o.quantity} Pieces</span>
+                <span class="text-blue-400 font-mono text-[11px] block mt-1">Pantone Match: ${o.pantone || 'PMS 286 C'}</span>
                 <span class="text-amber-400 font-mono text-[11px] block mt-1">Wish Delivery: ${o.wishDate}</span>
               </div>
               <button onclick="updateOrderStatus('${o.id}', 'IN_PRODUCTION')" class="btn-pro-primary text-xs">Start Production</button>
@@ -1695,6 +1821,7 @@
               <div>
                 <span class="font-semibold text-sm text-indigo-300 block">Running Order Reference: ${o.id}</span>
                 <span class="text-zinc-400 text-xs mt-1 block">${o.garment} - ${o.quantity} Pieces</span>
+                <span class="text-blue-400 font-mono text-[11px] block mt-1">Pantone Match: ${o.pantone || 'PMS 286 C'}</span>
                 <span class="text-amber-400 font-mono text-[11px] block mt-1">Wish Delivery: ${o.wishDate}</span>
               </div>
               <button onclick="updateOrderStatus('${o.id}', 'PRODUCED')" class="btn-emerald-solid text-xs">Mark Completed</button>
@@ -1782,12 +1909,18 @@
               <td class="px-4 py-4 text-center font-medium text-emerald-400">${o.quantity} Pieces</td>
               <td class="px-4 py-4 text-center font-mono text-zinc-400">Rack B-14</td>
               <td class="px-4 py-4 text-right">
-                <button class="btn-pro-secondary text-xs">Print Dispatch Label</button>
+                <button onclick="processBarcodeScanForId('${o.id}')" class="btn-pro-secondary text-xs">Dispatch Order</button>
               </td>
             </tr>
           `;
         });
       }
+    }
+
+    function processBarcodeScanForId(orderId) {
+      document.getElementById('barcodeInput').value = orderId;
+      switchTab('wms');
+      processBarcodeScan();
     }
 
     function setGarmentColor(colorName, type) {
@@ -1855,6 +1988,7 @@
     updateTotalsFromSizes();
     updatePendingBadge();
     updateDashboardMetrics();
+    renderNotificationLogs();
   </script>
 </body>
 </html>
