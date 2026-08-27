@@ -325,24 +325,24 @@
 
               <div class="bg-zinc-900 p-3 rounded-md border border-zinc-800">
                 <div class="grid grid-cols-5 gap-2">
-                  <div class="text-center">
-                    <span class="block text-[10px] font-medium text-zinc-400 mb-1">Small</span>
+                  <div class="text-center flex flex-col justify-between">
+                    <span class="block text-[10px] font-medium text-zinc-400 mb-1 leading-tight">Small</span>
                     <input type="number" id="inputS" value="10" min="0" oninput="updateTotalsFromSizes()" class="input-pro w-full px-2 py-1.5 text-xs font-mono text-center">
                   </div>
-                  <div class="text-center">
-                    <span class="block text-[10px] font-medium text-zinc-400 mb-1">Medium</span>
+                  <div class="text-center flex flex-col justify-between">
+                    <span class="block text-[10px] font-medium text-zinc-400 mb-1 leading-tight">Medium</span>
                     <input type="number" id="inputM" value="25" min="0" oninput="updateTotalsFromSizes()" class="input-pro w-full px-2 py-1.5 text-xs font-mono text-center">
                   </div>
-                  <div class="text-center">
-                    <span class="block text-[10px] font-medium text-zinc-400 mb-1">Large</span>
+                  <div class="text-center flex flex-col justify-between">
+                    <span class="block text-[10px] font-medium text-zinc-400 mb-1 leading-tight">Large</span>
                     <input type="number" id="inputL" value="25" min="0" oninput="updateTotalsFromSizes()" class="input-pro w-full px-2 py-1.5 text-xs font-mono text-center">
                   </div>
-                  <div class="text-center">
-                    <span class="block text-[10px] font-medium text-zinc-400 mb-1">Extra Large</span>
+                  <div class="text-center flex flex-col justify-between">
+                    <span class="block text-[10px] font-medium text-zinc-400 mb-1 leading-tight">Extra Large</span>
                     <input type="number" id="inputXL" value="10" min="0" oninput="updateTotalsFromSizes()" class="input-pro w-full px-2 py-1.5 text-xs font-mono text-center">
                   </div>
-                  <div class="text-center">
-                    <span class="block text-[10px] font-medium text-zinc-400 mb-1">Double Extra Large</span>
+                  <div class="text-center flex flex-col justify-between">
+                    <span class="block text-[10px] font-medium text-zinc-400 mb-1 leading-tight">Double Extra Large</span>
                     <input type="number" id="input2XL" value="5" min="0" oninput="updateTotalsFromSizes()" class="input-pro w-full px-2 py-1.5 text-xs font-mono text-center">
                   </div>
                 </div>
@@ -1270,7 +1270,6 @@
 
       let filtered = ordersBacklog.filter(o => {
         const matchesStatus = (currentBacklogStatusFilter === 'ALL' || o.status === currentBacklogStatusFilter);
-        // Updated to show all orders up to and including the selected date
         const matchesDate = (!selectedCalendarDate || o.wishDate <= selectedCalendarDate);
         return matchesStatus && matchesDate;
       });
