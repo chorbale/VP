@@ -60,6 +60,27 @@
       border: 1px solid rgba(59, 130, 246, 0.2);
     }
 
+    .sub-tab-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background-color: #18181b;
+      border: 1px solid #27272a;
+      color: #a1a1aa;
+    }
+    .sub-tab-btn:hover {
+      background-color: #27272a;
+      color: #f4f4f5;
+    }
+    .sub-tab-btn.active {
+      background-color: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border-color: rgba(59, 130, 246, 0.4);
+    }
+
     .btn-pro-primary {
       background-color: #2563eb;
       color: white;
@@ -703,67 +724,83 @@
           </div>
         </div>
 
-        <!-- WAREHOUSE MANAGEMENT SYSTEM MODULE -->
+        <!-- WAREHOUSE MANAGEMENT SYSTEM MODULE WITH SUB-TABS -->
         <div id="moduleWMS" class="hidden space-y-6">
-          <div class="app-panel p-6 space-y-4">
-            <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4 flex justify-between items-center">
-              <span>Barcode Scanner Dispatch & Packing Terminal</span>
-              <span class="text-xs font-mono text-blue-400">Handheld Reader Simulator Online</span>
-            </h3>
-            <p class="text-sm text-zinc-400">Scan or type order reference identification to automatically pack and dispatch finished items.</p>
-            
-            <div class="flex gap-3 mt-2">
-              <input type="text" id="barcodeInput" placeholder="Scan or Enter Order Reference Identification (Example: VirtuePrint-2026-8818)" class="input-pro flex-1 px-4 py-2.5 text-sm font-mono">
-              <button onclick="processBarcodeScan()" class="btn-pro-primary px-6">Process Scan</button>
+          <div class="flex items-center gap-2 border-b border-zinc-800 pb-4">
+            <button id="warehouseSubTabBtnScanner" onclick="switchWarehouseSubTab('scanner')" class="sub-tab-btn active">Barcode Scanner & Packing</button>
+            <button id="warehouseSubTabBtnInventory" onclick="switchWarehouseSubTab('inventory')" class="sub-tab-btn">Material Inventory Bins</button>
+            <button id="warehouseSubTabBtnFinished" onclick="switchWarehouseSubTab('finished')" class="sub-tab-btn">Finished Goods Manifest</button>
+          </div>
+
+          <!-- WAREHOUSE SUB-TAB 1: BARCODE SCANNER -->
+          <div id="warehouseSubTabScanner" class="space-y-6">
+            <div class="app-panel p-6 space-y-4">
+              <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4 flex justify-between items-center">
+                <span>Barcode Scanner Dispatch & Packing Terminal</span>
+                <span class="text-xs font-mono text-blue-400">Handheld Reader Simulator Online</span>
+              </h3>
+              <p class="text-sm text-zinc-400">Scan or type order reference identification to automatically pack and dispatch finished items.</p>
+              
+              <div class="flex gap-3 mt-2">
+                <input type="text" id="barcodeInput" placeholder="Scan or Enter Order Reference Identification (Example: VirtuePrint-2026-8818)" class="input-pro flex-1 px-4 py-2.5 text-sm font-mono">
+                <button onclick="processBarcodeScan()" class="btn-pro-primary px-6">Process Scan</button>
+              </div>
             </div>
           </div>
 
-          <div class="app-panel p-6 space-y-4">
-            <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4 flex justify-between items-center">
-              <span>Multi-Location Inventory Transfer & Storage Bin Management</span>
-              <button onclick="openBinTransferModal()" class="btn-pro-secondary text-xs">Transfer Bin Stock</button>
-            </h3>
-            <p class="text-sm text-zinc-400">Manage storage bins and rack locations across multiple facility zones.</p>
-            <div class="overflow-x-auto rounded-lg border border-zinc-800 mt-4">
-              <table class="w-full text-left text-sm">
-                <thead class="bg-zinc-900 border-b border-zinc-800 text-zinc-400">
-                  <tr>
-                    <th class="px-4 py-3 font-medium">Garment Style Description</th>
-                    <th class="px-4 py-3 font-medium text-center">Storage Bin Location</th>
-                    <th class="px-4 py-3 font-medium text-center">Total On Hand</th>
-                    <th class="px-4 py-3 font-medium text-center">Allocated for Production</th>
-                    <th class="px-4 py-3 font-medium text-center">Available for Sale</th>
-                    <th class="px-4 py-3 font-medium text-right">Receive Supply</th>
-                  </tr>
-                </thead>
-                <tbody id="blanksInventoryTable" class="divide-y divide-zinc-800 text-zinc-200">
-                </tbody>
-              </table>
+          <!-- WAREHOUSE SUB-TAB 2: MATERIAL INVENTORY -->
+          <div id="warehouseSubTabInventory" class="hidden space-y-6">
+            <div class="app-panel p-6 space-y-4">
+              <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4 flex justify-between items-center">
+                <span>Multi-Location Inventory Transfer & Storage Bin Management</span>
+                <button onclick="openBinTransferModal()" class="btn-pro-secondary text-xs">Transfer Bin Stock</button>
+              </h3>
+              <p class="text-sm text-zinc-400">Manage storage bins and rack locations across multiple facility zones.</p>
+              <div class="overflow-x-auto rounded-lg border border-zinc-800 mt-4">
+                <table class="w-full text-left text-sm">
+                  <thead class="bg-zinc-900 border-b border-zinc-800 text-zinc-400">
+                    <tr>
+                      <th class="px-4 py-3 font-medium">Garment Style Description</th>
+                      <th class="px-4 py-3 font-medium text-center">Storage Bin Location</th>
+                      <th class="px-4 py-3 font-medium text-center">Total On Hand</th>
+                      <th class="px-4 py-3 font-medium text-center">Allocated for Production</th>
+                      <th class="px-4 py-3 font-medium text-center">Available for Sale</th>
+                      <th class="px-4 py-3 font-medium text-right">Receive Supply</th>
+                    </tr>
+                  </thead>
+                  <tbody id="blanksInventoryTable" class="divide-y divide-zinc-800 text-zinc-200">
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
 
-          <div class="app-panel p-6 space-y-4 mt-6">
-            <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4 flex justify-between items-center">
-              <span>Finished Goods Inventory & Shipping Address Manifest</span>
-            </h3>
-            <p class="text-sm text-zinc-400">Completed production runs awaiting warehouse packing and carrier dispatch.</p>
-            <div class="overflow-x-auto rounded-lg border border-zinc-800 mt-4">
-              <table class="w-full text-left text-sm">
-                <thead class="bg-zinc-900 border-b border-zinc-800 text-zinc-400">
-                  <tr>
-                    <th class="px-4 py-3 font-medium">Order Reference Identification</th>
-                    <th class="px-4 py-3 font-medium">Customer Information & Shipping Address</th>
-                    <th class="px-4 py-3 font-medium text-center">Wish Delivery Date</th>
-                    <th class="px-4 py-3 font-medium text-center">Total Pieces Produced</th>
-                    <th class="px-4 py-3 font-medium text-center">Warehouse Location</th>
-                    <th class="px-4 py-3 font-medium text-right">Shipping Action</th>
-                  </tr>
-                </thead>
-                <tbody id="finishedGoodsTable" class="divide-y divide-zinc-800 text-zinc-200">
-                </tbody>
-              </table>
+          <!-- WAREHOUSE SUB-TAB 3: FINISHED GOODS -->
+          <div id="warehouseSubTabFinished" class="hidden space-y-6">
+            <div class="app-panel p-6 space-y-4">
+              <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4 flex justify-between items-center">
+                <span>Finished Goods Inventory & Shipping Address Manifest</span>
+              </h3>
+              <p class="text-sm text-zinc-400">Completed production runs awaiting warehouse packing and carrier dispatch.</p>
+              <div class="overflow-x-auto rounded-lg border border-zinc-800 mt-4">
+                <table class="w-full text-left text-sm">
+                  <thead class="bg-zinc-900 border-b border-zinc-800 text-zinc-400">
+                    <tr>
+                      <th class="px-4 py-3 font-medium">Order Reference Identification</th>
+                      <th class="px-4 py-3 font-medium">Customer Information & Shipping Address</th>
+                      <th class="px-4 py-3 font-medium text-center">Wish Delivery Date</th>
+                      <th class="px-4 py-3 font-medium text-center">Total Pieces Produced</th>
+                      <th class="px-4 py-3 font-medium text-center">Warehouse Location</th>
+                      <th class="px-4 py-3 font-medium text-right">Shipping Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="finishedGoodsTable" class="divide-y divide-zinc-800 text-zinc-200">
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
+
         </div>
 
         <!-- CUSTOMER RELATIONSHIP MANAGEMENT MODULE -->
@@ -1423,7 +1460,7 @@
         document.getElementById('moduleWMS').classList.remove('hidden');
         document.getElementById('nav-wms').classList.add('active');
         pageTitle = "Warehouse Management and Shipping System";
-        renderWarehouseModule();
+        switchWarehouseSubTab('scanner');
       } else if (tabName === 'crm') {
         document.getElementById('moduleCRM').classList.remove('hidden');
         document.getElementById('nav-crm').classList.add('active');
@@ -1432,6 +1469,29 @@
       }
 
       document.getElementById('pageTitle').innerText = pageTitle;
+    }
+
+    function switchWarehouseSubTab(subTabName) {
+      document.getElementById('warehouseSubTabScanner').classList.add('hidden');
+      document.getElementById('warehouseSubTabInventory').classList.add('hidden');
+      document.getElementById('warehouseSubTabFinished').classList.add('hidden');
+
+      document.getElementById('warehouseSubTabBtnScanner').classList.remove('active');
+      document.getElementById('warehouseSubTabBtnInventory').classList.remove('active');
+      document.getElementById('warehouseSubTabBtnFinished').classList.remove('active');
+
+      if (subTabName === 'scanner') {
+        document.getElementById('warehouseSubTabScanner').classList.remove('hidden');
+        document.getElementById('warehouseSubTabBtnScanner').classList.add('active');
+      } else if (subTabName === 'inventory') {
+        document.getElementById('warehouseSubTabInventory').classList.remove('hidden');
+        document.getElementById('warehouseSubTabBtnInventory').classList.add('active');
+        renderWarehouseModule();
+      } else if (subTabName === 'finished') {
+        document.getElementById('warehouseSubTabFinished').classList.remove('hidden');
+        document.getElementById('warehouseSubTabBtnFinished').classList.add('active');
+        renderWarehouseModule();
+      }
     }
 
     function setGarmentSupplyMode(mode) {
@@ -2102,7 +2162,6 @@
       const crmTable = document.getElementById('crmTableBody');
       crmTable.innerHTML = "";
 
-      // Group orders by customer email
       const clientMap = {};
       ordersBacklog.forEach(o => {
         if(!clientMap[o.customerEmail]) {
@@ -2150,6 +2209,7 @@
     function processBarcodeScanForId(orderId) {
       document.getElementById('barcodeInput').value = orderId;
       switchTab('wms');
+      switchWarehouseSubTab('scanner');
       processBarcodeScan();
     }
 
