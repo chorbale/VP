@@ -504,6 +504,19 @@
                 </div>
               </div>
 
+              <!-- EXTRA MULTIPLE FILES CONTAINER -->
+              <div class="border-t border-zinc-800 pt-5 space-y-3">
+                <div class="flex justify-between items-center">
+                  <div>
+                    <h4 class="text-xs font-semibold text-white">Additional Specification Files (Optional Multiple Documents)</h4>
+                    <p class="text-[11px] text-zinc-400 mt-0.5">Upload supplementary specification sheets, portable document format files, or drawing assets.</p>
+                  </div>
+                  <span class="text-[10px] font-mono text-zinc-500 bg-zinc-900 px-2 py-1 rounded border border-zinc-800">Multiple Supported</span>
+                </div>
+                <input type="file" id="extraFilesInput" multiple accept=".pdf,.ai,.eps,.svg,image/*" onchange="handleExtraFilesSelection(this)" class="input-pro w-full px-3 py-2 text-xs text-zinc-300 cursor-pointer">
+                <div id="extraFilesListContainer" class="space-y-1.5"></div>
+              </div>
+
               <div>
                 <label class="block text-xs font-medium text-zinc-400 mb-1.5">Special Artwork Specifications and Placement Notes</label>
                 <textarea id="artworkNotes" rows="3" placeholder="Specify print placement, Pantone Matching System color codes, or special curing instructions." class="input-pro w-full px-3 py-2 text-sm resize-none"></textarea>
@@ -671,7 +684,7 @@
           </div>
         </div>
 
-        <!-- LIVE PRODUCTION FLOOR MODULE -->
+        <!-- LIVE PRODUCTION FLOOR MODULE WITH OVERALL STATUS CHANGE CONTROLS -->
         <div id="moduleTelemetry" class="hidden space-y-6">
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div class="app-panel p-6 flex flex-col justify-center border-l-4 border-l-amber-500">
@@ -1036,6 +1049,14 @@
         </div>
       </div>
 
+      <!-- ADDITIONAL SPECIFICATION FILES SECTION IN MODAL -->
+      <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-3">
+        <span class="text-zinc-500 font-medium text-[10px] uppercase tracking-wider block mb-2">Additional Specification Documents</span>
+        <div id="modalExtraFilesList" class="space-y-2">
+          <span class="text-xs text-zinc-500 italic">No additional documents uploaded.</span>
+        </div>
+      </div>
+
       <div id="modalActionFooter" class="flex justify-between items-center pt-4 border-t border-zinc-800">
         <span id="modalStatusBadge" class="px-3 py-1 text-xs font-semibold rounded-md bg-amber-500/10 text-amber-500">PENDING APPROVAL</span>
         <div id="modalActionButtons" class="flex gap-3">
@@ -1044,7 +1065,7 @@
     </div>
   </div>
 
-  <!-- PRODUCTION FLOOR VIEW-ONLY DETAILS MODAL (OPTIMIZED FOR ACTIVE PRODUCTION TAB: COMMENTS, SIZING, VIEW FILE, & STATUS REVERT CONTROLS) -->
+  <!-- PRODUCTION FLOOR VIEW-ONLY DETAILS MODAL (COMMENTS, SIZING, VIEW FILE) -->
   <div id="productionOrderModal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 no-print">
     <div class="app-panel max-w-xl w-full p-6 space-y-5 relative max-h-[90vh] overflow-y-auto shadow-2xl border border-zinc-700">
       <button onclick="closeProductionOrderModal()" class="absolute top-6 right-6 text-zinc-400 hover:text-white transition-colors p-2">
@@ -1059,17 +1080,6 @@
         <p id="prodModalGarment" class="text-sm text-zinc-300 font-medium mt-1">Independent Trading Company Heavy Hoodie</p>
       </div>
 
-      <!-- STATUS REVERT / CHANGE CONTROL FOR MISCLICKS -->
-      <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-2">
-        <span class="text-zinc-400 font-medium text-[11px] uppercase tracking-wider block">Operational Status Control (Revert / Change Stage)</span>
-        <div class="grid grid-cols-4 gap-2 text-xs">
-          <button onclick="updateProdModalStatus('QUEUED')" class="btn-pro-secondary py-1.5 text-blue-400 border-blue-500/30 hover:bg-blue-500/10">Queued</button>
-          <button onclick="updateProdModalStatus('IN_PRODUCTION')" class="btn-pro-secondary py-1.5 text-indigo-400 border-indigo-500/30 hover:bg-indigo-500/10">In Production</button>
-          <button onclick="updateProdModalStatus('PRODUCED')" class="btn-pro-secondary py-1.5 text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/10">Produced</button>
-          <button onclick="updateProdModalStatus('PENDING')" class="btn-pro-secondary py-1.5 text-amber-400 border-amber-500/30 hover:bg-amber-500/10">Pending</button>
-        </div>
-      </div>
-
       <!-- 1. COMMENTS FIELD (VIEW ONLY) -->
       <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-1.5">
         <span class="text-zinc-400 font-medium text-[11px] uppercase tracking-wider block">Production Comments & Specifications</span>
@@ -1080,11 +1090,10 @@
       <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-2">
         <span class="text-zinc-400 font-medium text-[11px] uppercase tracking-wider block">Sizing Breakdown</span>
         <div id="prodModalSizeMatrix" class="grid grid-cols-5 gap-2 text-center">
-          <!-- Populated dynamically -->
         </div>
       </div>
 
-      <!-- 3. THE FILE / ARTWORK TECHPACK VIEW (VIEW FILE BUTTON INSTEAD OF DOWNLOAD) -->
+      <!-- 3. THE FILE / ARTWORK TECHPACK VIEW (VIEW FILE BUTTON) -->
       <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-3">
         <span class="text-zinc-400 font-medium text-[11px] uppercase tracking-wider block">Artwork File & Techpack Asset</span>
         <div class="flex items-center justify-between bg-zinc-950 p-3 rounded-md border border-zinc-800">
@@ -1102,6 +1111,14 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
             View File
           </button>
+        </div>
+      </div>
+
+      <!-- ADDITIONAL SPECIFICATION FILES IN PRODUCTION MODAL -->
+      <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-3">
+        <span class="text-zinc-400 font-medium text-[11px] uppercase tracking-wider block">Additional Specification Documents</span>
+        <div id="prodModalExtraFilesList" class="space-y-2">
+          <span class="text-xs text-zinc-500 italic">No additional documents uploaded.</span>
         </div>
       </div>
 
@@ -1241,7 +1258,10 @@
         proofApproved: true,
         notes: "Center chest print, 3 inches below collar. Pantone Matching System 286 Blue ink.",
         artworkName: "NavyHoodie_Design.png",
-        artworkData: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><circle cx='100' cy='100' r='80' fill='%232563eb'/></svg>"
+        artworkData: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><circle cx='100' cy='100' r='80' fill='%232563eb'/></svg>",
+        extraFiles: [
+          { name: "Hoodie_Specs_Sheet.pdf", data: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><rect width='200' height='200' fill='%233b82f6'/><text x='20' y='100' fill='white' font-size='16'>Spec Sheet PDF</text></svg>" }
+        ]
       },
       {
         id: "VirtuePrint-2026-8819",
@@ -1259,7 +1279,8 @@
         proofApproved: true,
         notes: "Customer shipping custom garments directly to the shop floor.",
         artworkName: "WhiteShirt_Front.png",
-        artworkData: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><rect width='200' height='200' fill='%2310b981'/></svg>"
+        artworkData: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><rect width='200' height='200' fill='%2310b981'/></svg>",
+        extraFiles: []
       },
       {
         id: "VirtuePrint-2026-8817",
@@ -1277,7 +1298,8 @@
         proofApproved: true,
         notes: "Standard placement.",
         artworkName: "BlackShirt_Design.png",
-        artworkData: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><rect width='200' height='200' fill='%23000000'/></svg>"
+        artworkData: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><rect width='200' height='200' fill='%23000000'/></svg>",
+        extraFiles: []
       }
     ];
 
@@ -1295,6 +1317,7 @@
     let inventoryBlanks = JSON.parse(localStorage.getItem('virtuePrintInventory')) || DEFAULT_INVENTORY;
     let notificationLogs = JSON.parse(localStorage.getItem('virtuePrintNotifications')) || DEFAULT_NOTIFICATIONS;
     let scanSessionLogs = [];
+    let currentExtraFilesSession = [];
 
     function saveSystemData() {
       localStorage.setItem('virtuePrintOrders', JSON.stringify(ordersBacklog));
@@ -1377,6 +1400,44 @@
 
       const btn = document.getElementById('submitToBacklogBtn');
       btn.disabled = false;
+    }
+
+    function handleExtraFilesSelection(inputElement) {
+      if (!inputElement.files || inputElement.files.length === 0) return;
+      const listContainer = document.getElementById('extraFilesListContainer');
+      
+      for (let i = 0; i < inputElement.files.length; i++) {
+        const file = inputElement.files[i];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          currentExtraFilesSession.push({
+            name: file.name,
+            data: e.target.result
+          });
+          renderExtraFilesListUI();
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function renderExtraFilesListUI() {
+      const container = document.getElementById('extraFilesListContainer');
+      container.innerHTML = "";
+      if (currentExtraFilesSession.length === 0) return;
+
+      currentExtraFilesSession.forEach((fileObj, idx) => {
+        container.innerHTML += `
+          <div class="flex items-center justify-between bg-zinc-900 p-2 rounded border border-zinc-800 text-xs font-mono">
+            <span class="text-zinc-200">${fileObj.name}</span>
+            <button type="button" onclick="removeExtraFile(${idx})" class="text-red-400 hover:text-red-300">Remove</button>
+          </div>
+        `;
+      });
+    }
+
+    function removeExtraFile(index) {
+      currentExtraFilesSession.splice(index, 1);
+      renderExtraFilesListUI();
     }
 
     const artworkRender = document.getElementById('artworkRender');
@@ -1706,6 +1767,9 @@
 
       document.getElementById('fileInput').value = "";
       document.getElementById('fileLabel').innerText = "Click or drag and drop to upload production artwork";
+      document.getElementById('extraFilesInput').value = "";
+      currentExtraFilesSession = [];
+      renderExtraFilesListUI();
 
       const imgElement = document.getElementById('artworkRender');
       imgElement.src = "";
@@ -1778,7 +1842,8 @@
         proofApproved: false,
         notes: notes,
         artworkName: document.getElementById('fileLabel').innerText,
-        artworkData: currentArtworkDataUrl || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><rect width='200' height='200' fill='%232563eb'/></svg>"
+        artworkData: currentArtworkDataUrl || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><rect width='200' height='200' fill='%232563eb'/></svg>",
+        extraFiles: [...currentExtraFilesSession]
       });
 
       logNotification(email, currentOrderId, "PENDING");
@@ -1910,6 +1975,22 @@
 
       document.getElementById('modalFileName').innerText = selectedModalOrder.artworkName;
 
+      // Render extra files in modal
+      const modalExtraList = document.getElementById('modalExtraFilesList');
+      modalExtraList.innerHTML = "";
+      if (selectedModalOrder.extraFiles && selectedModalOrder.extraFiles.length > 0) {
+        selectedModalOrder.extraFiles.forEach(fileObj => {
+          modalExtraList.innerHTML += `
+            <div class="flex items-center justify-between bg-zinc-950 p-2.5 rounded border border-zinc-800 text-xs font-mono">
+              <span class="text-zinc-200">${fileObj.name}</span>
+              <button onclick="viewDataUrlFile('${fileObj.name}', '${fileObj.data}')" class="btn-pro-secondary text-xs py-1 px-2.5">View File</button>
+            </div>
+          `;
+        });
+      } else {
+        modalExtraList.innerHTML = `<span class="text-xs text-zinc-500 italic">No additional documents uploaded.</span>`;
+      }
+
       const matrix = document.getElementById('modalSizeMatrix');
       matrix.innerHTML = `
         <div class="bg-zinc-800 p-2 rounded-md border border-zinc-700"><span class="text-zinc-400 text-xs block mb-1">Small</span><span class="font-medium text-zinc-200">${selectedModalOrder.sizes.Small}</span></div>
@@ -1950,7 +2031,7 @@
       document.getElementById('orderDetailsModal').classList.remove('hidden');
     }
 
-    /* PRODUCTION FLOOR VIEW-ONLY DETAILS MODAL (OPTIMIZED FOR ACTIVE PRODUCTION TAB: COMMENTS, SIZING, VIEW FILE, & STATUS REVERT CONTROLS) */
+    /* PRODUCTION FLOOR VIEW-ONLY DETAILS MODAL (COMMENTS, SIZING, VIEW FILE) */
     function openProductionOrderModal(orderId) {
       selectedProductionOrder = ordersBacklog.find(o => o.id === orderId);
       if (!selectedProductionOrder) return;
@@ -1977,6 +2058,22 @@
       // 3. THE FILE NAME
       document.getElementById('prodModalFileName').innerText = selectedProductionOrder.artworkName || "Production_Artwork.png";
 
+      // Render extra files in production modal
+      const prodModalExtraList = document.getElementById('prodModalExtraFilesList');
+      prodModalExtraList.innerHTML = "";
+      if (selectedProductionOrder.extraFiles && selectedProductionOrder.extraFiles.length > 0) {
+        selectedProductionOrder.extraFiles.forEach(fileObj => {
+          prodModalExtraList.innerHTML += `
+            <div class="flex items-center justify-between bg-zinc-950 p-2.5 rounded border border-zinc-800 text-xs font-mono">
+              <span class="text-zinc-200">${fileObj.name}</span>
+              <button onclick="viewDataUrlFile('${fileObj.name}', '${fileObj.data}')" class="btn-pro-secondary text-xs py-1 px-2.5">View File</button>
+            </div>
+          `;
+        });
+      } else {
+        prodModalExtraList.innerHTML = `<span class="text-xs text-zinc-500 italic">No additional documents uploaded.</span>`;
+      }
+
       document.getElementById('productionOrderModal').classList.remove('hidden');
     }
 
@@ -1984,9 +2081,12 @@
       document.getElementById('productionOrderModal').classList.add('hidden');
     }
 
-    function updateProdModalStatus(newStatus) {
-      if (!selectedProductionOrder) return;
-      selectedProductionOrder.status = newStatus;
+    // STATUS CHANGE / REVERT CONTROLS DIRECTLY ON THE LIVE PRODUCTION FLOOR
+    function updateOrderStatusFromFloor(orderId, newStatus) {
+      const order = ordersBacklog.find(o => o.id === orderId);
+      if (!order) return;
+      order.status = newStatus;
+      logNotification(order.customerEmail, order.id, newStatus + ' (Live Floor Status Revert/Change)');
       saveSystemData();
       updatePendingBadge();
       updateDashboardMetrics();
@@ -1994,7 +2094,6 @@
       renderProductionFloor();
       renderWarehouseModule();
       renderNotificationLogs();
-      openProductionOrderModal(selectedProductionOrder.id);
       alert("Order status successfully updated to " + newStatus + ".");
     }
 
@@ -2003,8 +2102,13 @@
         alert("No artwork file attached to this order record.");
         return;
       }
-      document.getElementById('previewModalTitle').innerText = "Artwork File Viewer - " + (selectedProductionOrder.artworkName || "Production_Artwork.png");
-      document.getElementById('previewModalImage').src = selectedProductionOrder.artworkData;
+      viewDataUrlFile(selectedProductionOrder.artworkName || "Production_Artwork.png", selectedProductionOrder.artworkData);
+    }
+
+    function viewDataUrlFile(fileName, dataUrl) {
+      document.getElementById('previewModalTitle').innerText = "File Viewer - " + fileName;
+      const img = document.getElementById('previewModalImage');
+      img.src = dataUrl;
       document.getElementById('artworkPreviewModal').classList.remove('hidden');
     }
 
@@ -2298,15 +2402,29 @@
       } else {
         queuedOrders.forEach(o => {
           queuedContainer.innerHTML += `
-            <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 flex justify-between items-center">
-              <div>
-                <span class="text-xs text-zinc-400 block mb-1">Order Reference:</span>
-                <button onclick="openProductionOrderModal('${o.id}')" class="font-mono font-medium text-blue-400 hover:underline text-left cursor-pointer focus:outline-none text-sm">${o.id} (View Details)</button>
-                <span class="text-zinc-400 text-xs mt-1 block">${o.garment} - ${o.quantity} Pieces</span>
-                <span class="text-blue-400 font-mono text-[11px] block mt-1">Pantone Match: ${o.pantone || 'PMS 286 C'}</span>
-                <span class="text-amber-400 font-mono text-[11px] block mt-1">Wish Delivery: ${o.wishDate}</span>
+            <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-3">
+              <div class="flex justify-between items-start">
+                <div>
+                  <span class="text-xs text-zinc-400 block mb-1">Order Reference:</span>
+                  <button onclick="openProductionOrderModal('${o.id}')" class="font-mono font-medium text-blue-400 hover:underline text-left cursor-pointer focus:outline-none text-sm">${o.id} (View Details)</button>
+                  <span class="text-zinc-400 text-xs mt-1 block">${o.garment} - ${o.quantity} Pieces</span>
+                  <span class="text-blue-400 font-mono text-[11px] block mt-1">Pantone Match: ${o.pantone || 'PMS 286 C'}</span>
+                  <span class="text-amber-400 font-mono text-[11px] block mt-1">Wish Delivery: ${o.wishDate}</span>
+                </div>
+                <button onclick="updateOrderStatus('${o.id}', 'IN_PRODUCTION')" class="btn-pro-primary text-xs">Start Production</button>
               </div>
-              <button onclick="updateOrderStatus('${o.id}', 'IN_PRODUCTION')" class="btn-pro-primary text-xs">Start Production</button>
+              <div class="pt-2 border-t border-zinc-800 flex items-center justify-between text-xs">
+                <span class="text-zinc-500">Revert / Change Stage:</span>
+                <div class="flex gap-2">
+                  <button onclick="updateOrderStatusFromFloor('${o.id}', 'PENDING')" class="text-amber-400 hover:underline">Pending</button>
+                  <span class="text-zinc-600">-</span>
+                  <button onclick="updateOrderStatusFromFloor('${o.id}', 'QUEUED')" class="text-blue-400 hover:underline">Queued</button>
+                  <span class="text-zinc-600">-</span>
+                  <button onclick="updateOrderStatusFromFloor('${o.id}', 'IN_PRODUCTION')" class="text-indigo-400 hover:underline">Running</button>
+                  <span class="text-zinc-600">-</span>
+                  <button onclick="updateOrderStatusFromFloor('${o.id}', 'PRODUCED')" class="text-emerald-400 hover:underline">Produced</button>
+                </div>
+              </div>
             </div>
           `;
         });
@@ -2317,15 +2435,29 @@
       } else {
         activeOrders.forEach(o => {
           activeContainer.innerHTML += `
-            <div class="bg-indigo-950/30 p-4 rounded-lg border border-indigo-500/30 flex justify-between items-center">
-              <div>
-                <span class="text-xs text-indigo-300/70 block mb-1">Running Order Reference:</span>
-                <button onclick="openProductionOrderModal('${o.id}')" class="font-mono font-medium text-blue-400 hover:underline text-left cursor-pointer focus:outline-none text-sm">${o.id} (View Details)</button>
-                <span class="text-zinc-400 text-xs mt-1 block">${o.garment} - ${o.quantity} Pieces</span>
-                <span class="text-blue-400 font-mono text-[11px] block mt-1">Pantone Match: ${o.pantone || 'PMS 286 C'}</span>
-                <span class="text-amber-400 font-mono text-[11px] block mt-1">Wish Delivery: ${o.wishDate}</span>
+            <div class="bg-indigo-950/30 p-4 rounded-lg border border-indigo-500/30 space-y-3">
+              <div class="flex justify-between items-start">
+                <div>
+                  <span class="text-xs text-indigo-300/70 block mb-1">Running Order Reference:</span>
+                  <button onclick="openProductionOrderModal('${o.id}')" class="font-mono font-medium text-blue-400 hover:underline text-left cursor-pointer focus:outline-none text-sm">${o.id} (View Details)</button>
+                  <span class="text-zinc-400 text-xs mt-1 block">${o.garment} - ${o.quantity} Pieces</span>
+                  <span class="text-blue-400 font-mono text-[11px] block mt-1">Pantone Match: ${o.pantone || 'PMS 286 C'}</span>
+                  <span class="text-amber-400 font-mono text-[11px] block mt-1">Wish Delivery: ${o.wishDate}</span>
+                </div>
+                <button onclick="updateOrderStatus('${o.id}', 'PRODUCED')" class="btn-emerald-solid text-xs">Mark Completed</button>
               </div>
-              <button onclick="updateOrderStatus('${o.id}', 'PRODUCED')" class="btn-emerald-solid text-xs">Mark Completed</button>
+              <div class="pt-2 border-t border-indigo-500/20 flex items-center justify-between text-xs">
+                <span class="text-zinc-400">Revert / Change Stage:</span>
+                <div class="flex gap-2">
+                  <button onclick="updateOrderStatusFromFloor('${o.id}', 'PENDING')" class="text-amber-400 hover:underline">Pending</button>
+                  <span class="text-zinc-600">-</span>
+                  <button onclick="updateOrderStatusFromFloor('${o.id}', 'QUEUED')" class="text-blue-400 hover:underline">Queued</button>
+                  <span class="text-zinc-600">-</span>
+                  <button onclick="updateOrderStatusFromFloor('${o.id}', 'IN_PRODUCTION')" class="text-indigo-400 hover:underline">Running</button>
+                  <span class="text-zinc-600">-</span>
+                  <button onclick="updateOrderStatusFromFloor('${o.id}', 'PRODUCED')" class="text-emerald-400 hover:underline">Produced</button>
+                </div>
+              </div>
             </div>
           `;
         });
@@ -2336,13 +2468,27 @@
       } else {
         completedOrders.slice(0, 3).forEach(o => {
           completedContainer.innerHTML += `
-            <div class="bg-zinc-900 p-3 rounded-lg border border-zinc-800 flex justify-between items-center">
-              <div>
-                <span class="text-xs text-zinc-500 block mb-0.5">Completed Reference:</span>
-                <button onclick="openProductionOrderModal('${o.id}')" class="font-mono font-medium text-blue-400 hover:underline text-left cursor-pointer focus:outline-none text-xs">${o.id} (View Details)</button>
-                <span class="text-zinc-500 text-xs mt-0.5 block">${o.quantity} Pieces successfully printed. (Wish: ${o.wishDate})</span>
+            <div class="bg-zinc-900 p-3 rounded-lg border border-zinc-800 space-y-2">
+              <div class="flex justify-between items-center">
+                <div>
+                  <span class="text-xs text-zinc-500 block mb-0.5">Completed Reference:</span>
+                  <button onclick="openProductionOrderModal('${o.id}')" class="font-mono font-medium text-blue-400 hover:underline text-left cursor-pointer focus:outline-none text-xs">${o.id} (View Details)</button>
+                  <span class="text-zinc-500 text-xs mt-0.5 block">${o.quantity} Pieces successfully printed. (Wish: ${o.wishDate})</span>
+                </div>
+                <span class="px-2 py-1 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-medium text-[10px] rounded">PRODUCED</span>
               </div>
-              <span class="px-2 py-1 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-medium text-[10px] rounded">PRODUCED</span>
+              <div class="pt-2 border-t border-zinc-800 flex items-center justify-between text-xs">
+                <span class="text-zinc-500">Revert / Change Stage:</span>
+                <div class="flex gap-2">
+                  <button onclick="updateOrderStatusFromFloor('${o.id}', 'PENDING')" class="text-amber-400 hover:underline">Pending</button>
+                  <span class="text-zinc-600">-</span>
+                  <button onclick="updateOrderStatusFromFloor('${o.id}', 'QUEUED')" class="text-blue-400 hover:underline">Queued</button>
+                  <span class="text-zinc-600">-</span>
+                  <button onclick="updateOrderStatusFromFloor('${o.id}', 'IN_PRODUCTION')" class="text-indigo-400 hover:underline">Running</button>
+                  <span class="text-zinc-600">-</span>
+                  <button onclick="updateOrderStatusFromFloor('${o.id}', 'PRODUCED')" class="text-emerald-400 hover:underline">Produced</button>
+                </div>
+              </div>
             </div>
           `;
         });
