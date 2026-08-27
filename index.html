@@ -283,7 +283,6 @@
         <div id="moduleIntake" class="grid grid-cols-1 lg:grid-cols-12 gap-6 max-w-7xl mx-auto w-full">
           
           <div class="lg:col-span-5 app-panel p-6 space-y-6">
-            <!-- SUCCESS NOTIFICATION BANNER -->
             <div id="intakeSuccessBanner" class="hidden bg-emerald-500/10 border border-emerald-500/40 p-4 rounded-lg text-emerald-400 text-sm font-medium"></div>
 
             <div class="border-b border-zinc-800 pb-4">
@@ -507,7 +506,6 @@
                 </div>
               </div>
 
-              <!-- EXTRA MULTIPLE FILES CONTAINER WITH UPLOAD LOADING BAR -->
               <div class="border-t border-zinc-800 pt-5 space-y-3">
                 <div class="flex justify-between items-center">
                   <div>
@@ -518,7 +516,6 @@
                 </div>
                 <input type="file" id="extraFilesInput" multiple accept=".pdf,.ai,.eps,.svg,image/*" onchange="handleExtraFilesSelection(this)" class="input-pro w-full px-3 py-2 text-xs text-zinc-300 cursor-pointer">
                 
-                <!-- UPLOAD LOADING BAR WRAPPER -->
                 <div id="extraFilesProgressWrapper" class="hidden space-y-1.5 bg-zinc-900 p-3 rounded border border-zinc-800">
                   <div class="flex justify-between text-[11px] text-zinc-300">
                     <span id="extraFilesProgressTitle" class="font-medium">Uploading specification files...</span>
@@ -567,7 +564,6 @@
                     
                     <div id="platenBoundary" class="w-28 h-36 border border-dashed border-zinc-500/50 rounded flex flex-col items-center justify-center p-1 relative z-10 overflow-hidden bg-zinc-900/30 backdrop-blur-sm shadow-xl select-none">
                       <span id="artworkPlaceholder" class="text-[10px] text-zinc-300 font-medium text-center leading-tight">Standard Platen Boundary<br>(12 inches by 15 inches)<br><br>Drag to Position</span>
-                      <!-- Image or PDF Canvas Preview Render -->
                       <img id="artworkRender" class="hidden max-w-full max-h-full object-contain filter drop-shadow-md select-none" alt="Virtual Proof Render" draggable="false">
                       <div id="pdfPlatenPreview" class="hidden w-full h-full bg-blue-950/90 border border-blue-500/40 rounded flex flex-col items-center justify-center p-2 text-center select-none">
                         <svg class="w-8 h-8 text-blue-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
@@ -640,7 +636,6 @@
         <div id="moduleBacklog" class="hidden h-full flex flex-col flex-1 w-full">
           <div class="app-panel p-6 space-y-5 flex-1 flex flex-col w-full">
             
-            <!-- BACKLOG INTERNAL SUB-TABS -->
             <div class="flex items-center gap-2 border-b border-zinc-800 pb-4">
               <button id="backlogSubTabBtnActive" onclick="switchBacklogSubTab('active')" class="sub-tab-btn active">Active Backlog & Approval</button>
               <button id="backlogSubTabBtnArchive" onclick="switchBacklogSubTab('archive')" class="sub-tab-btn">Archived Orders Terminal</button>
@@ -713,12 +708,12 @@
               </div>
             </div>
 
-            <!-- SUB-TAB 2: ARCHIVED ORDERS -->
+            <!-- SUB-TAB 2: ARCHIVED ORDERS WITH EXPLICIT ORIGIN LABELS -->
             <div id="backlogSubTabArchive" class="hidden flex-1 flex flex-col space-y-5">
               <div class="flex justify-between items-center border-b border-zinc-800 pb-5">
                 <div>
                   <h3 class="text-base font-semibold text-white">Archived Orders Terminal</h3>
-                  <p class="text-sm text-zinc-400 mt-1">Review archived historical submissions and restore them if necessary.</p>
+                  <p class="text-sm text-zinc-400 mt-1">Review historical submissions separated by their archive origin and restore them if necessary.</p>
                 </div>
                 <button onclick="archiveAllCompletedOrders()" class="btn-pro-secondary text-xs">Auto-Archive All Completed Orders</button>
               </div>
@@ -730,6 +725,7 @@
                       <th class="px-6 py-3.5 font-medium">Order Reference</th>
                       <th class="px-6 py-3.5 font-medium">Customer Information</th>
                       <th class="px-6 py-3.5 font-medium">Garment & Asset</th>
+                      <th class="px-6 py-3.5 font-medium text-center">Archive Origin Source</th>
                       <th class="px-6 py-3.5 font-medium text-center">Wish Delivery Date</th>
                       <th class="px-6 py-3.5 font-medium text-center">Financial Value</th>
                       <th class="px-6 py-3.5 font-medium text-right">Restore Action</th>
@@ -744,7 +740,7 @@
           </div>
         </div>
 
-        <!-- LIVE PRODUCTION FLOOR MODULE -->
+        <!-- LIVE PRODUCTION FLOOR MODULE (DISTINCTLY DESIGNED CARDS) -->
         <div id="moduleTelemetry" class="hidden space-y-6">
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div class="app-panel p-6 flex flex-col justify-center border-l-4 border-l-amber-500">
@@ -805,7 +801,6 @@
             <button id="warehouseSubTabBtnFinished" onclick="switchWarehouseSubTab('finished')" class="sub-tab-btn">Finished Goods Manifest</button>
           </div>
 
-          <!-- WAREHOUSE SUB-TAB 1: BARCODE SCANNER WORKFLOW -->
           <div id="warehouseSubTabScanner" class="space-y-6">
             <div class="app-panel p-6 space-y-4 border border-zinc-700">
               <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4 flex justify-between items-center">
@@ -819,35 +814,31 @@
                 <button onclick="processBarcodeScan()" class="btn-pro-primary px-6">Process Scan</button>
               </div>
 
-              <!-- DYNAMIC FEEDBACK CARD CONTAINER -->
-              <div id="scannerFeedbackContainer" class="hidden mt-4">
+              <div id="scannerFeedbackContainer" class="hidden mt-4"></div>
+            </div>
+
+            <div class="app-panel p-6 space-y-4">
+              <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4">
+                Current Session Scan Log
+              </h3>
+              <div class="overflow-x-auto rounded-lg border border-zinc-800">
+                <table class="w-full text-left text-sm">
+                  <thead class="bg-zinc-900 border-b border-zinc-800 text-zinc-400">
+                    <tr>
+                      <th class="px-4 py-3 font-medium">Timestamp</th>
+                      <th class="px-4 py-3 font-medium">Order Reference</th>
+                      <th class="px-4 py-3 font-medium">Customer & Destination</th>
+                      <th class="px-4 py-3 font-medium text-center">Status Result</th>
+                    </tr>
+                  </thead>
+                  <tbody id="scanSessionLogBody" class="divide-y divide-zinc-800 text-zinc-200">
+                    <tr><td colspan="4" class="py-4 text-center text-zinc-500 text-xs">No packages scanned during current operational session.</td></tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
 
-          <!-- LIVE SCAN SESSION LOG -->
-          <div class="app-panel p-6 space-y-4">
-            <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4">
-              Current Session Scan Log
-            </h3>
-            <div class="overflow-x-auto rounded-lg border border-zinc-800">
-              <table class="w-full text-left text-sm">
-                <thead class="bg-zinc-900 border-b border-zinc-800 text-zinc-400">
-                  <tr>
-                    <th class="px-4 py-3 font-medium">Timestamp</th>
-                    <th class="px-4 py-3 font-medium">Order Reference</th>
-                    <th class="px-4 py-3 font-medium">Customer & Destination</th>
-                    <th class="px-4 py-3 font-medium text-center">Status Result</th>
-                  </tr>
-                </thead>
-                <tbody id="scanSessionLogBody" class="divide-y divide-zinc-800 text-zinc-200">
-                  <tr><td colspan="4" class="py-4 text-center text-zinc-500 text-xs">No packages scanned during current operational session.</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-          <!-- WAREHOUSE SUB-TAB 2: MATERIAL INVENTORY -->
           <div id="warehouseSubTabInventory" class="hidden space-y-6">
             <div class="app-panel p-6 space-y-4">
               <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4 flex justify-between items-center">
@@ -874,7 +865,6 @@
             </div>
           </div>
 
-          <!-- WAREHOUSE SUB-TAB 3: FINISHED GOODS -->
           <div id="warehouseSubTabFinished" class="hidden space-y-6">
             <div class="app-panel p-6 space-y-4">
               <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4 flex justify-between items-center">
@@ -1059,7 +1049,6 @@
         </div>
       </div>
 
-      <!-- CLIENT DIGITAL PROOF APPROVAL PORTAL WIDGET -->
       <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-3">
         <div class="flex justify-between items-center">
           <span class="text-zinc-500 font-medium text-[10px] uppercase tracking-wider">Client Digital Proof Approval Portal</span>
@@ -1314,6 +1303,8 @@
         sizes: { Small: 5, Medium: 15, Large: 20, ExtraLarge: 8, DoubleExtraLarge: 2 },
         price: "$1,313.25",
         status: "QUEUED",
+        isArchived: false,
+        archivedFrom: "",
         proofApproved: true,
         notes: "Center chest print, 3 inches below collar. Pantone Matching System 286 Blue ink.",
         artworkName: "NavyHoodie_Design.png",
@@ -1335,6 +1326,8 @@
         sizes: { Small: 25, Medium: 50, Large: 50, ExtraLarge: 20, DoubleExtraLarge: 5 },
         price: "$405.15",
         status: "IN_PRODUCTION",
+        isArchived: false,
+        archivedFrom: "",
         proofApproved: true,
         notes: "Customer shipping custom garments directly to the shop floor.",
         artworkName: "WhiteShirt_Front.png",
@@ -1354,6 +1347,8 @@
         sizes: { Small: 10, Medium: 40, Large: 30, ExtraLarge: 15, DoubleExtraLarge: 5 },
         price: "$1,023.83",
         status: "PRODUCED",
+        isArchived: false,
+        archivedFrom: "",
         proofApproved: true,
         notes: "Standard placement.",
         artworkName: "BlackShirt_Design.png",
@@ -1986,6 +1981,7 @@
         price: currentCalculatedTotal,
         status: "PENDING",
         isArchived: false,
+        archivedFrom: "",
         proofApproved: false,
         notes: notes,
         artworkName: document.getElementById('fileLabel').innerText,
@@ -2091,11 +2087,18 @@
       let archivedOrders = ordersBacklog.filter(o => o.isArchived);
 
       if (archivedOrders.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-zinc-500 font-mono text-sm">No orders in archive.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-zinc-500 font-mono text-sm">No orders in archive.</td></tr>`;
         return;
       }
 
       archivedOrders.forEach(o => {
+        let originBadge = "";
+        if (o.archivedFrom === 'Production Floor') {
+          originBadge = `<span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded font-semibold text-[10px]">PRODUCTION FLOOR</span>`;
+        } else {
+          originBadge = `<span class="px-2.5 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded font-semibold text-[10px]">ORDER BACKLOG</span>`;
+        }
+
         tbody.innerHTML += `
           <tr class="hover:bg-zinc-800/50 transition-colors">
             <td class="px-6 py-4 font-mono font-medium text-blue-400">${o.id}</td>
@@ -2107,6 +2110,7 @@
               <div class="font-medium text-zinc-200">${o.garment}</div>
               <div class="text-[11px] text-zinc-500 mt-0.5">${o.artworkName}</div>
             </td>
+            <td class="px-6 py-4 text-center">${originBadge}</td>
             <td class="px-6 py-4 text-center font-mono text-amber-400 text-xs">${o.wishDate}</td>
             <td class="px-6 py-4 text-center font-mono text-zinc-300">${o.price}</td>
             <td class="px-6 py-4 text-right">
@@ -2121,6 +2125,7 @@
       const order = ordersBacklog.find(o => o.id === orderId);
       if (!order) return;
       order.isArchived = true;
+      order.archivedFrom = (order.status === 'PRODUCED') ? 'Production Floor' : 'Order Backlog';
       saveSystemData();
       applyBacklogFilters();
       updatePendingBadge();
@@ -2131,6 +2136,7 @@
       const order = ordersBacklog.find(o => o.id === orderId);
       if (!order) return;
       order.isArchived = false;
+      order.archivedFrom = "";
       saveSystemData();
       renderArchiveModule();
       updatePendingBadge();
@@ -2140,6 +2146,7 @@
     function archiveCurrentModalOrder() {
       if (!selectedModalOrder) return;
       selectedModalOrder.isArchived = true;
+      selectedModalOrder.archivedFrom = (selectedModalOrder.status === 'PRODUCED') ? 'Production Floor' : 'Order Backlog';
       saveSystemData();
       closeOrderModal();
       applyBacklogFilters();
@@ -2152,6 +2159,7 @@
       ordersBacklog.forEach(o => {
         if (o.status === 'PRODUCED' && !o.isArchived) {
           o.isArchived = true;
+          o.archivedFrom = 'Production Floor';
           count++;
         }
       });
@@ -2623,6 +2631,7 @@
       });
     }
 
+    /* REDESIGNED PRODUCTION FLOOR RENDERING WITH DISTINCT CLIENT NAMES, COLOR TAGS, AND URGENCY BADGES */
     function renderProductionFloor() {
       const queuedContainer = document.getElementById('queuedProductionContainer');
       const activeContainer = document.getElementById('activeProductionContainer');
@@ -2644,13 +2653,21 @@
             <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-3">
               <div class="flex justify-between items-start">
                 <div>
-                  <span class="text-xs text-zinc-400 block mb-1">Order Reference:</span>
-                  <button onclick="openProductionOrderModal('${o.id}')" class="font-mono font-medium text-blue-400 hover:underline text-left cursor-pointer focus:outline-none text-sm">${o.id} (View Details)</button>
-                  <span class="text-zinc-400 text-xs mt-1 block">${o.garment} - ${o.quantity} Pieces</span>
-                  <span class="text-blue-400 font-mono text-[11px] block mt-1">Pantone Match: ${o.pantone || 'PMS 286 C'}</span>
-                  <span class="text-amber-400 font-mono text-[11px] block mt-1">Wish Delivery: ${o.wishDate}</span>
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="text-base font-bold text-white">${o.customerName}</span>
+                    <span class="text-xs font-mono bg-blue-500/10 text-blue-400 px-2 py-0.5 rounded border border-blue-500/20">${o.id}</span>
+                  </div>
+                  <div class="text-xs font-medium text-zinc-300">${o.garment}</div>
+                  <div class="flex flex-wrap items-center gap-2 mt-2">
+                    <span class="text-xs bg-zinc-800 text-zinc-300 px-2 py-0.5 rounded font-mono">${o.quantity} Units</span>
+                    <span class="text-xs bg-blue-950/80 text-blue-300 px-2 py-0.5 rounded font-mono border border-blue-800/50">${o.pantone || 'PMS 286 C'}</span>
+                    <span class="text-xs bg-amber-950/80 text-amber-300 px-2 py-0.5 rounded font-mono border border-amber-800/50">Due: ${o.wishDate}</span>
+                  </div>
                 </div>
-                <button onclick="updateOrderStatus('${o.id}', 'IN_PRODUCTION')" class="btn-pro-primary text-xs">Start Production</button>
+                <div class="flex flex-col items-end gap-2">
+                  <button onclick="updateOrderStatus('${o.id}', 'IN_PRODUCTION')" class="btn-pro-primary text-xs">Start Production</button>
+                  <button onclick="openProductionOrderModal('${o.id}')" class="text-xs text-blue-400 hover:underline">View Specs</button>
+                </div>
               </div>
               <div class="pt-2 border-t border-zinc-800 flex items-center justify-between text-xs">
                 <span class="text-zinc-500">Change Stage:</span>
@@ -2677,13 +2694,21 @@
             <div class="bg-indigo-950/30 p-4 rounded-lg border border-indigo-500/30 space-y-3">
               <div class="flex justify-between items-start">
                 <div>
-                  <span class="text-xs text-indigo-300/70 block mb-1">Running Order Reference:</span>
-                  <button onclick="openProductionOrderModal('${o.id}')" class="font-mono font-medium text-blue-400 hover:underline text-left cursor-pointer focus:outline-none text-sm">${o.id} (View Details)</button>
-                  <span class="text-zinc-400 text-xs mt-1 block">${o.garment} - ${o.quantity} Pieces</span>
-                  <span class="text-blue-400 font-mono text-[11px] block mt-1">Pantone Match: ${o.pantone || 'PMS 286 C'}</span>
-                  <span class="text-amber-400 font-mono text-[11px] block mt-1">Wish Delivery: ${o.wishDate}</span>
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="text-base font-bold text-white">${o.customerName}</span>
+                    <span class="text-xs font-mono bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded border border-indigo-500/30">${o.id}</span>
+                  </div>
+                  <div class="text-xs font-medium text-zinc-300">${o.garment}</div>
+                  <div class="flex flex-wrap items-center gap-2 mt-2">
+                    <span class="text-xs bg-zinc-800 text-zinc-300 px-2 py-0.5 rounded font-mono">${o.quantity} Units</span>
+                    <span class="text-xs bg-blue-950/80 text-blue-300 px-2 py-0.5 rounded font-mono border border-blue-800/50">${o.pantone || 'PMS 286 C'}</span>
+                    <span class="text-xs bg-amber-950/80 text-amber-300 px-2 py-0.5 rounded font-mono border border-amber-800/50">Due: ${o.wishDate}</span>
+                  </div>
                 </div>
-                <button onclick="updateOrderStatus('${o.id}', 'PRODUCED')" class="btn-emerald-solid text-xs">Mark Completed</button>
+                <div class="flex flex-col items-end gap-2">
+                  <button onclick="updateOrderStatus('${o.id}', 'PRODUCED')" class="btn-emerald-solid text-xs">Mark Completed</button>
+                  <button onclick="openProductionOrderModal('${o.id}')" class="text-xs text-blue-400 hover:underline">View Specs</button>
+                </div>
               </div>
               <div class="pt-2 border-t border-indigo-500/20 flex items-center justify-between text-xs">
                 <span class="text-zinc-400">Change Stage:</span>
@@ -2710,11 +2735,14 @@
             <div class="bg-zinc-900 p-3 rounded-lg border border-zinc-800 space-y-2">
               <div class="flex justify-between items-center">
                 <div>
-                  <span class="text-xs text-zinc-500 block mb-0.5">History Produced Reference:</span>
-                  <button onclick="openProductionOrderModal('${o.id}')" class="font-mono font-medium text-blue-400 hover:underline text-left cursor-pointer focus:outline-none text-xs">${o.id} (View Details)</button>
-                  <span class="text-zinc-500 text-xs mt-0.5 block">${o.customerName} - ${o.quantity} Pieces successfully printed. (Wish: ${o.wishDate})</span>
+                  <div class="flex items-center gap-2 mb-0.5">
+                    <span class="text-sm font-bold text-white">${o.customerName}</span>
+                    <span class="text-xs font-mono text-zinc-400">${o.id}</span>
+                  </div>
+                  <span class="text-zinc-400 text-xs block">${o.garment} - ${o.quantity} Units (Due: ${o.wishDate})</span>
                 </div>
                 <div class="flex items-center gap-2">
+                  <button onclick="openProductionOrderModal('${o.id}')" class="text-xs text-blue-400 hover:underline">View Specs</button>
                   <span class="px-2 py-1 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-medium text-[10px] rounded">PRODUCED</span>
                   <button onclick="archiveOrder('${o.id}')" class="btn-pro-secondary text-xs py-1 px-2">Archive</button>
                 </div>
