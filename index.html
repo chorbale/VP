@@ -71,6 +71,7 @@
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
+      cursor: pointer;
     }
     .btn-pro-primary:hover:not(:disabled) {
       background-color: #1d4ed8;
@@ -89,10 +90,15 @@
       padding: 0.5rem 1rem;
       border-radius: 0.5rem;
       transition: all 0.2s ease;
+      cursor: pointer;
     }
-    .btn-pro-secondary:hover {
+    .btn-pro-secondary:hover:not(:disabled) {
       background-color: #3f3f46;
       color: white;
+    }
+    .btn-pro-secondary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
     .btn-emerald-solid {
@@ -102,6 +108,7 @@
       padding: 0.5rem 1rem;
       border-radius: 0.5rem;
       transition: all 0.2s ease;
+      cursor: pointer;
     }
     .btn-emerald-solid:hover {
       background-color: #047857;
@@ -136,11 +143,46 @@
     ::-webkit-scrollbar-thumb:hover {
       background: #52525b; 
     }
+
+    .drag-over {
+      border-color: #3b82f6 !important;
+      background-color: rgba(59, 130, 246, 0.1) !important;
+    }
+
+    #artworkRender {
+      cursor: grab;
+      position: absolute;
+      transform-origin: center center;
+    }
+    #artworkRender:active {
+      cursor: grabbing;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #printInvoiceContainer, #printInvoiceContainer * {
+        visibility: visible;
+      }
+      #printInvoiceContainer {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background-color: white !important;
+        color: black !important;
+        padding: 2rem;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
   </style>
 </head>
 <body class="flex h-screen overflow-hidden antialiased selection:bg-blue-500/30">
 
-  <aside class="w-72 border-r border-zinc-800 bg-[#09090b] flex flex-col flex-shrink-0 z-10">
+  <aside class="w-72 border-r border-zinc-800 bg-[#09090b] flex flex-col flex-shrink-0 z-10 no-print">
     <div class="p-6 border-b border-zinc-800 flex items-center gap-4">
       <div class="w-12 h-12 bg-white rounded-lg p-1 shrink-0">
         <img src="v_logo.png" alt="Virtue Print Logo" class="w-full h-full object-contain rounded-md">
@@ -194,13 +236,14 @@
     </div>
   </aside>
 
-  <main class="flex-1 flex flex-col h-screen overflow-hidden bg-[#09090b]">
+  <main class="flex-1 flex flex-col h-screen overflow-hidden bg-[#09090b] no-print">
     
     <header class="h-16 border-b border-zinc-800 px-8 flex items-center justify-between shrink-0">
       <h2 id="pageTitle" class="text-lg font-semibold text-white">Order Specification and Preflight</h2>
       
       <div class="flex items-center gap-3">
-        <span class="text-xs text-zinc-500 font-medium">Current Session Reference:</span>
+        <button onclick="clearSystemData()" class="btn-pro-secondary text-[10px] py-1 px-2 border-red-500/30 text-red-400 hover:bg-red-500/10">Reset System Data</button>
+        <span class="text-xs text-zinc-500 font-medium ml-4">Current Session Reference:</span>
         <span id="activeOrderBadge" class="text-xs font-mono font-semibold bg-zinc-800 text-zinc-300 px-3 py-1 rounded border border-zinc-700">
           DRAFT-SESSION
         </span>
@@ -378,8 +421,16 @@
                 <span>Screen and Technical Setup:</span>
                 <span id="screenCost" class="font-mono text-zinc-200">$0.00</span>
               </div>
-              <div class="flex justify-between font-semibold text-white border-t border-zinc-800 pt-3 mt-1">
-                <span>Production Total:</span>
+              <div class="flex justify-between text-sm text-zinc-400">
+                <span>Logistics and Delivery:</span>
+                <span id="shippingCost" class="font-mono text-zinc-200">$0.00</span>
+              </div>
+              <div class="flex justify-between text-sm text-zinc-400 pb-2 border-b border-zinc-800">
+                <span>Los Angeles Sales Tax (9.5 percent):</span>
+                <span id="taxCost" class="font-mono text-zinc-200">$0.00</span>
+              </div>
+              <div class="flex justify-between font-semibold text-white pt-1">
+                <span>Production Master Total:</span>
                 <span id="totalCost" class="font-mono text-blue-400 text-lg">$0.00</span>
               </div>
             </div>
@@ -396,17 +447,17 @@
                 <span class="text-xs text-zinc-500 font-mono bg-zinc-900 px-2 py-1 rounded border border-zinc-800">Vector and Image Formats</span>
               </div>
 
-              <div class="border-2 border-dashed border-zinc-700 rounded-lg p-8 text-center hover:border-blue-500/50 transition-all bg-zinc-900/50 cursor-pointer group">
-                <input type="file" id="fileInput" accept="image/*,.pdf,.svg,.ai,.eps" onchange="handleFileSelected(event)" class="hidden">
-                <label for="fileInput" class="cursor-pointer flex flex-col items-center gap-3 w-full h-full">
+              <div id="dragDropArea" class="border-2 border-dashed border-zinc-700 rounded-lg p-8 text-center hover:border-blue-500/50 transition-all bg-zinc-900/50 cursor-pointer group relative">
+                <input type="file" id="fileInput" accept="image/*,.pdf,.svg,.ai,.eps" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                <div class="flex flex-col items-center gap-3 w-full h-full pointer-events-none">
                   <div class="w-12 h-12 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-400 group-hover:text-blue-400 group-hover:border-blue-500/30 group-hover:bg-blue-500/10 transition-all">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                   </div>
                   <div>
-                    <p id="fileLabel" class="text-sm font-medium text-zinc-200">Click to upload production artwork</p>
+                    <p id="fileLabel" class="text-sm font-medium text-zinc-200">Click or drag and drop to upload production artwork</p>
                     <p class="text-xs text-zinc-500 mt-1">Automated Resolution Check and Preflight Verification</p>
                   </div>
-                </label>
+                </div>
               </div>
 
               <div>
@@ -442,10 +493,27 @@
                     
                     <img id="tshirtImage" src="T-shirt.png" class="absolute inset-0 w-full h-full object-contain pointer-events-none p-4" style="filter: invert(1) opacity(0.7); mix-blend-mode: screen;" alt="T-Shirt Template Base">
                     
-                    <div class="w-28 h-36 border border-dashed border-zinc-500/50 rounded flex flex-col items-center justify-center p-1 relative z-10 overflow-hidden bg-zinc-900/30 backdrop-blur-sm shadow-xl">
-                      <span id="artworkPlaceholder" class="text-[10px] text-zinc-300 font-medium text-center leading-tight">Standard Platen Boundary<br>(12 inches by 15 inches)</span>
-                      <img id="artworkRender" class="hidden max-w-full max-h-full object-contain filter drop-shadow-md" alt="Virtual Proof Render">
+                    <div id="platenBoundary" class="w-28 h-36 border border-dashed border-zinc-500/50 rounded flex flex-col items-center justify-center p-1 relative z-10 overflow-hidden bg-zinc-900/30 backdrop-blur-sm shadow-xl select-none">
+                      <span id="artworkPlaceholder" class="text-[10px] text-zinc-300 font-medium text-center leading-tight">Standard Platen Boundary<br>(12 inches by 15 inches)<br><br>Drag to Position</span>
+                      <img id="artworkRender" class="hidden max-w-full max-h-full object-contain filter drop-shadow-md select-none" alt="Virtual Proof Render" draggable="false">
                     </div>
+                  </div>
+                </div>
+
+                <div class="w-full mt-4 space-y-3 bg-zinc-900 p-3 rounded border border-zinc-800">
+                  <div>
+                    <div class="flex justify-between text-[10px] text-zinc-400 mb-1">
+                      <span>Artwork Scaling Dimension</span>
+                      <span id="scaleLabel">100 Percent</span>
+                    </div>
+                    <input type="range" id="artScale" min="20" max="200" value="100" class="w-full cursor-pointer accent-blue-500">
+                  </div>
+                  <div>
+                    <div class="flex justify-between text-[10px] text-zinc-400 mb-1">
+                      <span>Ink Opacity Blending</span>
+                      <span id="opacityLabel">100 Percent</span>
+                    </div>
+                    <input type="range" id="artOpacity" min="10" max="100" value="100" class="w-full cursor-pointer accent-blue-500">
                   </div>
                 </div>
               </div>
@@ -499,7 +567,6 @@
                 <p class="text-sm text-zinc-400 mt-1">Review pending jobs and approve them to the production queue.</p>
               </div>
 
-              <!-- Top Filters: Status and Custom Calendar Picker Popup Widget -->
               <div class="flex flex-wrap items-center gap-3">
                 <div class="relative">
                   <div onclick="toggleCalendarDropdown()" class="flex items-center justify-between bg-zinc-900 px-3 py-1.5 rounded-lg border border-zinc-700 hover:border-blue-500 cursor-pointer w-48 shadow-sm">
@@ -619,7 +686,7 @@
             <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4">
               Raw Material Blanks Inventory
             </h3>
-            <p class="text-sm text-zinc-400">Inventory levels adjust dynamically as orders are queued and enter production.</p>
+            <p class="text-sm text-zinc-400">Inventory levels adjust dynamically as orders are queued and enter production. Enter numbers in the receive fields to increase stock levels.</p>
             <div class="overflow-x-auto rounded-lg border border-zinc-800 mt-4">
               <table class="w-full text-left text-sm">
                 <thead class="bg-zinc-900 border-b border-zinc-800 text-zinc-400">
@@ -627,7 +694,8 @@
                     <th class="px-4 py-3 font-medium">Garment Style Description</th>
                     <th class="px-4 py-3 font-medium text-center">Total On Hand</th>
                     <th class="px-4 py-3 font-medium text-center">Allocated for Production</th>
-                    <th class="px-4 py-3 font-medium text-right">Available for Sale</th>
+                    <th class="px-4 py-3 font-medium text-center">Available for Sale</th>
+                    <th class="px-4 py-3 font-medium text-right">Receive Inventory Supply</th>
                   </tr>
                 </thead>
                 <tbody id="blanksInventoryTable" class="divide-y divide-zinc-800 text-zinc-200">
@@ -639,7 +707,6 @@
           <div class="app-panel p-6 space-y-4 mt-6">
             <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4 flex justify-between items-center">
               <span>Finished Goods Inventory</span>
-              <button type="button" class="btn-pro-secondary text-xs">Generate Master Shipping Manifest</button>
             </h3>
             <p class="text-sm text-zinc-400">Completed production runs awaiting warehouse packing and carrier dispatch.</p>
             <div class="overflow-x-auto rounded-lg border border-zinc-800 mt-4">
@@ -706,10 +773,6 @@
                   <span>Queued for Production Pieces:</span>
                   <span id="dashQueuedPieces" class="font-mono font-bold text-white">50 Pieces</span>
                 </div>
-                <div class="flex justify-between py-2 border-b border-zinc-800/60">
-                  <span>Warehouse Raw Material Blanks Available:</span>
-                  <span class="font-mono font-bold text-emerald-400">4,800 Pieces</span>
-                </div>
                 <div class="flex justify-between py-2">
                   <span>System Status:</span>
                   <span class="font-mono font-bold text-emerald-400">Operational System Online</span>
@@ -741,18 +804,24 @@
     </div>
   </main>
 
-  <div id="orderDetailsModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+  <div id="orderDetailsModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 no-print">
     <div class="app-panel max-w-2xl w-full p-6 space-y-6 relative max-h-[90vh] overflow-y-auto shadow-2xl">
       <button onclick="closeOrderModal()" class="absolute top-6 right-6 text-zinc-400 hover:text-white transition-colors">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
       </button>
       
-      <div class="border-b border-zinc-800 pb-4 pr-8">
-        <h2 class="text-xl font-bold text-white flex items-center gap-3">
-          Order Detail View
-          <span id="modalOrderId" class="text-blue-500 font-mono text-lg bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">VirtuePrint-2026-8820</span>
-        </h2>
-        <p class="text-sm text-zinc-400 mt-1">Review parameters and download production assets.</p>
+      <div class="border-b border-zinc-800 pb-4 pr-8 flex justify-between items-start">
+        <div>
+          <h2 class="text-xl font-bold text-white flex items-center gap-3">
+            Order Detail View
+            <span id="modalOrderId" class="text-blue-500 font-mono text-lg bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">VirtuePrint-2026-8820</span>
+          </h2>
+          <p class="text-sm text-zinc-400 mt-1">Review parameters and manage order details.</p>
+        </div>
+        <button onclick="printModalInvoice()" class="btn-pro-secondary text-xs flex items-center gap-2 py-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+          Print Invoice Document
+        </button>
       </div>
 
       <div class="grid grid-cols-2 gap-4">
@@ -769,9 +838,13 @@
         </div>
       </div>
 
-      <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800">
-        <span class="text-zinc-500 font-medium text-[10px] uppercase tracking-wider block mb-2">Special Notes and Specifications</span>
+      <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 relative">
+        <span class="text-zinc-500 font-medium text-[10px] uppercase tracking-wider block mb-2 flex justify-between">
+          Special Notes and Specifications
+          <button id="editNotesBtn" class="text-blue-400 hover:text-blue-300">Edit Note Input</button>
+        </span>
         <div id="modalArtworkNotes" class="text-zinc-300 text-sm italic">No special instructions provided.</div>
+        <textarea id="editArtworkNotesInput" class="hidden input-pro w-full px-2 py-1 text-sm mt-2" rows="2"></textarea>
       </div>
 
       <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800">
@@ -808,24 +881,64 @@
     </div>
   </div>
 
+  <div id="printInvoiceContainer" class="hidden">
+    <div style="display: flex; justify-content: space-between; border-bottom: 2px solid #e5e7eb; padding-bottom: 1rem; margin-bottom: 2rem;">
+      <div>
+        <h1 style="font-size: 24px; font-weight: bold;">Virtue Print Los Angeles</h1>
+        <p style="color: #6b7280; font-size: 12px;">Production Operating System Invoice Document</p>
+      </div>
+      <div style="text-align: right;">
+        <h2 style="font-size: 18px; font-weight: bold; font-family: monospace;" id="printOrderId">VirtuePrint-2026-8820</h2>
+        <p style="color: #6b7280; font-size: 12px;" id="printDate">Date Generated</p>
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; margin-bottom: 2rem;">
+      <div>
+        <h3 style="font-size: 14px; font-weight: bold; color: #374151; margin-bottom: 0.5rem; text-transform: uppercase;">Customer Information</h3>
+        <p id="printCustomerName" style="font-weight: 500;">Client Name</p>
+        <p id="printCustomerEmail" style="color: #6b7280; font-size: 14px;">email@example.com</p>
+      </div>
+      <div style="text-align: right;">
+        <h3 style="font-size: 14px; font-weight: bold; color: #374151; margin-bottom: 0.5rem; text-transform: uppercase;">Delivery Objective</h3>
+        <p id="printWishDate" style="font-weight: 500;">2026-09-15</p>
+      </div>
+    </div>
+
+    <div style="margin-bottom: 2rem;">
+      <h3 style="font-size: 14px; font-weight: bold; color: #374151; margin-bottom: 0.5rem; text-transform: uppercase;">Order Production Details</h3>
+      <table style="width: 100%; text-align: left; border-collapse: collapse;">
+        <thead>
+          <tr style="border-bottom: 1px solid #e5e7eb;">
+            <th style="padding: 0.5rem 0;">Garment Style Definition</th>
+            <th style="padding: 0.5rem 0;">Fabric Color</th>
+            <th style="padding: 0.5rem 0; text-align: center;">Total Units Quantity</th>
+            <th style="padding: 0.5rem 0; text-align: right;">Master Total Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="printGarment" style="padding: 1rem 0;">Garment Details</td>
+            <td id="printColor" style="padding: 1rem 0;">Black</td>
+            <td id="printQty" style="padding: 1rem 0; text-align: center; font-family: monospace;">100</td>
+            <td id="printPrice" style="padding: 1rem 0; text-align: right; font-family: monospace; font-weight: bold;">$0.00</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="margin-bottom: 2rem; padding: 1rem; background-color: #f3f4f6; border-radius: 0.5rem;">
+      <h3 style="font-size: 12px; font-weight: bold; color: #6b7280; margin-bottom: 0.5rem; text-transform: uppercase;">Special Production Notes</h3>
+      <p id="printNotes" style="font-size: 14px; font-style: italic;">No special notes provided.</p>
+    </div>
+    
+    <div style="text-align: center; font-size: 12px; color: #9ca3af; margin-top: 4rem; border-top: 1px solid #e5e7eb; padding-top: 1rem;">
+      Generated securely by Virtue Print Digital Operations System
+    </div>
+  </div>
+
   <script>
-    let currentColorType = 'dark';
-    let currentSupplyMode = 'catalog';
-    let currentOrderId = "";
-    let currentCalculatedTotal = "$0.00";
-    let currentArtworkDataUrl = "";
-    let selectedModalOrder = null;
-    let currentBacklogStatusFilter = 'ALL';
-    let selectedCalendarDate = "";
-    let selectedIntakeDate = "";
-
-    let calendarYear = 2026;
-    let calendarMonth = 7;
-
-    let intakeCalendarYear = 2026;
-    let intakeCalendarMonth = 7;
-
-    let ordersBacklog = [
+    const DEFAULT_ORDERS = [
       {
         id: "VirtuePrint-2026-8818",
         customerName: "Nikol Ivanova",
@@ -835,7 +948,7 @@
         color: "Navy",
         quantity: 50,
         sizes: { Small: 5, Medium: 15, Large: 20, ExtraLarge: 8, DoubleExtraLarge: 2 },
-        price: "$1,125.00",
+        price: "$1,313.25",
         status: "QUEUED",
         notes: "Center chest print, 3 inches below collar. Pantone Matching System 286 Blue ink.",
         artworkName: "NavyHoodie_Design.png",
@@ -850,7 +963,7 @@
         color: "White",
         quantity: 150,
         sizes: { Small: 25, Medium: 50, Large: 50, ExtraLarge: 20, DoubleExtraLarge: 5 },
-        price: "$450.00",
+        price: "$405.15",
         status: "IN_PRODUCTION",
         notes: "Customer shipping custom garments directly to the shop floor.",
         artworkName: "WhiteShirt_Front.png",
@@ -861,11 +974,11 @@
         customerName: "Zlatin",
         customerEmail: "zlatin@example.com",
         wishDate: "2026-09-05",
-        garment: "Shaka Wear 7.5 ounce Heavyweight",
+        garment: "Shaka Wear 7.5 ounce Heavyweight Maximum Heavy Shirt",
         color: "Black",
         quantity: 100,
         sizes: { Small: 10, Medium: 40, Large: 30, ExtraLarge: 15, DoubleExtraLarge: 5 },
-        price: "$950.00",
+        price: "$1,023.83",
         status: "PRODUCED",
         notes: "Standard placement.",
         artworkName: "BlackShirt_Design.png",
@@ -873,59 +986,180 @@
       }
     ];
 
-    let inventoryBlanks = [
-      { style: "Shaka Wear 7.5 ounce Heavyweight (Black)", onHand: 1500 },
+    const DEFAULT_INVENTORY = [
+      { style: "Shaka Wear 7.5 ounce Heavyweight Maximum Heavy Shirt (Black)", onHand: 1500 },
       { style: "Independent Trading Company Heavy Hoodie (Navy)", onHand: 800 },
       { style: "Bella Canvas 3001 Unisex Jersey Shirt (White)", onHand: 2500 }
     ];
 
+    let ordersBacklog = JSON.parse(localStorage.getItem('virtuePrintOrders')) || DEFAULT_ORDERS;
+    let inventoryBlanks = JSON.parse(localStorage.getItem('virtuePrintInventory')) || DEFAULT_INVENTORY;
+
+    function saveSystemData() {
+      localStorage.setItem('virtuePrintOrders', JSON.stringify(ordersBacklog));
+      localStorage.setItem('virtuePrintInventory', JSON.stringify(inventoryBlanks));
+    }
+
+    function clearSystemData() {
+      if(confirm("Are you certain you wish to reset all internal operating data to factory defaults?")) {
+        localStorage.removeItem('virtuePrintOrders');
+        localStorage.removeItem('virtuePrintInventory');
+        location.reload();
+      }
+    }
+
+    let currentColorType = 'dark';
+    let currentSupplyMode = 'catalog';
+    let currentOrderId = "";
+    let currentCalculatedTotal = "$0.00";
+    let currentArtworkDataUrl = "";
+    let selectedModalOrder = null;
+    let currentBacklogStatusFilter = 'ALL';
+    let selectedCalendarDate = "";
+    let selectedIntakeDate = "";
+
+    let calendarYear = 2026;
+    let calendarMonth = 7;
+    let intakeCalendarYear = 2026;
+    let intakeCalendarMonth = 7;
+
+    const dragDropArea = document.getElementById('dragDropArea');
+    const fileInput = document.getElementById('fileInput');
+
+    dragDropArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dragDropArea.classList.add('drag-over');
+    });
+
+    dragDropArea.addEventListener('dragleave', (e) => {
+      e.preventDefault();
+      dragDropArea.classList.remove('drag-over');
+    });
+
+    dragDropArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dragDropArea.classList.remove('drag-over');
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        fileInput.files = e.dataTransfer.files;
+        processFileSelection(e.dataTransfer.files[0]);
+      }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files.length > 0) {
+        processFileSelection(e.target.files[0]);
+      }
+    });
+
+    function processFileSelection(file) {
+      if (!file) return;
+      document.getElementById('fileLabel').innerText = file.name;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        currentArtworkDataUrl = e.target.result;
+        const imgElement = document.getElementById('artworkRender');
+        imgElement.src = currentArtworkDataUrl;
+        imgElement.classList.remove('hidden');
+        document.getElementById('artworkPlaceholder').classList.add('hidden');
+        resetArtworkPositioning();
+      };
+      reader.readAsDataURL(file);
+
+      currentOrderId = generateUniqueOrderId();
+      document.getElementById('activeOrderBadge').innerText = currentOrderId;
+      document.getElementById('generatedOrderId').innerText = currentOrderId;
+      document.getElementById('preflightIdle').classList.add('hidden');
+      document.getElementById('preflightResults').classList.remove('hidden');
+
+      const btn = document.getElementById('submitToBacklogBtn');
+      btn.disabled = false;
+    }
+
+    const artworkRender = document.getElementById('artworkRender');
+    const artScaleSlider = document.getElementById('artScale');
+    const artOpacitySlider = document.getElementById('artOpacity');
+    
+    let isDragging = false;
+    let startDragX = 0;
+    let startDragY = 0;
+    let currentPosX = 0;
+    let currentPosY = 0;
+
+    artworkRender.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      startDragX = e.clientX - currentPosX;
+      startDragY = e.clientY - currentPosY;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      currentPosX = e.clientX - startDragX;
+      currentPosY = e.clientY - startDragY;
+      applyArtworkTransforms();
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    artScaleSlider.addEventListener('input', (e) => {
+      document.getElementById('scaleLabel').innerText = e.target.value + " Percent";
+      applyArtworkTransforms();
+    });
+
+    artOpacitySlider.addEventListener('input', (e) => {
+      document.getElementById('opacityLabel').innerText = e.target.value + " Percent";
+      applyArtworkTransforms();
+    });
+
+    function applyArtworkTransforms() {
+      const scaleValue = artScaleSlider.value / 100;
+      const opacityValue = artOpacitySlider.value / 100;
+      artworkRender.style.transform = `translate(${currentPosX}px, ${currentPosY}px) scale(${scaleValue})`;
+      artworkRender.style.opacity = opacityValue;
+    }
+
+    function resetArtworkPositioning() {
+      currentPosX = 0;
+      currentPosY = 0;
+      artScaleSlider.value = 100;
+      artOpacitySlider.value = 100;
+      document.getElementById('scaleLabel').innerText = "100 Percent";
+      document.getElementById('opacityLabel').innerText = "100 Percent";
+      applyArtworkTransforms();
+    }
+
     function toggleCalendarDropdown() {
       const dropdown = document.getElementById('calendarDropdown');
       dropdown.classList.toggle('hidden');
-      if (!dropdown.classList.contains('hidden')) {
-        renderCalendarGrid();
-      }
+      if (!dropdown.classList.contains('hidden')) renderCalendarGrid();
     }
 
     function changeMonth(direction) {
       calendarMonth += direction;
-      if (calendarMonth > 11) {
-        calendarMonth = 0;
-        calendarYear++;
-      } else if (calendarMonth < 0) {
-        calendarMonth = 11;
-        calendarYear--;
-      }
+      if (calendarMonth > 11) { calendarMonth = 0; calendarYear++; } 
+      else if (calendarMonth < 0) { calendarMonth = 11; calendarYear--; }
       renderCalendarGrid();
     }
 
     function renderCalendarGrid() {
       const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
       document.getElementById('calendarMonthYear').innerText = monthNames[calendarMonth] + " " + calendarYear;
-
       const grid = document.getElementById('calendarDaysGrid');
       grid.innerHTML = "";
-
       const firstDayIndex = new Date(calendarYear, calendarMonth, 1).getDay();
       const totalDays = new Date(calendarYear, calendarMonth + 1, 0).getDate();
       const prevTotalDays = new Date(calendarYear, calendarMonth, 0).getDate();
-
       for (let i = firstDayIndex - 1; i >= 0; i--) {
-        const dayNum = prevTotalDays - i;
-        grid.innerHTML += `<div class="py-1.5 text-zinc-600 text-xs">${dayNum}</div>`;
+        grid.innerHTML += `<div class="py-1.5 text-zinc-600 text-xs">${prevTotalDays - i}</div>`;
       }
-
       for (let d = 1; d <= totalDays; d++) {
         const monthString = String(calendarMonth + 1).padStart(2, '0');
         const dayString = String(d).padStart(2, '0');
         const dateString = calendarYear + "-" + monthString + "-" + dayString;
         const displayString = monthString + "/" + dayString + "/" + calendarYear;
-
         const isSelected = (selectedCalendarDate === dateString);
-        const btnClass = isSelected ? 
-          "py-1.5 rounded-lg bg-blue-600 text-white font-semibold cursor-pointer" : 
-          "py-1.5 rounded-lg hover:bg-zinc-800 text-zinc-200 cursor-pointer";
-
+        const btnClass = isSelected ? "py-1.5 rounded-lg bg-blue-600 text-white font-semibold cursor-pointer" : "py-1.5 rounded-lg hover:bg-zinc-800 text-zinc-200 cursor-pointer";
         grid.innerHTML += `<div onclick="selectCalendarDate('${dateString}', '${displayString}')" class="${btnClass}">${d}</div>`;
       }
     }
@@ -947,50 +1181,34 @@
     function toggleIntakeCalendarDropdown() {
       const dropdown = document.getElementById('intakeCalendarDropdown');
       dropdown.classList.toggle('hidden');
-      if (!dropdown.classList.contains('hidden')) {
-        renderIntakeCalendarGrid();
-      }
+      if (!dropdown.classList.contains('hidden')) renderIntakeCalendarGrid();
     }
 
     function changeIntakeMonth(direction) {
       intakeCalendarMonth += direction;
-      if (intakeCalendarMonth > 11) {
-        intakeCalendarMonth = 0;
-        intakeCalendarYear++;
-      } else if (intakeCalendarMonth < 0) {
-        intakeCalendarMonth = 11;
-        intakeCalendarYear--;
-      }
+      if (intakeCalendarMonth > 11) { intakeCalendarMonth = 0; intakeCalendarYear++; } 
+      else if (intakeCalendarMonth < 0) { intakeCalendarMonth = 11; intakeCalendarYear--; }
       renderIntakeCalendarGrid();
     }
 
     function renderIntakeCalendarGrid() {
       const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
       document.getElementById('intakeCalendarMonthYear').innerText = monthNames[intakeCalendarMonth] + " " + intakeCalendarYear;
-
       const grid = document.getElementById('intakeCalendarDaysGrid');
       grid.innerHTML = "";
-
       const firstDayIndex = new Date(intakeCalendarYear, intakeCalendarMonth, 1).getDay();
       const totalDays = new Date(intakeCalendarYear, intakeCalendarMonth + 1, 0).getDate();
       const prevTotalDays = new Date(intakeCalendarYear, intakeCalendarMonth, 0).getDate();
-
       for (let i = firstDayIndex - 1; i >= 0; i--) {
-        const dayNum = prevTotalDays - i;
-        grid.innerHTML += `<div class="py-1.5 text-zinc-600 text-xs">${dayNum}</div>`;
+        grid.innerHTML += `<div class="py-1.5 text-zinc-600 text-xs">${prevTotalDays - i}</div>`;
       }
-
       for (let d = 1; d <= totalDays; d++) {
         const monthString = String(intakeCalendarMonth + 1).padStart(2, '0');
         const dayString = String(d).padStart(2, '0');
         const dateString = intakeCalendarYear + "-" + monthString + "-" + dayString;
         const displayString = monthString + "/" + dayString + "/" + intakeCalendarYear;
-
         const isSelected = (selectedIntakeDate === dateString);
-        const btnClass = isSelected ? 
-          "py-1.5 rounded-lg bg-blue-600 text-white font-semibold cursor-pointer" : 
-          "py-1.5 rounded-lg hover:bg-zinc-800 text-zinc-200 cursor-pointer";
-
+        const btnClass = isSelected ? "py-1.5 rounded-lg bg-blue-600 text-white font-semibold cursor-pointer" : "py-1.5 rounded-lg hover:bg-zinc-800 text-zinc-200 cursor-pointer";
         grid.innerHTML += `<div onclick="selectIntakeDate('${dateString}', '${displayString}')" class="${btnClass}">${d}</div>`;
       }
     }
@@ -1076,46 +1294,16 @@
         customerBox.classList.remove('hidden');
         catalogBox.classList.add('hidden');
       }
-
       updatePrice();
-    }
-
-    function handleFileSelected(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      document.getElementById('fileLabel').innerText = file.name;
-      
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        currentArtworkDataUrl = e.target.result;
-        const imgElement = document.getElementById('artworkRender');
-        imgElement.src = currentArtworkDataUrl;
-        imgElement.classList.remove('hidden');
-        document.getElementById('artworkPlaceholder').classList.add('hidden');
-      };
-      reader.readAsDataURL(file);
-
-      currentOrderId = generateUniqueOrderId();
-      document.getElementById('activeOrderBadge').innerText = currentOrderId;
-      document.getElementById('generatedOrderId').innerText = currentOrderId;
-
-      document.getElementById('preflightIdle').classList.add('hidden');
-      document.getElementById('preflightResults').classList.remove('hidden');
-
-      const btn = document.getElementById('submitToBacklogBtn');
-      btn.disabled = false;
     }
 
     function applyTotalQuantityDistribution() {
       const total = parseInt(document.getElementById('inputTotalQuantity').value) || 0;
-      
       document.getElementById('inputSmall').value = Math.round(total * 0.15);
       document.getElementById('inputMedium').value = Math.round(total * 0.35);
       document.getElementById('inputLarge').value = Math.round(total * 0.35);
       document.getElementById('inputExtraLarge').value = Math.round(total * 0.10);
       document.getElementById('inputDoubleExtraLarge').value = Math.max(0, total - (Math.round(total * 0.15) + Math.round(total * 0.35) + Math.round(total * 0.35) + Math.round(total * 0.10)));
-
       document.getElementById('totalUnitsBadge').innerText = total + " Pieces";
       updatePrice();
     }
@@ -1130,13 +1318,11 @@
       const total = smallAmount + mediumAmount + largeAmount + extraLargeAmount + doubleExtraLargeAmount;
       document.getElementById('inputTotalQuantity').value = total;
       document.getElementById('totalUnitsBadge').innerText = total + " Pieces";
-
       updatePrice();
     }
 
     function applySplitRecommendation(type) {
       const total = parseInt(document.getElementById('inputTotalQuantity').value) || 75;
-
       if (type === 'standard') {
         document.getElementById('inputSmall').value = Math.round(total * 0.15);
         document.getElementById('inputMedium').value = Math.round(total * 0.35);
@@ -1157,7 +1343,6 @@
         document.getElementById('inputExtraLarge').value = eachAmount;
         document.getElementById('inputDoubleExtraLarge').value = total - (eachAmount * 4);
       }
-
       updateTotalsFromSizes();
     }
 
@@ -1179,7 +1364,7 @@
       document.getElementById('colorCount').selectedIndex = 1;
 
       document.getElementById('fileInput').value = "";
-      document.getElementById('fileLabel').innerText = "Click to upload production artwork";
+      document.getElementById('fileLabel').innerText = "Click or drag and drop to upload production artwork";
 
       const imgElement = document.getElementById('artworkRender');
       imgElement.src = "";
@@ -1196,6 +1381,7 @@
       btn.disabled = true;
 
       updateTotalsFromSizes();
+      resetArtworkPositioning();
     }
 
     function submitOrderToBacklog() {
@@ -1241,6 +1427,7 @@
         artworkData: currentArtworkDataUrl || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><rect width='200' height='200' fill='%232563eb'/></svg>"
       });
 
+      saveSystemData();
       updatePendingBadge();
       updateDashboardMetrics();
       alert("Order Reference " + currentOrderId + " for " + name + " successfully submitted to the Backlog.");
@@ -1251,18 +1438,13 @@
 
     function filterBacklogStatus(status) {
       currentBacklogStatusFilter = status;
-      
       ['ALL', 'PENDING', 'QUEUED', 'REJECTED'].forEach(s => {
         const btn = document.getElementById('filterBtn' + s);
         if(btn) {
-          if(s === status) {
-            btn.className = "px-3 py-1.5 rounded-md bg-zinc-800 text-white font-medium transition-all";
-          } else {
-            btn.className = "px-3 py-1.5 rounded-md text-zinc-400 hover:bg-zinc-800 font-medium transition-all";
-          }
+          if(s === status) btn.className = "px-3 py-1.5 rounded-md bg-zinc-800 text-white font-medium transition-all";
+          else btn.className = "px-3 py-1.5 rounded-md text-zinc-400 hover:bg-zinc-800 font-medium transition-all";
         }
       });
-
       applyBacklogFilters();
     }
 
@@ -1283,17 +1465,11 @@
 
       filtered.forEach(o => {
         let statusBadge = "";
-        if (o.status === 'PENDING') {
-          statusBadge = `<span class="px-2.5 py-1 bg-amber-500/10 text-amber-500 border border-amber-500/20 rounded-md font-medium text-xs">PENDING</span>`;
-        } else if (o.status === 'QUEUED') {
-          statusBadge = `<span class="px-2.5 py-1 bg-blue-500/10 text-blue-500 border border-blue-500/20 rounded-md font-medium text-xs">QUEUED</span>`;
-        } else if (o.status === 'IN_PRODUCTION') {
-          statusBadge = `<span class="px-2.5 py-1 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-md font-medium text-xs">RUNNING</span>`;
-        } else if (o.status === 'PRODUCED') {
-          statusBadge = `<span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 rounded-md font-medium text-xs">PRODUCED</span>`;
-        } else if (o.status === 'REJECTED') {
-          statusBadge = `<span class="px-2.5 py-1 bg-red-500/10 text-red-500 border border-red-500/20 rounded-md font-medium text-xs">REJECTED</span>`;
-        }
+        if (o.status === 'PENDING') statusBadge = `<span class="px-2.5 py-1 bg-amber-500/10 text-amber-500 border border-amber-500/20 rounded-md font-medium text-xs">PENDING</span>`;
+        else if (o.status === 'QUEUED') statusBadge = `<span class="px-2.5 py-1 bg-blue-500/10 text-blue-500 border border-blue-500/20 rounded-md font-medium text-xs">QUEUED</span>`;
+        else if (o.status === 'IN_PRODUCTION') statusBadge = `<span class="px-2.5 py-1 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-md font-medium text-xs">RUNNING</span>`;
+        else if (o.status === 'PRODUCED') statusBadge = `<span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 rounded-md font-medium text-xs">PRODUCED</span>`;
+        else if (o.status === 'REJECTED') statusBadge = `<span class="px-2.5 py-1 bg-red-500/10 text-red-500 border border-red-500/20 rounded-md font-medium text-xs">REJECTED</span>`;
 
         const row = `
           <tr class="hover:bg-zinc-800/50 transition-colors">
@@ -1333,7 +1509,32 @@
       document.getElementById('modalCustomerEmail').innerText = selectedModalOrder.customerEmail;
       document.getElementById('modalGarmentName').innerText = selectedModalOrder.garment;
       document.getElementById('modalWishDate').innerText = "Wish Delivery Date: " + selectedModalOrder.wishDate;
-      document.getElementById('modalArtworkNotes').innerText = selectedModalOrder.notes || "No special artwork notes provided.";
+      
+      const notesDisplay = document.getElementById('modalArtworkNotes');
+      const editInput = document.getElementById('editArtworkNotesInput');
+      const editBtn = document.getElementById('editNotesBtn');
+      
+      notesDisplay.innerText = selectedModalOrder.notes || "No special artwork notes provided.";
+      notesDisplay.classList.remove('hidden');
+      editInput.classList.add('hidden');
+      editBtn.innerText = "Edit Note Input";
+      
+      editBtn.onclick = function() {
+        if (editInput.classList.contains('hidden')) {
+          editInput.value = selectedModalOrder.notes;
+          notesDisplay.classList.add('hidden');
+          editInput.classList.remove('hidden');
+          editBtn.innerText = "Save Note Input";
+        } else {
+          selectedModalOrder.notes = editInput.value;
+          notesDisplay.innerText = selectedModalOrder.notes || "No special artwork notes provided.";
+          notesDisplay.classList.remove('hidden');
+          editInput.classList.add('hidden');
+          editBtn.innerText = "Edit Note Input";
+          saveSystemData();
+        }
+      };
+
       document.getElementById('modalFileName').innerText = selectedModalOrder.artworkName;
 
       const matrix = document.getElementById('modalSizeMatrix');
@@ -1351,7 +1552,6 @@
       if (selectedModalOrder.status === 'PENDING') {
         statusBadge.className = "px-3 py-1 text-xs font-semibold rounded-md bg-amber-500/10 text-amber-500 border border-amber-500/20";
         statusBadge.innerText = "PENDING APPROVAL";
-
         actionButtons.innerHTML = `
           <button onclick="updateOrderStatus('${selectedModalOrder.id}', 'REJECTED')" class="px-4 py-2 bg-zinc-900 border border-red-500/30 text-red-500 hover:bg-red-500/10 font-medium text-sm rounded-md transition-all">Reject Order</button>
           <button onclick="updateOrderStatus('${selectedModalOrder.id}', 'QUEUED')" class="btn-pro-primary text-sm rounded-md transition-all">Approve to Production Queue</button>
@@ -1378,11 +1578,9 @@
         alert("No artwork file attached to this order record.");
         return;
       }
-
       try {
         const dataString = selectedModalOrder.artworkData;
         const filename = selectedModalOrder.artworkName || "Artwork_Asset.png";
-
         const link = document.createElement('a');
         link.href = dataString;
         link.download = filename;
@@ -1394,6 +1592,22 @@
       }
     }
 
+    function printModalInvoice() {
+      if (!selectedModalOrder) return;
+      document.getElementById('printOrderId').innerText = selectedModalOrder.id;
+      document.getElementById('printDate').innerText = new Date().toLocaleDateString();
+      document.getElementById('printCustomerName').innerText = selectedModalOrder.customerName;
+      document.getElementById('printCustomerEmail').innerText = selectedModalOrder.customerEmail;
+      document.getElementById('printWishDate').innerText = selectedModalOrder.wishDate;
+      document.getElementById('printGarment').innerText = selectedModalOrder.garment;
+      document.getElementById('printColor').innerText = selectedModalOrder.color;
+      document.getElementById('printQty').innerText = selectedModalOrder.quantity;
+      document.getElementById('printPrice').innerText = selectedModalOrder.price;
+      document.getElementById('printNotes').innerText = selectedModalOrder.notes || "No special notes provided.";
+      
+      window.print();
+    }
+
     function closeOrderModal() {
       document.getElementById('orderDetailsModal').classList.add('hidden');
     }
@@ -1401,9 +1615,9 @@
     function updateOrderStatus(orderId, newStatus) {
       const order = ordersBacklog.find(o => o.id === orderId);
       if (!order) return;
-
       order.status = newStatus;
       
+      saveSystemData();
       updatePendingBadge();
       updateDashboardMetrics();
       applyBacklogFilters();
@@ -1430,12 +1644,16 @@
         }
       });
 
-      document.getElementById('dashTotalRevenue').innerText = '$' + totalRevenue.toFixed(2);
+      document.getElementById('dashTotalRevenue').innerText = '$' + totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
       document.getElementById('dashPendingCount').innerText = pendingCount;
       document.getElementById('dashActiveVolume').innerText = activeVolume + " Pieces";
       document.getElementById('dashProducedVolume').innerText = producedVolume + " Pieces";
       document.getElementById('dashTotalOrders').innerText = ordersBacklog.length;
       document.getElementById('dashQueuedPieces').innerText = queuedPieces + " Pieces";
+      
+      document.getElementById('kpiQueuedCount').innerText = queuedPieces;
+      document.getElementById('kpiRunningCount').innerText = activeVolume;
+      document.getElementById('kpiCompletedCount').innerText = producedVolume;
     }
 
     function renderProductionFloor() {
@@ -1502,12 +1720,23 @@
       }
     }
 
+    function receiveWarehouseStock(index) {
+      const inputId = 'receiveInput' + index;
+      const inputElement = document.getElementById(inputId);
+      const amount = parseInt(inputElement.value);
+      if(amount > 0) {
+        inventoryBlanks[index].onHand += amount;
+        saveSystemData();
+        renderWarehouseModule();
+      }
+    }
+
     function renderWarehouseModule() {
       const blanksTable = document.getElementById('blanksInventoryTable');
       const finishedTable = document.getElementById('finishedGoodsTable');
 
       blanksTable.innerHTML = "";
-      inventoryBlanks.forEach(blank => {
+      inventoryBlanks.forEach((blank, index) => {
         let allocatedCount = 0;
         ordersBacklog.forEach(order => {
           if ((order.status === 'PENDING' || order.status === 'QUEUED' || order.status === 'IN_PRODUCTION') && order.garment.includes(blank.style.split(' ')[0])) {
@@ -1516,13 +1745,21 @@
         });
 
         const available = blank.onHand - allocatedCount;
+        const rowClass = available < 0 ? "bg-red-500/10 border-red-500/50" : "hover:bg-zinc-800/50 transition-colors";
+        const alertLabel = available < 0 ? `<span class="bg-red-500/20 text-red-500 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold uppercase tracking-wider border border-red-500/30">Deficit Alert</span>` : "";
 
         blanksTable.innerHTML += `
-          <tr class="hover:bg-zinc-800/50 transition-colors">
-            <td class="px-4 py-4 font-medium text-zinc-200">${blank.style}</td>
+          <tr class="${rowClass}">
+            <td class="px-4 py-4 font-medium text-zinc-200">${blank.style} ${alertLabel}</td>
             <td class="px-4 py-4 text-center font-mono text-zinc-300">${blank.onHand}</td>
             <td class="px-4 py-4 text-center font-mono text-blue-400">${allocatedCount}</td>
-            <td class="px-4 py-4 text-right font-mono font-bold text-white">${available}</td>
+            <td class="px-4 py-4 text-center font-mono font-bold text-white">${available}</td>
+            <td class="px-4 py-4 text-right">
+              <div class="flex justify-end gap-2">
+                <input type="number" id="receiveInput${index}" min="1" placeholder="Amount" class="input-pro w-20 px-2 py-1 text-xs text-center font-mono">
+                <button onclick="receiveWarehouseStock(${index})" class="btn-pro-secondary py-1 text-xs">Receive</button>
+              </div>
+            </td>
           </tr>
         `;
       });
@@ -1571,7 +1808,6 @@
         tshirtImg.style.filter = "invert(1) opacity(0.7)";
         tshirtImg.style.mixBlendMode = "screen";
       }
-
       updatePrice();
     }
 
@@ -1596,12 +1832,22 @@
       const laborPerUnit = colors * 0.75;
       const garmentTotal = totalUnits * (garmentRate + laborPerUnit);
       const setupTotal = screensNeeded * 25.0;
+      
+      const estimatedWeightPounds = totalUnits * 0.4; 
+      const shippingTotal = estimatedWeightPounds * 1.50; 
+      
+      const subtotalBeforeTax = garmentTotal + setupTotal + shippingTotal;
+      const taxRate = 0.095; 
+      const taxTotal = subtotalBeforeTax * taxRate;
+      
+      const grandTotal = subtotalBeforeTax + taxTotal;
+      
+      currentCalculatedTotal = '$' + grandTotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
 
-      const grandTotal = garmentTotal + setupTotal;
-      currentCalculatedTotal = '$' + grandTotal.toFixed(2);
-
-      document.getElementById('garmentCost').innerText = '$' + garmentTotal.toFixed(2);
-      document.getElementById('screenCost').innerText = '$' + setupTotal.toFixed(2) + ' (' + screensNeeded + ' Screens)';
+      document.getElementById('garmentCost').innerText = '$' + garmentTotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      document.getElementById('screenCost').innerText = '$' + setupTotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' (' + screensNeeded + ' Screens)';
+      document.getElementById('shippingCost').innerText = '$' + shippingTotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      document.getElementById('taxCost').innerText = '$' + taxTotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
       document.getElementById('totalCost').innerText = currentCalculatedTotal;
     }
 
