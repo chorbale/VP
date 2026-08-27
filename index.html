@@ -724,7 +724,7 @@
           </div>
         </div>
 
-        <!-- WAREHOUSE MANAGEMENT SYSTEM MODULE WITH SUB-TABS -->
+        <!-- WAREHOUSE MANAGEMENT SYSTEM MODULE WITH LOGICAL SCANNER WORKFLOW -->
         <div id="moduleWMS" class="hidden space-y-6">
           <div class="flex items-center gap-2 border-b border-zinc-800 pb-4">
             <button id="warehouseSubTabBtnScanner" onclick="switchWarehouseSubTab('scanner')" class="sub-tab-btn active">Barcode Scanner & Packing</button>
@@ -732,21 +732,47 @@
             <button id="warehouseSubTabBtnFinished" onclick="switchWarehouseSubTab('finished')" class="sub-tab-btn">Finished Goods Manifest</button>
           </div>
 
-          <!-- WAREHOUSE SUB-TAB 1: BARCODE SCANNER -->
+          <!-- WAREHOUSE SUB-TAB 1: BARCODE SCANNER WORKFLOW -->
           <div id="warehouseSubTabScanner" class="space-y-6">
-            <div class="app-panel p-6 space-y-4">
+            <div class="app-panel p-6 space-y-4 border border-zinc-700">
               <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4 flex justify-between items-center">
-                <span>Barcode Scanner Dispatch & Packing Terminal</span>
-                <span class="text-xs font-mono text-blue-400">Handheld Reader Simulator Online</span>
+                <span>Wireless Barcode Scanner Packing Station</span>
+                <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded border border-emerald-500/20">Active Focus Ready</span>
               </h3>
-              <p class="text-sm text-zinc-400">Scan or type order reference identification to automatically pack and dispatch finished items.</p>
+              <p class="text-sm text-zinc-400">Scan job ticket barcode or press enter to register dispatch. Input field maintains automatic persistent focus for rapid multi-package processing.</p>
               
               <div class="flex gap-3 mt-2">
-                <input type="text" id="barcodeInput" placeholder="Scan or Enter Order Reference Identification (Example: VirtuePrint-2026-8818)" class="input-pro flex-1 px-4 py-2.5 text-sm font-mono">
+                <input type="text" id="barcodeInput" placeholder="Waiting for scanner input... (Example: VirtuePrint-2026-8818)" class="input-pro flex-1 px-4 py-3 text-base font-mono">
                 <button onclick="processBarcodeScan()" class="btn-pro-primary px-6">Process Scan</button>
               </div>
+
+              <!-- DYNAMIC FEEDBACK CARD CONTAINER -->
+              <div id="scannerFeedbackContainer" class="hidden mt-4">
             </div>
           </div>
+
+          <!-- LIVE SCAN SESSION LOG -->
+          <div class="app-panel p-6 space-y-4">
+            <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4">
+              Current Session Scan Log
+            </h3>
+            <div class="overflow-x-auto rounded-lg border border-zinc-800">
+              <table class="w-full text-left text-sm">
+                <thead class="bg-zinc-900 border-b border-zinc-800 text-zinc-400">
+                  <tr>
+                    <th class="px-4 py-3 font-medium">Timestamp</th>
+                    <th class="px-4 py-3 font-medium">Order Reference</th>
+                    <th class="px-4 py-3 font-medium">Customer & Destination</th>
+                    <th class="px-4 py-3 font-medium text-center">Status Result</th>
+                  </tr>
+                </thead>
+                <tbody id="scanSessionLogBody" class="divide-y divide-zinc-800 text-zinc-200">
+                  <tr><td colspan="4" class="py-4 text-center text-zinc-500 text-xs">No packages scanned during current operational session.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
 
           <!-- WAREHOUSE SUB-TAB 2: MATERIAL INVENTORY -->
           <div id="warehouseSubTabInventory" class="hidden space-y-6">
@@ -1179,6 +1205,7 @@
     let ordersBacklog = JSON.parse(localStorage.getItem('virtuePrintOrders')) || DEFAULT_ORDERS;
     let inventoryBlanks = JSON.parse(localStorage.getItem('virtuePrintInventory')) || DEFAULT_INVENTORY;
     let notificationLogs = JSON.parse(localStorage.getItem('virtuePrintNotifications')) || DEFAULT_NOTIFICATIONS;
+    let scanSessionLogs = [];
 
     function saveSystemData() {
       localStorage.setItem('virtuePrintOrders', JSON.stringify(ordersBacklog));
@@ -1483,6 +1510,11 @@
       if (subTabName === 'scanner') {
         document.getElementById('warehouseSubTabScanner').classList.remove('hidden');
         document.getElementById('warehouseSubTabBtnScanner').classList.add('active');
+        // Ensure barcode input maintains automatic focus for wireless scanner
+        setTimeout(() => {
+          const scannerInput = document.getElementById('barcodeInput');
+          if(scannerInput) scannerInput.focus();
+        }, 50);
       } else if (subTabName === 'inventory') {
         document.getElementById('warehouseSubTabInventory').classList.remove('hidden');
         document.getElementById('warehouseSubTabBtnInventory').classList.add('active');
@@ -1907,34 +1939,160 @@
       closeOrderModal();
     }
 
+    // Wireless Barcode Scanner Event Listener Setup
+    document.addEventListener('DOMContentLoaded', () => {
+      const barcodeInput = document.getElementById('barcodeInput');
+      if(barcodeInput) {
+        barcodeInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            processBarcodeScan();
+          }
+        });
+        
+        // Persistent focus maintenance
+        document.addEventListener('click', (e) => {
+          const wmsModule = document.getElementById('moduleWMS');
+          const scannerSubTab = document.getElementById('warehouseSubTabScanner');
+          if (wmsModule && !wmsModule.classList.contains('hidden') && scannerSubTab && !scannerSubTab.classList.contains('hidden')) {
+            if (e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'SELECT') {
+              barcodeInput.focus();
+            }
+          }
+        });
+      }
+    });
+
     function processBarcodeScan() {
       const codeInput = document.getElementById('barcodeInput');
+      const feedbackContainer = document.getElementById('scannerFeedbackContainer');
       const val = codeInput.value.trim();
+      
       if (!val) {
-        alert("Please enter or scan an order reference identification.");
         return;
       }
 
       const order = ordersBacklog.find(o => o.id.toLowerCase() === val.toLowerCase());
+      const now = new Date();
+      const timeString = now.toLocaleTimeString();
+
+      feedbackContainer.classList.remove('hidden');
+
       if (!order) {
-        alert("Scanning Error: Order reference " + val + " not found in system backlog.");
+        // Error handling for unknown barcode
+        feedbackContainer.innerHTML = `
+          <div class="bg-red-500/10 border border-red-500/40 p-4 rounded-lg flex items-start gap-3">
+            <svg class="w-6 h-6 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            <div>
+              <h4 class="text-sm font-semibold text-red-400">Scan Error: Unrecognized Barcode</h4>
+              <p class="text-xs text-zinc-300 mt-1">The barcode string <span class="font-mono text-white">${val}</span> does not match any active order reference in the operating system.</p>
+            </div>
+          </div>
+        `;
+        addScanSessionLog(timeString, val, "Unrecognized Barcode", "text-red-400");
+        codeInput.value = "";
+        codeInput.focus();
         return;
       }
 
       if (order.status === 'PRODUCED') {
-        alert("Order " + order.id + " is already packed and dispatched.");
-      } else {
-        order.status = 'PRODUCED';
-        logNotification(order.customerEmail, order.id, 'PRODUCED (Scanned & Packed)');
-        saveSystemData();
-        updatePendingBadge();
-        updateDashboardMetrics();
-        renderWarehouseModule();
-        renderProductionFloor();
-        renderNotificationLogs();
-        alert("Success: Handheld scanner registered " + order.id + ". Item marked as packed and dispatched to address: " + order.customerAddress);
+        // Warning: already dispatched
+        feedbackContainer.innerHTML = `
+          <div class="bg-amber-500/10 border border-amber-500/40 p-4 rounded-lg flex items-start gap-3">
+            <svg class="w-6 h-6 text-amber-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <div>
+              <h4 class="text-sm font-semibold text-amber-400">Notice: Package Already Dispatched</h4>
+              <p class="text-xs text-zinc-300 mt-1">Order <span class="font-mono text-white">${order.id}</span> for ${order.customerName} has already been marked as packed and completed.</p>
+            </div>
+          </div>
+        `;
+        addScanSessionLog(timeString, order.id, "Already Dispatched", "text-amber-400");
+        codeInput.value = "";
+        codeInput.focus();
+        return;
       }
+
+      if (order.status !== 'IN_PRODUCTION' && order.status !== 'QUEUED') {
+        feedbackContainer.innerHTML = `
+          <div class="bg-amber-500/10 border border-amber-500/40 p-4 rounded-lg flex items-start gap-3">
+            <svg class="w-6 h-6 text-amber-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            <div>
+              <h4 class="text-sm font-semibold text-amber-400">Scan Warning: Order Not Ready</h4>
+              <p class="text-xs text-zinc-300 mt-1">Order <span class="font-mono text-white">${order.id}</span> is currently in state <span class="font-semibold text-white">${order.status}</span> and cannot be packed yet.</p>
+            </div>
+          </div>
+        `;
+        addScanSessionLog(timeString, order.id, "Order Not Ready", "text-amber-400");
+        codeInput.value = "";
+        codeInput.focus();
+        return;
+      }
+
+      // Successful scan dispatch & packing confirmation
+      order.status = 'PRODUCED';
+      logNotification(order.customerEmail, order.id, 'PRODUCED (Wireless Scanner Packed)');
+      saveSystemData();
+      updatePendingBadge();
+      updateDashboardMetrics();
+      renderWarehouseModule();
+      renderProductionFloor();
+      renderNotificationLogs();
+
+      feedbackContainer.innerHTML = `
+        <div class="bg-emerald-500/10 border border-emerald-500/40 p-4 rounded-lg flex items-start gap-3">
+          <svg class="w-6 h-6 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+          <div class="w-full">
+            <div class="flex justify-between items-center">
+              <h4 class="text-sm font-semibold text-emerald-400">Successful Package Dispatch & Packing</h4>
+              <span class="font-mono text-xs bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded">${order.id}</span>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mt-2 pt-2 border-t border-emerald-500/20 text-xs">
+              <div>
+                <span class="text-zinc-400 block">Customer:</span>
+                <span class="font-semibold text-white">${order.customerName}</span>
+              </div>
+              <div>
+                <span class="text-zinc-400 block">Total Pieces Packed:</span>
+                <span class="font-semibold text-white">${order.quantity} Units</span>
+              </div>
+              <div class="col-span-2">
+                <span class="text-zinc-400 block">Destination Shipping Address:</span>
+                <span class="font-mono text-zinc-200">${order.customerAddress || 'Not Provided'}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      addScanSessionLog(timeString, order.id, "Successfully Dispatched", "text-emerald-400");
+      
       codeInput.value = "";
+      codeInput.focus();
+    }
+
+    function addScanSessionLog(timeStr, orderRef, resultText, colorClass) {
+      scanSessionLogs.unshift({ time: timeStr, ref: orderRef, result: resultText, color: colorClass });
+      const logBody = document.getElementById('scanSessionLogBody');
+      logBody.innerHTML = "";
+      
+      scanSessionLogs.forEach(log => {
+        let customerInfo = "N/A";
+        let matchOrder = ordersBacklog.find(o => o.id === log.ref);
+        if(matchOrder) {
+          customerInfo = matchOrder.customerName + " - " + (matchOrder.customerAddress || 'No Address');
+        } else {
+          customerInfo = "Unknown Record";
+        }
+
+        logBody.innerHTML += `
+          <tr class="hover:bg-zinc-800/50 transition-colors">
+            <td class="px-4 py-3 font-mono text-xs text-zinc-400">${log.time}</td>
+            <td class="px-4 py-3 font-mono text-blue-400 font-medium">${log.ref}</td>
+            <td class="px-4 py-3 text-xs text-zinc-300">${customerInfo}</td>
+            <td class="px-4 py-3 text-center font-semibold text-xs ${log.color}">${log.result}</td>
+          </tr>
+        `;
+      });
     }
 
     function updatePendingBadge() {
