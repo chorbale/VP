@@ -327,23 +327,23 @@
                 <div class="grid grid-cols-5 gap-2">
                   <div class="text-center flex flex-col justify-between">
                     <span class="block text-[10px] font-medium text-zinc-400 mb-1 leading-tight">Small</span>
-                    <input type="number" id="inputS" value="10" min="0" oninput="updateTotalsFromSizes()" class="input-pro w-full px-2 py-1.5 text-xs font-mono text-center">
+                    <input type="number" id="inputSmall" value="10" min="0" oninput="updateTotalsFromSizes()" class="input-pro w-full px-2 py-1.5 text-xs font-mono text-center">
                   </div>
                   <div class="text-center flex flex-col justify-between">
                     <span class="block text-[10px] font-medium text-zinc-400 mb-1 leading-tight">Medium</span>
-                    <input type="number" id="inputM" value="25" min="0" oninput="updateTotalsFromSizes()" class="input-pro w-full px-2 py-1.5 text-xs font-mono text-center">
+                    <input type="number" id="inputMedium" value="25" min="0" oninput="updateTotalsFromSizes()" class="input-pro w-full px-2 py-1.5 text-xs font-mono text-center">
                   </div>
                   <div class="text-center flex flex-col justify-between">
                     <span class="block text-[10px] font-medium text-zinc-400 mb-1 leading-tight">Large</span>
-                    <input type="number" id="inputL" value="25" min="0" oninput="updateTotalsFromSizes()" class="input-pro w-full px-2 py-1.5 text-xs font-mono text-center">
+                    <input type="number" id="inputLarge" value="25" min="0" oninput="updateTotalsFromSizes()" class="input-pro w-full px-2 py-1.5 text-xs font-mono text-center">
                   </div>
                   <div class="text-center flex flex-col justify-between">
                     <span class="block text-[10px] font-medium text-zinc-400 mb-1 leading-tight">Extra Large</span>
-                    <input type="number" id="inputXL" value="10" min="0" oninput="updateTotalsFromSizes()" class="input-pro w-full px-2 py-1.5 text-xs font-mono text-center">
+                    <input type="number" id="inputExtraLarge" value="10" min="0" oninput="updateTotalsFromSizes()" class="input-pro w-full px-2 py-1.5 text-xs font-mono text-center">
                   </div>
                   <div class="text-center flex flex-col justify-between">
                     <span class="block text-[10px] font-medium text-zinc-400 mb-1 leading-tight">Double Extra Large</span>
-                    <input type="number" id="input2XL" value="5" min="0" oninput="updateTotalsFromSizes()" class="input-pro w-full px-2 py-1.5 text-xs font-mono text-center">
+                    <input type="number" id="inputDoubleExtraLarge" value="5" min="0" oninput="updateTotalsFromSizes()" class="input-pro w-full px-2 py-1.5 text-xs font-mono text-center">
                   </div>
                 </div>
               </div>
@@ -437,11 +437,13 @@
                   Virtual Platen Render
                 </h3>
 
-                <div id="garmentViewport" class="w-full h-56 bg-zinc-950 rounded-md border border-zinc-800 flex items-center justify-center relative overflow-hidden">
-                  <div id="garmentSilhouette" class="w-40 h-48 bg-zinc-900 border border-zinc-800 rounded-t-2xl relative flex flex-col items-center justify-center transition-colors">
-                    <div class="w-14 h-4 bg-zinc-950 rounded-b-full absolute top-0 border-b border-zinc-800"></div>
-                    <div class="w-24 h-32 border border-dashed border-zinc-600 rounded flex flex-col items-center justify-center p-1 relative overflow-hidden">
-                      <span id="artworkPlaceholder" class="text-[9px] text-zinc-500 text-center leading-tight">Standard Platen Boundary<br>(12 inches by 15 inches)</span>
+                <div id="garmentViewport" class="w-full h-64 bg-zinc-950 rounded-md border border-zinc-800 flex items-center justify-center relative overflow-hidden">
+                  <div id="garmentSilhouette" class="w-full h-full relative flex flex-col items-center justify-start pt-14 transition-colors bg-zinc-900">
+                    
+                    <img id="tshirtImage" src="T-shirt.png" class="absolute inset-0 w-full h-full object-contain pointer-events-none p-4" style="filter: invert(1) opacity(0.7); mix-blend-mode: screen;" alt="T-Shirt Template Base">
+                    
+                    <div class="w-28 h-36 border border-dashed border-zinc-500/50 rounded flex flex-col items-center justify-center p-1 relative z-10 overflow-hidden bg-zinc-900/30 backdrop-blur-sm shadow-xl">
+                      <span id="artworkPlaceholder" class="text-[10px] text-zinc-300 font-medium text-center leading-tight">Standard Platen Boundary<br>(12 inches by 15 inches)</span>
                       <img id="artworkRender" class="hidden max-w-full max-h-full object-contain filter drop-shadow-md" alt="Virtual Proof Render">
                     </div>
                   </div>
@@ -467,7 +469,7 @@
                     <div class="bg-zinc-900 p-4 rounded-md border border-zinc-800 space-y-3">
                       <div class="flex justify-between text-sm">
                         <span class="text-zinc-400">Order Reference Identification:</span>
-                        <span id="generatedOrderId" class="font-mono font-semibold text-blue-400">VP-2026-8820</span>
+                        <span id="generatedOrderId" class="font-mono font-semibold text-blue-400">VirtuePrint-2026-8820</span>
                       </div>
                       <div class="flex justify-between text-sm">
                         <span class="text-zinc-400">Queue Status:</span>
@@ -748,7 +750,7 @@
       <div class="border-b border-zinc-800 pb-4 pr-8">
         <h2 class="text-xl font-bold text-white flex items-center gap-3">
           Order Detail View
-          <span id="modalOrderId" class="text-blue-500 font-mono text-lg bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">VP-2026-8820</span>
+          <span id="modalOrderId" class="text-blue-500 font-mono text-lg bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">VirtuePrint-2026-8820</span>
         </h2>
         <p class="text-sm text-zinc-400 mt-1">Review parameters and download production assets.</p>
       </div>
@@ -825,14 +827,14 @@
 
     let ordersBacklog = [
       {
-        id: "VP-2026-8818",
+        id: "VirtuePrint-2026-8818",
         customerName: "Nikol Ivanova",
         customerEmail: "nikol@example.com",
         wishDate: "2026-09-10",
         garment: "Independent Trading Company Heavy Hoodie",
         color: "Navy",
-        qty: 50,
-        sizes: { S: 5, M: 15, L: 20, XL: 8, XXL: 2 },
+        quantity: 50,
+        sizes: { Small: 5, Medium: 15, Large: 20, ExtraLarge: 8, DoubleExtraLarge: 2 },
         price: "$1,125.00",
         status: "QUEUED",
         notes: "Center chest print, 3 inches below collar. Pantone Matching System 286 Blue ink.",
@@ -840,14 +842,14 @@
         artworkData: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><circle cx='100' cy='100' r='80' fill='%232563eb'/></svg>"
       },
       {
-        id: "VP-2026-8819",
+        id: "VirtuePrint-2026-8819",
         customerName: "Valentin Rizov",
         customerEmail: "valentin@example.com",
         wishDate: "2026-09-15",
         garment: "Customer Provided Blanks",
         color: "White",
-        qty: 150,
-        sizes: { S: 25, M: 50, L: 50, XL: 20, XXL: 5 },
+        quantity: 150,
+        sizes: { Small: 25, Medium: 50, Large: 50, ExtraLarge: 20, DoubleExtraLarge: 5 },
         price: "$450.00",
         status: "IN_PRODUCTION",
         notes: "Customer shipping custom garments directly to the shop floor.",
@@ -855,14 +857,14 @@
         artworkData: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><rect width='200' height='200' fill='%2310b981'/></svg>"
       },
       {
-        id: "VP-2026-8817",
+        id: "VirtuePrint-2026-8817",
         customerName: "Zlatin",
         customerEmail: "zlatin@example.com",
         wishDate: "2026-09-05",
         garment: "Shaka Wear 7.5 ounce Heavyweight",
         color: "Black",
-        qty: 100,
-        sizes: { S: 10, M: 40, L: 30, XL: 15, XXL: 5 },
+        quantity: 100,
+        sizes: { Small: 10, Medium: 40, Large: 30, ExtraLarge: 15, DoubleExtraLarge: 5 },
         price: "$950.00",
         status: "PRODUCED",
         notes: "Standard placement.",
@@ -914,10 +916,10 @@
       }
 
       for (let d = 1; d <= totalDays; d++) {
-        const mStr = String(calendarMonth + 1).padStart(2, '0');
-        const dStr = String(d).padStart(2, '0');
-        const dateString = calendarYear + "-" + mStr + "-" + dStr;
-        const displayString = mStr + "/" + dStr + "/" + calendarYear;
+        const monthString = String(calendarMonth + 1).padStart(2, '0');
+        const dayString = String(d).padStart(2, '0');
+        const dateString = calendarYear + "-" + monthString + "-" + dayString;
+        const displayString = monthString + "/" + dayString + "/" + calendarYear;
 
         const isSelected = (selectedCalendarDate === dateString);
         const btnClass = isSelected ? 
@@ -979,10 +981,10 @@
       }
 
       for (let d = 1; d <= totalDays; d++) {
-        const mStr = String(intakeCalendarMonth + 1).padStart(2, '0');
-        const dStr = String(d).padStart(2, '0');
-        const dateString = intakeCalendarYear + "-" + mStr + "-" + dStr;
-        const displayString = mStr + "/" + dStr + "/" + intakeCalendarYear;
+        const monthString = String(intakeCalendarMonth + 1).padStart(2, '0');
+        const dayString = String(d).padStart(2, '0');
+        const dateString = intakeCalendarYear + "-" + monthString + "-" + dayString;
+        const displayString = monthString + "/" + dayString + "/" + intakeCalendarYear;
 
         const isSelected = (selectedIntakeDate === dateString);
         const btnClass = isSelected ? 
@@ -1009,7 +1011,7 @@
 
     function generateUniqueOrderId() {
       const randomNum = Math.floor(1000 + Math.random() * 9000);
-      return "VP-2026-" + randomNum;
+      return "VirtuePrint-2026-" + randomNum;
     }
 
     function switchTab(tabName) {
@@ -1108,24 +1110,24 @@
     function applyTotalQuantityDistribution() {
       const total = parseInt(document.getElementById('inputTotalQuantity').value) || 0;
       
-      document.getElementById('inputS').value = Math.round(total * 0.15);
-      document.getElementById('inputM').value = Math.round(total * 0.35);
-      document.getElementById('inputL').value = Math.round(total * 0.35);
-      document.getElementById('inputXL').value = Math.round(total * 0.10);
-      document.getElementById('input2XL').value = Math.max(0, total - (Math.round(total * 0.15) + Math.round(total * 0.35) + Math.round(total * 0.35) + Math.round(total * 0.10)));
+      document.getElementById('inputSmall').value = Math.round(total * 0.15);
+      document.getElementById('inputMedium').value = Math.round(total * 0.35);
+      document.getElementById('inputLarge').value = Math.round(total * 0.35);
+      document.getElementById('inputExtraLarge').value = Math.round(total * 0.10);
+      document.getElementById('inputDoubleExtraLarge').value = Math.max(0, total - (Math.round(total * 0.15) + Math.round(total * 0.35) + Math.round(total * 0.35) + Math.round(total * 0.10)));
 
       document.getElementById('totalUnitsBadge').innerText = total + " Pieces";
       updatePrice();
     }
 
     function updateTotalsFromSizes() {
-      const s = parseInt(document.getElementById('inputS').value) || 0;
-      const m = parseInt(document.getElementById('inputM').value) || 0;
-      const l = parseInt(document.getElementById('inputL').value) || 0;
-      const xl = parseInt(document.getElementById('inputXL').value) || 0;
-      const xxl = parseInt(document.getElementById('input2XL').value) || 0;
+      const smallAmount = parseInt(document.getElementById('inputSmall').value) || 0;
+      const mediumAmount = parseInt(document.getElementById('inputMedium').value) || 0;
+      const largeAmount = parseInt(document.getElementById('inputLarge').value) || 0;
+      const extraLargeAmount = parseInt(document.getElementById('inputExtraLarge').value) || 0;
+      const doubleExtraLargeAmount = parseInt(document.getElementById('inputDoubleExtraLarge').value) || 0;
 
-      const total = s + m + l + xl + xxl;
+      const total = smallAmount + mediumAmount + largeAmount + extraLargeAmount + doubleExtraLargeAmount;
       document.getElementById('inputTotalQuantity').value = total;
       document.getElementById('totalUnitsBadge').innerText = total + " Pieces";
 
@@ -1136,24 +1138,24 @@
       const total = parseInt(document.getElementById('inputTotalQuantity').value) || 75;
 
       if (type === 'standard') {
-        document.getElementById('inputS').value = Math.round(total * 0.15);
-        document.getElementById('inputM').value = Math.round(total * 0.35);
-        document.getElementById('inputL').value = Math.round(total * 0.35);
-        document.getElementById('inputXL').value = Math.round(total * 0.10);
-        document.getElementById('input2XL').value = Math.max(0, total - (Math.round(total * 0.15) + Math.round(total * 0.35) + Math.round(total * 0.35) + Math.round(total * 0.10)));
+        document.getElementById('inputSmall').value = Math.round(total * 0.15);
+        document.getElementById('inputMedium').value = Math.round(total * 0.35);
+        document.getElementById('inputLarge').value = Math.round(total * 0.35);
+        document.getElementById('inputExtraLarge').value = Math.round(total * 0.10);
+        document.getElementById('inputDoubleExtraLarge').value = Math.max(0, total - (Math.round(total * 0.15) + Math.round(total * 0.35) + Math.round(total * 0.35) + Math.round(total * 0.10)));
       } else if (type === 'streetwear') {
-        document.getElementById('inputS').value = Math.round(total * 0.05);
-        document.getElementById('inputM').value = Math.round(total * 0.15);
-        document.getElementById('inputL').value = Math.round(total * 0.40);
-        document.getElementById('inputXL').value = Math.round(total * 0.30);
-        document.getElementById('input2XL').value = Math.max(0, total - (Math.round(total * 0.05) + Math.round(total * 0.15) + Math.round(total * 0.40) + Math.round(total * 0.30)));
+        document.getElementById('inputSmall').value = Math.round(total * 0.05);
+        document.getElementById('inputMedium').value = Math.round(total * 0.15);
+        document.getElementById('inputLarge').value = Math.round(total * 0.40);
+        document.getElementById('inputExtraLarge').value = Math.round(total * 0.30);
+        document.getElementById('inputDoubleExtraLarge').value = Math.max(0, total - (Math.round(total * 0.05) + Math.round(total * 0.15) + Math.round(total * 0.40) + Math.round(total * 0.30)));
       } else if (type === 'even') {
-        const each = Math.floor(total / 5);
-        document.getElementById('inputS').value = each;
-        document.getElementById('inputM').value = each;
-        document.getElementById('inputL').value = each;
-        document.getElementById('inputXL').value = each;
-        document.getElementById('input2XL').value = total - (each * 4);
+        const eachAmount = Math.floor(total / 5);
+        document.getElementById('inputSmall').value = eachAmount;
+        document.getElementById('inputMedium').value = eachAmount;
+        document.getElementById('inputLarge').value = eachAmount;
+        document.getElementById('inputExtraLarge').value = eachAmount;
+        document.getElementById('inputDoubleExtraLarge').value = total - (eachAmount * 4);
       }
 
       updateTotalsFromSizes();
@@ -1216,12 +1218,12 @@
 
       const notes = document.getElementById('artworkNotes').value || "No special placement notes.";
 
-      const s = parseInt(document.getElementById('inputS').value) || 0;
-      const m = parseInt(document.getElementById('inputM').value) || 0;
-      const l = parseInt(document.getElementById('inputL').value) || 0;
-      const xl = parseInt(document.getElementById('inputXL').value) || 0;
-      const xxl = parseInt(document.getElementById('input2XL').value) || 0;
-      const totalUnits = s + m + l + xl + xxl;
+      const smallAmount = parseInt(document.getElementById('inputSmall').value) || 0;
+      const mediumAmount = parseInt(document.getElementById('inputMedium').value) || 0;
+      const largeAmount = parseInt(document.getElementById('inputLarge').value) || 0;
+      const extraLargeAmount = parseInt(document.getElementById('inputExtraLarge').value) || 0;
+      const doubleExtraLargeAmount = parseInt(document.getElementById('inputDoubleExtraLarge').value) || 0;
+      const totalUnits = smallAmount + mediumAmount + largeAmount + extraLargeAmount + doubleExtraLargeAmount;
 
       ordersBacklog.unshift({
         id: currentOrderId,
@@ -1230,8 +1232,8 @@
         wishDate: wishDate,
         garment: garmentName,
         color: currentColorType === 'dark' ? 'Black' : 'White',
-        qty: totalUnits,
-        sizes: { S: s, M: m, L: l, XL: xl, XXL: xxl },
+        quantity: totalUnits,
+        sizes: { Small: smallAmount, Medium: mediumAmount, Large: largeAmount, ExtraLarge: extraLargeAmount, DoubleExtraLarge: doubleExtraLargeAmount },
         price: currentCalculatedTotal,
         status: "PENDING",
         notes: notes,
@@ -1308,7 +1310,7 @@
               </div>
             </td>
             <td class="px-4 py-4 text-center font-mono text-amber-400 text-xs">${o.wishDate}</td>
-            <td class="px-4 py-4 text-center font-medium text-zinc-200">${o.qty} Pieces</td>
+            <td class="px-4 py-4 text-center font-medium text-zinc-200">${o.quantity} Pieces</td>
             <td class="px-4 py-4 text-center font-mono text-zinc-300">${o.price}</td>
             <td class="px-4 py-4 text-center">${statusBadge}</td>
             <td class="px-4 py-4 text-right">
@@ -1336,11 +1338,11 @@
 
       const matrix = document.getElementById('modalSizeMatrix');
       matrix.innerHTML = `
-        <div class="bg-zinc-800 p-2 rounded-md border border-zinc-700"><span class="text-zinc-400 text-xs block mb-1">Small</span><span class="font-medium text-zinc-200">${selectedModalOrder.sizes.S}</span></div>
-        <div class="bg-zinc-800 p-2 rounded-md border border-zinc-700"><span class="text-zinc-400 text-xs block mb-1">Medium</span><span class="font-medium text-zinc-200">${selectedModalOrder.sizes.M}</span></div>
-        <div class="bg-zinc-800 p-2 rounded-md border border-zinc-700"><span class="text-zinc-400 text-xs block mb-1">Large</span><span class="font-medium text-zinc-200">${selectedModalOrder.sizes.L}</span></div>
-        <div class="bg-zinc-800 p-2 rounded-md border border-zinc-700"><span class="text-zinc-400 text-xs block mb-1">Extra Large</span><span class="font-medium text-zinc-200">${selectedModalOrder.sizes.XL}</span></div>
-        <div class="bg-zinc-800 p-2 rounded-md border border-zinc-700"><span class="text-zinc-400 text-xs block mb-1">Double XL</span><span class="font-medium text-zinc-200">${selectedModalOrder.sizes.XXL}</span></div>
+        <div class="bg-zinc-800 p-2 rounded-md border border-zinc-700"><span class="text-zinc-400 text-xs block mb-1">Small</span><span class="font-medium text-zinc-200">${selectedModalOrder.sizes.Small}</span></div>
+        <div class="bg-zinc-800 p-2 rounded-md border border-zinc-700"><span class="text-zinc-400 text-xs block mb-1">Medium</span><span class="font-medium text-zinc-200">${selectedModalOrder.sizes.Medium}</span></div>
+        <div class="bg-zinc-800 p-2 rounded-md border border-zinc-700"><span class="text-zinc-400 text-xs block mb-1">Large</span><span class="font-medium text-zinc-200">${selectedModalOrder.sizes.Large}</span></div>
+        <div class="bg-zinc-800 p-2 rounded-md border border-zinc-700"><span class="text-zinc-400 text-xs block mb-1">Extra Large</span><span class="font-medium text-zinc-200">${selectedModalOrder.sizes.ExtraLarge}</span></div>
+        <div class="bg-zinc-800 p-2 rounded-md border border-zinc-700"><span class="text-zinc-400 text-xs block mb-1">Double Extra Large</span><span class="font-medium text-zinc-200">${selectedModalOrder.sizes.DoubleExtraLarge}</span></div>
       `;
 
       const statusBadge = document.getElementById('modalStatusBadge');
@@ -1378,16 +1380,16 @@
       }
 
       try {
-        const dataStr = selectedModalOrder.artworkData;
+        const dataString = selectedModalOrder.artworkData;
         const filename = selectedModalOrder.artworkName || "Artwork_Asset.png";
 
         const link = document.createElement('a');
-        link.href = dataStr;
+        link.href = dataString;
         link.download = filename;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-      } catch (err) {
+      } catch (errorDetails) {
         alert("File download process initiated.");
       }
     }
@@ -1417,9 +1419,9 @@
 
     function updateDashboardMetrics() {
       const pendingCount = ordersBacklog.filter(o => o.status === 'PENDING').length;
-      const activeVolume = ordersBacklog.filter(o => o.status === 'IN_PRODUCTION').reduce((sum, o) => sum + o.qty, 0);
-      const producedVolume = ordersBacklog.filter(o => o.status === 'PRODUCED').reduce((sum, o) => sum + o.qty, 0);
-      const queuedPieces = ordersBacklog.filter(o => o.status === 'QUEUED').reduce((sum, o) => sum + o.qty, 0);
+      const activeVolume = ordersBacklog.filter(o => o.status === 'IN_PRODUCTION').reduce((sum, o) => sum + o.quantity, 0);
+      const producedVolume = ordersBacklog.filter(o => o.status === 'PRODUCED').reduce((sum, o) => sum + o.quantity, 0);
+      const queuedPieces = ordersBacklog.filter(o => o.status === 'QUEUED').reduce((sum, o) => sum + o.quantity, 0);
 
       let totalRevenue = 0;
       ordersBacklog.forEach(o => {
@@ -1457,7 +1459,7 @@
             <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 flex justify-between items-center">
               <div>
                 <span class="font-semibold text-sm text-zinc-100 block">Order Reference: ${o.id}</span>
-                <span class="text-zinc-400 text-xs mt-1 block">${o.garment} - ${o.qty} Pieces</span>
+                <span class="text-zinc-400 text-xs mt-1 block">${o.garment} - ${o.quantity} Pieces</span>
                 <span class="text-amber-400 font-mono text-[11px] block mt-1">Wish Delivery: ${o.wishDate}</span>
               </div>
               <button onclick="updateOrderStatus('${o.id}', 'IN_PRODUCTION')" class="btn-pro-primary text-xs">Start Production</button>
@@ -1474,7 +1476,7 @@
             <div class="bg-indigo-950/30 p-4 rounded-lg border border-indigo-500/30 flex justify-between items-center">
               <div>
                 <span class="font-semibold text-sm text-indigo-300 block">Running Order Reference: ${o.id}</span>
-                <span class="text-zinc-400 text-xs mt-1 block">${o.garment} - ${o.qty} Pieces</span>
+                <span class="text-zinc-400 text-xs mt-1 block">${o.garment} - ${o.quantity} Pieces</span>
                 <span class="text-amber-400 font-mono text-[11px] block mt-1">Wish Delivery: ${o.wishDate}</span>
               </div>
               <button onclick="updateOrderStatus('${o.id}', 'PRODUCED')" class="btn-emerald-solid text-xs">Mark Completed</button>
@@ -1491,7 +1493,7 @@
             <div class="bg-zinc-900 p-3 rounded-lg border border-zinc-800 flex justify-between items-center">
               <div>
                 <span class="font-semibold text-sm text-zinc-300 block">Completed Reference: ${o.id}</span>
-                <span class="text-zinc-500 text-xs mt-0.5 block">${o.qty} Pieces successfully printed. (Wish: ${o.wishDate})</span>
+                <span class="text-zinc-500 text-xs mt-0.5 block">${o.quantity} Pieces successfully printed. (Wish: ${o.wishDate})</span>
               </div>
               <span class="px-2 py-1 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-medium text-[10px] rounded">PRODUCED</span>
             </div>
@@ -1509,7 +1511,7 @@
         let allocatedCount = 0;
         ordersBacklog.forEach(order => {
           if ((order.status === 'PENDING' || order.status === 'QUEUED' || order.status === 'IN_PRODUCTION') && order.garment.includes(blank.style.split(' ')[0])) {
-            allocatedCount += order.qty;
+            allocatedCount += order.quantity;
           }
         });
 
@@ -1540,7 +1542,7 @@
                 <div class="text-[11px] text-zinc-500 mt-0.5">${o.customerEmail}</div>
               </td>
               <td class="px-4 py-4 text-center font-mono text-amber-400 text-xs">${o.wishDate}</td>
-              <td class="px-4 py-4 text-center font-medium text-emerald-400">${o.qty} Pieces</td>
+              <td class="px-4 py-4 text-center font-medium text-emerald-400">${o.quantity} Pieces</td>
               <td class="px-4 py-4 text-center font-mono text-zinc-400">Rack B-14</td>
               <td class="px-4 py-4 text-right">
                 <button class="btn-pro-secondary text-xs">Print Dispatch Label</button>
@@ -1554,13 +1556,20 @@
     function setGarmentColor(colorName, type) {
       currentColorType = type;
       const silhouette = document.getElementById('garmentSilhouette');
+      const tshirtImg = document.getElementById('tshirtImage');
 
       if (colorName === 'black') {
-        silhouette.className = "w-40 h-48 bg-zinc-900 border border-zinc-800 rounded-t-2xl relative flex flex-col items-center justify-center transition-colors";
+        silhouette.className = "w-full h-full bg-zinc-900 relative flex flex-col items-center justify-start pt-14 transition-colors";
+        tshirtImg.style.filter = "invert(1) opacity(0.7)";
+        tshirtImg.style.mixBlendMode = "screen";
       } else if (colorName === 'white') {
-        silhouette.className = "w-40 h-48 bg-zinc-200 border border-zinc-300 rounded-t-2xl relative flex flex-col items-center justify-center transition-colors";
+        silhouette.className = "w-full h-full bg-zinc-200 relative flex flex-col items-center justify-start pt-14 transition-colors";
+        tshirtImg.style.filter = "opacity(0.9)";
+        tshirtImg.style.mixBlendMode = "multiply";
       } else if (colorName === 'navy') {
-        silhouette.className = "w-40 h-48 bg-blue-950 border border-blue-900 rounded-t-2xl relative flex flex-col items-center justify-center transition-colors";
+        silhouette.className = "w-full h-full bg-blue-950 relative flex flex-col items-center justify-start pt-14 transition-colors";
+        tshirtImg.style.filter = "invert(1) opacity(0.7)";
+        tshirtImg.style.mixBlendMode = "screen";
       }
 
       updatePrice();
@@ -1575,13 +1584,13 @@
       const isDark = currentColorType === 'dark';
       const colors = parseInt(document.getElementById('colorCount').value);
 
-      const s = parseInt(document.getElementById('inputS').value) || 0;
-      const m = parseInt(document.getElementById('inputM').value) || 0;
-      const l = parseInt(document.getElementById('inputL').value) || 0;
-      const xl = parseInt(document.getElementById('inputXL').value) || 0;
-      const xxl = parseInt(document.getElementById('input2XL').value) || 0;
+      const smallAmount = parseInt(document.getElementById('inputSmall').value) || 0;
+      const mediumAmount = parseInt(document.getElementById('inputMedium').value) || 0;
+      const largeAmount = parseInt(document.getElementById('inputLarge').value) || 0;
+      const extraLargeAmount = parseInt(document.getElementById('inputExtraLarge').value) || 0;
+      const doubleExtraLargeAmount = parseInt(document.getElementById('inputDoubleExtraLarge').value) || 0;
 
-      const totalUnits = s + m + l + xl + xxl;
+      const totalUnits = smallAmount + mediumAmount + largeAmount + extraLargeAmount + doubleExtraLargeAmount;
       const screensNeeded = colors + (isDark ? 1 : 0);
 
       const laborPerUnit = colors * 0.75;
