@@ -276,11 +276,11 @@
       </div>
     </header>
 
-    <div class="flex-1 overflow-y-auto p-8 flex flex-col">
-      <div class="max-w-7xl w-full mx-auto space-y-6 flex-1 flex flex-col">
+    <div class="flex-1 overflow-y-auto p-6 flex flex-col">
+      <div class="w-full mx-auto space-y-6 flex-1 flex flex-col">
 
         <!-- ORDER SPECIFICATION MODULE -->
-        <div id="moduleIntake" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div id="moduleIntake" class="grid grid-cols-1 lg:grid-cols-12 gap-6 max-w-7xl mx-auto w-full">
           
           <div class="lg:col-span-5 app-panel p-6 space-y-6">
             <div class="border-b border-zinc-800 pb-4">
@@ -603,8 +603,8 @@
         </div>
 
         <!-- ORDER BACKLOG MODULE -->
-        <div id="moduleBacklog" class="hidden h-full flex flex-col flex-1">
-          <div class="app-panel p-6 space-y-5 flex-1 flex flex-col">
+        <div id="moduleBacklog" class="hidden h-full flex flex-col flex-1 w-full">
+          <div class="app-panel p-6 space-y-5 flex-1 flex flex-col w-full">
             <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center border-b border-zinc-800 pb-5 gap-4 shrink-0">
               <div>
                 <h3 class="text-base font-semibold text-white">Order Backlog and Approval Terminal</h3>
@@ -650,18 +650,18 @@
               </div>
             </div>
 
-            <div class="overflow-x-auto overflow-y-auto rounded-lg border border-zinc-800 flex-1">
-              <table class="w-full text-left text-sm whitespace-nowrap">
+            <div class="overflow-x-auto overflow-y-auto rounded-lg border border-zinc-800 flex-1 w-full">
+              <table class="w-full text-left text-sm">
                 <thead class="bg-zinc-900 border-b border-zinc-800 text-zinc-400 sticky top-0 z-10">
                   <tr>
-                    <th class="px-4 py-3 font-medium">Order Reference</th>
-                    <th class="px-4 py-3 font-medium">Customer Information</th>
-                    <th class="px-4 py-3 font-medium">Garment, Pantone & Asset</th>
-                    <th class="px-4 py-3 font-medium text-center">Digital Proof Status</th>
-                    <th class="px-4 py-3 font-medium text-center">Wish Delivery Date</th>
-                    <th class="px-4 py-3 font-medium text-center">Financial Value</th>
-                    <th class="px-4 py-3 font-medium text-center">Current Status</th>
-                    <th class="px-4 py-3 font-medium text-right">Available Actions</th>
+                    <th class="px-6 py-3.5 font-medium">Order Reference</th>
+                    <th class="px-6 py-3.5 font-medium">Customer Information</th>
+                    <th class="px-6 py-3.5 font-medium">Garment, Pantone & Asset</th>
+                    <th class="px-6 py-3.5 font-medium text-center">Digital Proof Status</th>
+                    <th class="px-6 py-3.5 font-medium text-center">Wish Delivery Date</th>
+                    <th class="px-6 py-3.5 font-medium text-center">Financial Value</th>
+                    <th class="px-6 py-3.5 font-medium text-center">Current Status</th>
+                    <th class="px-6 py-3.5 font-medium text-right">Action Hint</th>
                   </tr>
                 </thead>
                 <tbody id="backlogTableBody" class="divide-y divide-zinc-800 text-zinc-200">
@@ -1742,13 +1742,15 @@
 
         const row = `
           <tr class="hover:bg-zinc-800/50 transition-colors">
-            <td class="px-4 py-4 font-mono font-medium text-blue-400">${o.id}</td>
-            <td class="px-4 py-4">
+            <td class="px-6 py-4">
+              <button onclick="openOrderModal('${o.id}')" class="font-mono font-medium text-blue-400 hover:underline text-left cursor-pointer focus:outline-none">${o.id}</button>
+            </td>
+            <td class="px-6 py-4">
               <div class="font-medium text-zinc-200">${o.customerName}</div>
               <div class="text-[11px] text-zinc-500 mt-0.5">${o.customerEmail}</div>
               <div class="text-[10px] font-mono text-zinc-400 mt-0.5">Addr: ${o.customerAddress || 'Not Provided'}</div>
             </td>
-            <td class="px-4 py-4">
+            <td class="px-6 py-4">
               <div class="font-medium text-zinc-200">${o.garment}</div>
               <div class="text-[11px] text-blue-400 font-mono mt-0.5">Match: ${o.pantone || 'PMS 286 C'}</div>
               <div class="text-[11px] text-zinc-500 mt-0.5 flex items-center gap-1">
@@ -1756,14 +1758,12 @@
                 ${o.artworkName}
               </div>
             </td>
-            <td class="px-4 py-4 text-center">${proofBadge}</td>
-            <td class="px-4 py-4 text-center font-mono text-amber-400 text-xs">${o.wishDate}</td>
-            <td class="px-4 py-4 text-center font-mono text-zinc-300">${o.price}</td>
-            <td class="px-4 py-4 text-center">${statusBadge}</td>
-            <td class="px-4 py-4 text-right">
-              <button onclick="openOrderModal('${o.id}')" class="btn-pro-secondary text-xs">
-                Inspect Details
-              </button>
+            <td class="px-6 py-4 text-center">${proofBadge}</td>
+            <td class="px-6 py-4 text-center font-mono text-amber-400 text-xs">${o.wishDate}</td>
+            <td class="px-6 py-4 text-center font-mono text-zinc-300">${o.price}</td>
+            <td class="px-6 py-4 text-center">${statusBadge}</td>
+            <td class="px-6 py-4 text-right">
+              <span class="text-xs text-zinc-500 font-mono">Click ID to Inspect</span>
             </td>
           </tr>
         `;
