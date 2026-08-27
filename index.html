@@ -1589,9 +1589,14 @@
     function applyArtworkTransforms() {
       const scaleValue = artScaleSlider.value / 100;
       const opacityValue = artOpacitySlider.value / 100;
-      const targetPlaten = document.getElementById('platenBoundary');
-      targetPlaten.style.transform = `translate(${currentPosX}px, ${currentPosY}px) scale(${scaleValue})`;
-      targetPlaten.style.opacity = opacityValue;
+      const targetImg = document.getElementById('artworkRender');
+      const pdfPreview = document.getElementById('pdfPlatenPreview');
+      
+      const transformString = `translate(${currentPosX}px, ${currentPosY}px) scale(${scaleValue})`;
+      targetImg.style.transform = transformString;
+      targetImg.style.opacity = opacityValue;
+      pdfPreview.style.transform = transformString;
+      pdfPreview.style.opacity = opacityValue;
     }
 
     function resetArtworkPositioning() {
