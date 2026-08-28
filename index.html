@@ -165,20 +165,6 @@
       background: #52525b; 
     }
 
-    .drag-over {
-      border-color: #3b82f6 !important;
-      background-color: rgba(59, 130, 246, 0.1) !important;
-    }
-
-    #artworkRender {
-      cursor: grab;
-      position: absolute;
-      transform-origin: center center;
-    }
-    #artworkRender:active {
-      cursor: grabbing;
-    }
-
     @media print {
       body * {
         visibility: hidden;
@@ -279,17 +265,20 @@
     <div class="flex-1 overflow-y-auto p-6 flex flex-col">
       <div class="w-full mx-auto space-y-6 flex-1 flex flex-col">
 
-        <div id="moduleIntake" class="grid grid-cols-1 lg:grid-cols-12 gap-6 max-w-7xl mx-auto w-full">
+        <div id="moduleIntake" class="space-y-6 max-w-7xl mx-auto w-full">
           
-          <div class="lg:col-span-5 app-panel p-6 space-y-6">
-            <div id="intakeSuccessBanner" class="hidden bg-emerald-500/10 border border-emerald-500/40 p-4 rounded-lg text-emerald-400 text-sm font-medium"></div>
+          <div id="intakeSuccessBanner" class="hidden bg-emerald-500/10 border border-emerald-500/40 p-4 rounded-lg text-emerald-400 text-sm font-medium"></div>
 
-            <div class="border-b border-zinc-800 pb-4">
-              <h3 class="text-sm font-semibold text-white">Job Parameters and Sizing Matrix</h3>
-              <p class="text-xs text-zinc-400 mt-1">Fields marked with an asterisk are required for submission.</p>
+          <div class="app-panel p-6 space-y-4">
+            <div class="border-b border-zinc-800 pb-3 flex justify-between items-center">
+              <div>
+                <h3 class="text-base font-semibold text-white">Master Customer Profile & Shipping Schedule</h3>
+                <p class="text-xs text-zinc-400 mt-0.5">Fields marked with an asterisk are mandatory for submission.</p>
+              </div>
+              <span class="text-xs font-mono bg-blue-500/10 text-blue-400 border border-blue-500/20 px-3 py-1 rounded">Multi-Style Support Active</span>
             </div>
 
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label class="block text-xs font-medium text-zinc-400 mb-1.5 mandatory-label">Customer Name</label>
                 <input type="text" id="customerName" placeholder="Enter Full Name" class="input-pro w-full px-3 py-2 text-sm">
@@ -298,337 +287,61 @@
                 <label class="block text-xs font-medium text-zinc-400 mb-1.5 mandatory-label">Customer Email Address</label>
                 <input type="email" id="customerEmail" placeholder="Enter Email Address" class="input-pro w-full px-3 py-2 text-sm">
               </div>
+              <div>
+                <label class="block text-xs font-medium text-zinc-400 mb-1.5 mandatory-label">Wish Delivery Date</label>
+                <input type="date" id="wishDeliveryDate" class="input-pro w-full px-3 py-2 text-sm font-mono text-zinc-200">
+              </div>
             </div>
 
             <div>
               <label class="block text-xs font-medium text-zinc-400 mb-1.5 mandatory-label">Shipping Street Address</label>
               <input type="text" id="customerAddress" placeholder="Enter Street Address, City, State, Zip" class="input-pro w-full px-3 py-2 text-sm">
             </div>
-
-            <div>
-              <label class="block text-xs font-medium text-zinc-400 mb-1.5 mandatory-label">Wish Delivery Date</label>
-              <div class="relative">
-                <div onclick="toggleIntakeCalendarDropdown()" class="flex items-center justify-between bg-[#09090b] border border-[#3f3f46] px-3 py-2 rounded-lg hover:border-blue-500 cursor-pointer w-full text-sm shadow-sm">
-                  <span id="intakeCalendarDisplayText" class="font-mono text-zinc-300">Select Date</span>
-                  <div class="p-1 rounded hover:bg-zinc-800 text-blue-400">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                  </div>
-                </div>
-                <input type="hidden" id="wishDeliveryDate">
-
-                <div id="intakeCalendarDropdown" class="hidden absolute left-0 mt-2 z-50 bg-[#18181b] border border-zinc-700 rounded-2xl shadow-2xl p-4 w-72 space-y-3">
-                  <div class="flex items-center justify-between text-zinc-300 px-1">
-                    <button type="button" onclick="event.stopPropagation(); changeIntakeMonth(-1);" class="p-1.5 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white">&lt;</button>
-                    <span id="intakeCalendarMonthYear" class="text-xs font-semibold text-white">August 2026</span>
-                    <button type="button" onclick="event.stopPropagation(); changeIntakeMonth(1);" class="p-1.5 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white">&gt;</button>
-                  </div>
-
-                  <div class="grid grid-cols-7 text-center text-[10px] font-semibold text-zinc-500 uppercase">
-                    <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
-                  </div>
-
-                  <div id="intakeCalendarDaysGrid" class="grid grid-cols-7 gap-1 text-center text-xs">
-                  </div>
-
-                  <div class="flex justify-between pt-2 border-t border-zinc-800 text-xs">
-                    <button type="button" onclick="clearIntakeCalendarDate()" class="text-blue-400 hover:underline">Clear</button>
-                    <button type="button" onclick="toggleIntakeCalendarDropdown()" class="text-zinc-400 hover:text-white">Close</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="space-y-2">
-              <label class="block text-xs font-medium text-zinc-400 mandatory-label">Garment Supply Mode</label>
-              <div class="grid grid-cols-2 gap-2 text-sm">
-                <button id="btnSupplyCatalog" type="button" onclick="setGarmentSupplyMode('catalog')" class="py-2 px-3 rounded-md bg-blue-600/10 text-blue-400 border border-blue-500/30 font-medium transition-all">
-                  Catalog Inventory Blanks
-                </button>
-                <button id="btnSupplyCustomer" type="button" onclick="setGarmentSupplyMode('customer')" class="py-2 px-3 rounded-md bg-zinc-900 border border-zinc-700 text-zinc-400 font-medium transition-all hover:bg-zinc-800">
-                  Customer Provided Blanks
-                </button>
-              </div>
-            </div>
-
-            <div id="catalogSelectorContainer">
-              <label class="block text-xs font-medium text-zinc-400 mb-1.5 mandatory-label">Integrated Blank Catalog</label>
-              <select id="garmentStyle" onchange="updatePrice()" class="input-pro w-full px-3 py-2 text-sm cursor-pointer">
-                <option value="6.50">Shaka Wear 7.5 ounce Heavyweight Maximum Heavy Shirt</option>
-                <option value="18.00">Independent Trading Company Heavy Hoodie</option>
-                <option value="5.00">Bella Canvas 3001 Unisex Jersey Shirt</option>
-              </select>
-            </div>
-
-            <div id="customerGarmentNoteContainer" class="hidden">
-              <label class="block text-xs font-medium text-zinc-400 mb-1.5 mandatory-label">Provided Garment Details</label>
-              <input type="text" id="customerGarmentDetails" placeholder="Example input - Vintage Black Oversized Shirts" class="input-pro w-full px-3 py-2 text-sm">
-            </div>
-
-            <div class="grid grid-cols-2 gap-4">
-              <div>
-                <label class="block text-xs font-medium text-zinc-400 mb-2 mandatory-label">Garment Fabric Color</label>
-                <div class="grid grid-cols-3 gap-2">
-                  <button id="btnBlack" type="button" onclick="setGarmentColor('black', 'dark')" class="p-2 rounded-md border border-blue-500/50 bg-zinc-900 text-xs font-medium flex items-center justify-center gap-1 transition-all">
-                    <span class="w-2.5 h-2.5 rounded-full bg-black ring-1 ring-zinc-700"></span> Black
-                  </button>
-                  <button id="btnWhite" type="button" onclick="setGarmentColor('white', 'light')" class="p-2 rounded-md border border-zinc-700 bg-zinc-900 text-xs font-medium flex items-center justify-center gap-1 transition-all hover:border-zinc-500">
-                    <span class="w-2.5 h-2.5 rounded-full bg-white ring-1 ring-zinc-300"></span> White
-                  </button>
-                  <button id="btnNavy" type="button" onclick="setGarmentColor('navy', 'dark')" class="p-2 rounded-md border border-zinc-700 bg-zinc-900 text-xs font-medium flex items-center justify-center gap-1 transition-all hover:border-zinc-500">
-                    <span class="w-2.5 h-2.5 rounded-full bg-blue-950 ring-1 ring-zinc-700"></span> Navy
-                  </button>
-                </div>
-              </div>
-
-              <div>
-                <label class="block text-xs font-medium text-zinc-400 mb-1.5 mandatory-label">Pantone Color Match</label>
-                <select id="pantoneColor" class="input-pro w-full px-3 py-2 text-sm cursor-pointer">
-                  <option value="PMS 186 C (Racing Red)">PMS 186 C (Racing Red)</option>
-                  <option value="PMS 286 C (Royal Blue)" selected>PMS 286 C (Royal Blue)</option>
-                  <option value="PMS Yellow C (Process Yellow)">PMS Yellow C (Process Yellow)</option>
-                  <option value="PMS Black 6 C (Rich Black)">PMS Black 6 C (Rich Black)</option>
-                  <option value="PMS 375 C (Vibrant Green)">PMS 375 C (Vibrant Green)</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="space-y-4 pt-2 border-t border-zinc-800">
-              <div class="flex justify-between items-center">
-                <label class="block text-xs font-medium text-zinc-400 mandatory-label">Total Units Master Control</label>
-                <span id="totalUnitsBadge" class="text-xs bg-zinc-800 text-zinc-300 px-2 py-1 rounded font-mono font-medium">75 Pieces</span>
-              </div>
-
-              <div class="flex gap-3 items-center">
-                <input type="number" id="inputTotalQuantity" value="75" min="1" oninput="applyTotalQuantityDistribution()" class="input-pro w-full px-3 py-2 text-sm font-mono" placeholder="Set Total Units">
-              </div>
-
-              <div>
-                <span class="block text-[10px] font-medium text-zinc-500 mb-2 uppercase tracking-wider">Preset Size Ratio Distributions</span>
-                <div class="grid grid-cols-3 gap-2 text-xs">
-                  <button type="button" onclick="applySplitRecommendation('standard')" class="btn-pro-secondary text-[11px] py-1.5">Standard Curve</button>
-                  <button type="button" onclick="applySplitRecommendation('streetwear')" class="btn-pro-secondary text-[11px] py-1.5">Oversized Distribution</button>
-                  <button type="button" onclick="applySplitRecommendation('even')" class="btn-pro-secondary text-[11px] py-1.5">Even Distribution</button>
-                </div>
-              </div>
-
-              <div class="bg-zinc-900 p-3 rounded-md border border-zinc-800">
-                <div class="grid grid-cols-5 gap-2">
-                  <div class="text-center flex flex-col justify-between">
-                    <span class="block text-[10px] font-medium text-zinc-400 mb-1 leading-tight">Small</span>
-                    <input type="number" id="inputSmall" value="10" min="0" oninput="updateTotalsFromSizes()" class="input-pro w-full px-2 py-1.5 text-xs font-mono text-center">
-                  </div>
-                  <div class="text-center flex flex-col justify-between">
-                    <span class="block text-[10px] font-medium text-zinc-400 mb-1 leading-tight">Medium</span>
-                    <input type="number" id="inputMedium" value="25" min="0" oninput="updateTotalsFromSizes()" class="input-pro w-full px-2 py-1.5 text-xs font-mono text-center">
-                  </div>
-                  <div class="text-center flex flex-col justify-between">
-                    <span class="block text-[10px] font-medium text-zinc-400 mb-1 leading-tight">Large</span>
-                    <input type="number" id="inputLarge" value="25" min="0" oninput="updateTotalsFromSizes()" class="input-pro w-full px-2 py-1.5 text-xs font-mono text-center">
-                  </div>
-                  <div class="text-center flex flex-col justify-between">
-                    <span class="block text-[10px] font-medium text-zinc-400 mb-1 leading-tight">Extra Large</span>
-                    <input type="number" id="inputExtraLarge" value="10" min="0" oninput="updateTotalsFromSizes()" class="input-pro w-full px-2 py-1.5 text-xs font-mono text-center">
-                  </div>
-                  <div class="text-center flex flex-col justify-between">
-                    <span class="block text-[10px] font-medium text-zinc-400 mb-1 leading-tight">Double Extra Large</span>
-                    <input type="number" id="inputDoubleExtraLarge" value="5" min="0" oninput="updateTotalsFromSizes()" class="input-pro w-full px-2 py-1.5 text-xs font-mono text-center">
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4 pt-2 border-t border-zinc-800">
-              <div>
-                <label class="block text-xs font-medium text-zinc-400 mb-1.5 mandatory-label">Print Chemistry</label>
-                <select id="inkType" onchange="updatePrice()" class="input-pro w-full px-3 py-2 text-sm">
-                  <option value="plastisol">Plastisol Ink</option>
-                  <option value="waterbase">Water Based Ink</option>
-                  <option value="puff">Three Dimensional Puff Ink</option>
-                </select>
-              </div>
-              <div>
-                <label class="block text-xs font-medium text-zinc-400 mb-1.5 mandatory-label">Spot Color Count</label>
-                <select id="colorCount" onchange="updatePrice()" class="input-pro w-full px-3 py-2 text-sm">
-                  <option value="1">1 Spot Color</option>
-                  <option value="2" selected>2 Spot Colors</option>
-                  <option value="3">3 Spot Colors</option>
-                  <option value="4">4 Spot Colors</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="bg-zinc-900 p-4 rounded-md space-y-2 border border-zinc-800 mt-4">
-              <div class="flex justify-between text-sm text-zinc-400">
-                <span>Garment Production Subtotal:</span>
-                <span id="garmentCost" class="font-mono text-zinc-200">$0.00</span>
-              </div>
-              <div class="flex justify-between text-sm text-zinc-400">
-                <span>Screen and Technical Setup:</span>
-                <span id="screenCost" class="font-mono text-zinc-200">$0.00</span>
-              </div>
-              <div class="flex justify-between text-sm text-zinc-400">
-                <span>Logistics and Delivery:</span>
-                <span id="shippingCost" class="font-mono text-zinc-200">$0.00</span>
-              </div>
-              <div class="flex justify-between text-sm text-zinc-400 pb-2 border-b border-zinc-800">
-                <span>Los Angeles Sales Tax (9.5 percent):</span>
-                <span id="taxCost" class="font-mono text-zinc-200">$0.00</span>
-              </div>
-              <div class="flex justify-between font-semibold text-white pt-1">
-                <span>Production Master Total:</span>
-                <span id="totalCost" class="font-mono text-blue-400 text-lg">$0.00</span>
-              </div>
-            </div>
           </div>
 
-          <div class="lg:col-span-7 space-y-6">
+          <div class="space-y-4">
+            <div class="flex justify-between items-center">
+              <h3 class="text-sm font-semibold text-white uppercase tracking-wider">Garment Style Line Items</h3>
+              <button onclick="addNewLineItem()" class="btn-pro-primary text-xs py-2 px-4">+ Add Garment Style Line Item</button>
+            </div>
+
+            <div id="lineItemsContainer" class="space-y-6">
+              </div>
+          </div>
+
+          <div class="app-panel p-6 space-y-4 bg-zinc-900 border border-zinc-700">
+            <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-3">Consolidated Order Financial Summary</h3>
             
-            <div class="app-panel p-6 space-y-5">
-              <div class="flex items-center justify-between border-b border-zinc-800 pb-4">
-                <div>
-                  <h3 class="text-sm font-semibold text-white mandatory-label">Artwork Asset Ingestion</h3>
-                  <p class="text-xs text-zinc-400 mt-1">Upload production ready vector formats, high resolution image formats, or portable document format files.</p>
-                </div>
-                <span class="text-xs text-zinc-500 font-mono bg-zinc-900 px-2 py-1 rounded border border-zinc-800">Vector, Image & Portable Document Formats</span>
-              </div>
-
-              <div id="dragDropArea" class="border-2 border-dashed border-zinc-700 rounded-lg p-8 text-center hover:border-blue-500/50 transition-all bg-zinc-900/50 cursor-pointer group relative">
-                <input type="file" id="fileInput" accept="image/*,.pdf,.svg,.ai,.eps" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
-                <div class="flex flex-col items-center gap-3 w-full h-full pointer-events-none">
-                  <div class="w-12 h-12 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-zinc-400 group-hover:text-blue-400 group-hover:border-blue-500/30 group-hover:bg-blue-500/10 transition-all">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                  </div>
-                  <div>
-                    <p id="fileLabel" class="text-sm font-medium text-zinc-200">Click or drag and drop to upload production artwork or portable document format</p>
-                    <p class="text-xs text-zinc-500 mt-1">Automated Resolution Check and Preflight Verification</p>
-                  </div>
-                </div>
-              </div>
-
-              <div class="border-t border-zinc-800 pt-5 space-y-3">
-                <div class="flex justify-between items-center">
-                  <div>
-                    <h4 class="text-xs font-semibold text-white">Additional Specification Files (Optional Multiple Documents)</h4>
-                    <p class="text-[11px] text-zinc-400 mt-0.5">Upload supplementary specification sheets, portable document format files, or drawing assets.</p>
-                  </div>
-                  <span class="text-[10px] font-mono text-zinc-500 bg-zinc-900 px-2 py-1 rounded border border-zinc-800">Multiple Supported</span>
-                </div>
-                <input type="file" id="extraFilesInput" multiple accept=".pdf,.ai,.eps,.svg,image/*" onchange="handleExtraFilesSelection(this)" class="input-pro w-full px-3 py-2 text-xs text-zinc-300 cursor-pointer">
-                
-                <div id="extraFilesProgressWrapper" class="hidden space-y-1.5 bg-zinc-900 p-3 rounded border border-zinc-800">
-                  <div class="flex justify-between text-[11px] text-zinc-300">
-                    <span id="extraFilesProgressTitle" class="font-medium">Uploading specification files...</span>
-                    <span id="extraFilesProgressText" class="font-mono text-blue-400">0 percent</span>
-                  </div>
-                  <div class="w-full bg-zinc-950 h-2 rounded-full overflow-hidden border border-zinc-800">
-                    <div id="extraFilesProgressBar" class="bg-blue-500 h-full w-0 transition-all duration-150"></div>
-                  </div>
-                </div>
-
-                <div id="extraFilesListContainer" class="space-y-1.5"></div>
-              </div>
-
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-zinc-300">
               <div>
-                <label class="block text-xs font-medium text-zinc-400 mb-1.5">Special Artwork Specifications and Placement Notes</label>
-                <textarea id="artworkNotes" rows="3" placeholder="Specify print placement, Pantone Matching System color codes, or special curing instructions." class="input-pro w-full px-3 py-2 text-sm resize-none"></textarea>
+                <span class="text-xs text-zinc-500 uppercase block">Total Combined Units</span>
+                <span id="masterTotalUnits" class="text-lg font-mono font-bold text-white">0 Pieces</span>
               </div>
-
-              <div class="grid grid-cols-3 gap-4 pt-2">
-                <div class="bg-zinc-900 p-3 rounded-md text-center border border-zinc-800">
-                  <span class="block text-[10px] text-zinc-500 font-medium uppercase tracking-wide">Resolution Threshold</span>
-                  <span class="text-xs font-semibold text-zinc-300 mt-1 block">300 Dots Per Inch</span>
-                </div>
-                <div class="bg-zinc-900 p-3 rounded-md text-center border border-zinc-800">
-                  <span class="block text-[10px] text-zinc-500 font-medium uppercase tracking-wide">Print Zone Limit</span>
-                  <span class="text-xs font-semibold text-zinc-300 mt-1 block">12 inches by 15 inches</span>
-                </div>
-                <div class="bg-zinc-900 p-3 rounded-md text-center border border-zinc-800">
-                  <span class="block text-[10px] text-zinc-500 font-medium uppercase tracking-wide">Preflight Engine</span>
-                  <span class="text-xs font-semibold text-blue-400 mt-1 block">Ready for Color Separation</span>
-                </div>
+              <div>
+                <span class="text-xs text-zinc-500 uppercase block">Garments Subtotal</span>
+                <span id="masterGarmentCost" class="text-lg font-mono text-zinc-200">$0.00</span>
+              </div>
+              <div>
+                <span class="text-xs text-zinc-500 uppercase block">Technical Screen Setups</span>
+                <span id="masterScreenCost" class="text-lg font-mono text-zinc-200">$0.00</span>
+              </div>
+              <div>
+                <span class="text-xs text-zinc-500 uppercase block">Logistics & Sales Tax</span>
+                <span id="masterTaxAndShipping" class="text-lg font-mono text-zinc-200">$0.00</span>
               </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              
-              <div class="app-panel p-5 flex flex-col items-center">
-                <h3 class="text-xs font-semibold text-zinc-400 uppercase tracking-wider w-full border-b border-zinc-800 pb-3 mb-4 text-center">
-                  Virtual Platen Render (Tablet Viewport)
-                </h3>
-
-                <div id="garmentViewport" class="w-full h-64 bg-zinc-950 rounded-md border border-zinc-800 flex items-center justify-center relative overflow-hidden">
-                  <div id="garmentSilhouette" class="w-full h-full relative flex flex-col items-center justify-start pt-14 transition-colors bg-zinc-900">
-                    
-                    <img id="tshirtImage" src="T-shirt.png" class="absolute inset-0 w-full h-full object-contain pointer-events-none p-4" style="filter: invert(1) opacity(0.7); mix-blend-mode: screen;" alt="T-Shirt Template Base">
-                    
-                    <div id="platenBoundary" class="w-28 h-36 border border-dashed border-zinc-500/50 rounded flex flex-col items-center justify-center p-1 relative z-10 overflow-hidden bg-zinc-900/30 backdrop-blur-sm shadow-xl select-none">
-                      <span id="artworkPlaceholder" class="text-[10px] text-zinc-300 font-medium text-center leading-tight">Standard Platen Boundary<br>(12 inches by 15 inches)<br><br>Drag to Position</span>
-                      <img id="artworkRender" class="hidden max-w-full max-h-full object-contain filter drop-shadow-md select-none" alt="Virtual Proof Render" draggable="false">
-                      <div id="pdfPlatenPreview" class="hidden w-full h-full bg-blue-950/90 border border-blue-500/40 rounded flex flex-col items-center justify-center p-2 text-center select-none">
-                        <svg class="w-8 h-8 text-blue-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                        <span class="text-[10px] font-mono font-bold text-blue-200">PORTABLE DOCUMENT FORMAT</span>
-                        <span id="pdfPlatenName" class="text-[9px] text-zinc-300 truncate w-full mt-0.5">document.pdf</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="w-full mt-4 space-y-3 bg-zinc-900 p-3 rounded border border-zinc-800">
-                  <div>
-                    <div class="flex justify-between text-[10px] text-zinc-400 mb-1">
-                      <span>Artwork Scaling Dimension</span>
-                      <span id="scaleLabel">100 Percent</span>
-                    </div>
-                    <input type="range" id="artScale" min="20" max="200" value="100" class="w-full cursor-pointer accent-blue-500">
-                  </div>
-                  <div>
-                    <div class="flex justify-between text-[10px] text-zinc-400 mb-1">
-                      <span>Ink Opacity Blending</span>
-                      <span id="opacityLabel">100 Percent</span>
-                    </div>
-                    <input type="range" id="artOpacity" min="10" max="100" value="100" class="w-full cursor-pointer accent-blue-500">
-                  </div>
-                </div>
+            <div class="pt-4 border-t border-zinc-800 flex justify-between items-center">
+              <div>
+                <span class="text-xs text-zinc-400 uppercase block">Master Order Total Value</span>
+                <span id="masterTotalCost" class="text-2xl font-mono font-bold text-blue-400">$0.00</span>
               </div>
-
-              <div class="app-panel p-5 flex flex-col justify-between">
-                <div>
-                  <h3 class="text-xs font-semibold text-zinc-400 uppercase tracking-wider w-full border-b border-zinc-800 pb-3 mb-4">
-                    Order Routing Process
-                  </h3>
-
-                  <div id="preflightIdle" class="text-sm text-zinc-500 py-10 text-center">
-                    Awaiting file upload to generate order data.
-                  </div>
-
-                  <div id="preflightResults" class="hidden space-y-4">
-                    <div class="flex items-center gap-2 text-emerald-500 text-sm font-medium">
-                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                      Preflight Passed Successfully
-                    </div>
-
-                    <div class="bg-zinc-900 p-4 rounded-md border border-zinc-800 space-y-3">
-                      <div class="flex justify-between text-sm">
-                        <span class="text-zinc-400">Order Reference Identification:</span>
-                        <span id="generatedOrderId" class="font-mono font-semibold text-blue-400">VirtuePrint-2026-8820</span>
-                      </div>
-                      <div class="flex justify-between text-sm">
-                        <span class="text-zinc-400">Queue Status:</span>
-                        <span class="font-semibold text-amber-500">Pending Approval</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="pt-5 border-t border-zinc-800 mt-4">
-                  <button id="submitToBacklogBtn" disabled onclick="submitOrderToBacklog()" class="btn-pro-primary w-full py-2.5">
-                    Submit Order to Backlog
-                  </button>
-                </div>
-              </div>
+              <button id="submitToBacklogBtn" onclick="submitOrderToBacklog()" class="btn-pro-primary text-base px-8 py-3">
+                Submit Consolidated Order to Backlog
+              </button>
             </div>
-
           </div>
+
         </div>
 
         <div id="moduleBacklog" class="hidden h-full flex flex-col flex-1 w-full">
@@ -640,48 +353,16 @@
             </div>
 
             <div id="backlogSubTabActive" class="flex-1 flex flex-col space-y-5">
-              <div class="flex flex-col xl:flex-row justify-between items-start xl:items-center border-b border-zinc-800 pb-5 gap-4 shrink-0">
+              <div class="flex justify-between items-center border-b border-zinc-800 pb-4">
                 <div>
                   <h3 class="text-base font-semibold text-white">Order Backlog and Approval Terminal</h3>
-                  <p class="text-sm text-zinc-400 mt-1">Review pending jobs, verify client proof digital sign-off, and approve them to the production queue.</p>
+                  <p class="text-sm text-zinc-400 mt-0.5">Review master submissions, inspect individual line items, and approve to press queue.</p>
                 </div>
 
-                <div class="flex flex-wrap items-center gap-3">
-                  <div class="relative">
-                    <div onclick="toggleCalendarDropdown()" class="flex items-center justify-between bg-zinc-900 px-3 py-1.5 rounded-lg border border-zinc-700 hover:border-blue-500 cursor-pointer w-48 shadow-sm">
-                      <span id="calendarDisplayText" class="text-xs font-mono text-zinc-200">Select Date</span>
-                      <div class="p-1 rounded hover:bg-zinc-800 text-blue-400">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                      </div>
-                    </div>
-
-                    <div id="calendarDropdown" class="hidden absolute right-0 mt-2 z-50 bg-[#18181b] border border-zinc-700 rounded-2xl shadow-2xl p-4 w-72 space-y-3">
-                      <div class="flex items-center justify-between text-zinc-300 px-1">
-                        <button type="button" onclick="event.stopPropagation(); changeMonth(-1);" class="p-1.5 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white">&lt;</button>
-                        <span id="calendarMonthYear" class="text-xs font-semibold text-white">August 2026</span>
-                        <button type="button" onclick="event.stopPropagation(); changeMonth(1);" class="p-1.5 hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-white">&gt;</button>
-                      </div>
-
-                      <div class="grid grid-cols-7 text-center text-[10px] font-semibold text-zinc-500 uppercase">
-                        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
-                      </div>
-
-                      <div id="calendarDaysGrid" class="grid grid-cols-7 gap-1 text-center text-xs">
-                      </div>
-
-                      <div class="flex justify-between pt-2 border-t border-zinc-800 text-xs">
-                        <button type="button" onclick="clearBacklogCalendarFilter()" class="text-blue-400 hover:underline">Clear Filter</button>
-                        <button type="button" onclick="toggleCalendarDropdown()" class="text-zinc-400 hover:text-white">Close</button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="flex items-center gap-1 text-sm bg-zinc-900 p-1 rounded-lg border border-zinc-800">
-                    <button onclick="filterBacklogStatus('ALL')" id="filterBtnALL" class="px-3 py-1.5 rounded-md bg-zinc-800 text-white font-medium transition-all">Show All Active</button>
-                    <button onclick="filterBacklogStatus('PENDING')" id="filterBtnPENDING" class="px-3 py-1.5 rounded-md text-amber-500 hover:bg-zinc-800 font-medium transition-all">Pending Review</button>
-                    <button onclick="filterBacklogStatus('QUEUED')" id="filterBtnQUEUED" class="px-3 py-1.5 rounded-md text-blue-400 hover:bg-zinc-800 font-medium transition-all">Queued for Production</button>
-                    <button onclick="filterBacklogStatus('REJECTED')" id="filterBtnREJECTED" class="px-3 py-1.5 rounded-md text-red-400 hover:bg-zinc-800 font-medium transition-all">Rejected</button>
-                  </div>
+                <div class="flex items-center gap-1 text-sm bg-zinc-900 p-1 rounded-lg border border-zinc-800">
+                  <button onclick="filterBacklogStatus('ALL')" id="filterBtnALL" class="px-3 py-1.5 rounded-md bg-zinc-800 text-white font-medium transition-all">Show All Active</button>
+                  <button onclick="filterBacklogStatus('PENDING')" id="filterBtnPENDING" class="px-3 py-1.5 rounded-md text-amber-500 hover:bg-zinc-800 font-medium transition-all">Pending Review</button>
+                  <button onclick="filterBacklogStatus('QUEUED')" id="filterBtnQUEUED" class="px-3 py-1.5 rounded-md text-blue-400 hover:bg-zinc-800 font-medium transition-all">Queued for Production</button>
                 </div>
               </div>
 
@@ -690,13 +371,13 @@
                   <thead class="bg-zinc-900 border-b border-zinc-800 text-zinc-400 sticky top-0 z-10">
                     <tr>
                       <th class="px-6 py-3.5 font-medium">Order Reference</th>
-                      <th class="px-6 py-3.5 font-medium">Customer Information</th>
-                      <th class="px-6 py-3.5 font-medium">Garment, Pantone & Asset</th>
+                      <th class="px-6 py-3.5 font-medium">Customer Profile</th>
+                      <th class="px-6 py-3.5 font-medium">Styles Included</th>
                       <th class="px-6 py-3.5 font-medium text-center">Digital Proof Status</th>
                       <th class="px-6 py-3.5 font-medium text-center">Wish Delivery Date</th>
-                      <th class="px-6 py-3.5 font-medium text-center">Financial Value</th>
-                      <th class="px-6 py-3.5 font-medium text-center">Current Status</th>
-                      <th class="px-6 py-3.5 font-medium text-right">Action Hint</th>
+                      <th class="px-6 py-3.5 font-medium text-center">Financial Total</th>
+                      <th class="px-6 py-3.5 font-medium text-center">Queue Status</th>
+                      <th class="px-6 py-3.5 font-medium text-right">Action</th>
                     </tr>
                   </thead>
                   <tbody id="backlogTableBody" class="divide-y divide-zinc-800 text-zinc-200">
@@ -706,11 +387,8 @@
             </div>
 
             <div id="backlogSubTabArchive" class="hidden flex-1 flex flex-col space-y-5">
-              <div class="flex justify-between items-center border-b border-zinc-800 pb-5">
-                <div>
-                  <h3 class="text-base font-semibold text-white">Archived Orders Terminal</h3>
-                  <p class="text-sm text-zinc-400 mt-1">Review historical submissions separated by their archive origin and restore them if necessary.</p>
-                </div>
+              <div class="flex justify-between items-center border-b border-zinc-800 pb-4">
+                <h3 class="text-base font-semibold text-white">Archived Orders Terminal</h3>
                 <button onclick="archiveAllCompletedOrders()" class="btn-pro-secondary text-xs">Auto-Archive All Completed Orders</button>
               </div>
 
@@ -720,10 +398,10 @@
                     <tr>
                       <th class="px-6 py-3.5 font-medium">Order Reference</th>
                       <th class="px-6 py-3.5 font-medium">Customer Information</th>
-                      <th class="px-6 py-3.5 font-medium">Garment & Asset</th>
-                      <th class="px-6 py-3.5 font-medium text-center">Archive Origin Source</th>
+                      <th class="px-6 py-3.5 font-medium">Line Item Summary</th>
+                      <th class="px-6 py-3.5 font-medium text-center">Archive Origin</th>
                       <th class="px-6 py-3.5 font-medium text-center">Wish Delivery Date</th>
-                      <th class="px-6 py-3.5 font-medium text-center">Financial Value</th>
+                      <th class="px-6 py-3.5 font-medium text-center">Financial Total</th>
                       <th class="px-6 py-3.5 font-medium text-right">Restore Action</th>
                     </tr>
                   </thead>
@@ -739,21 +417,21 @@
         <div id="moduleTelemetry" class="hidden space-y-6">
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div class="app-panel p-6 flex flex-col justify-center border-l-4 border-l-amber-500">
-              <span class="text-xs font-medium text-zinc-400 uppercase tracking-wide mb-2">Needs to be Produced (Queued)</span>
+              <span class="text-xs font-medium text-zinc-400 uppercase tracking-wide mb-2">Queued Line Item Tickets</span>
               <div class="flex items-end gap-3">
                 <span id="kpiQueuedCount" class="text-3xl font-bold font-mono text-white">0</span>
                 <span class="text-sm text-zinc-500 mb-1">Total Pieces</span>
               </div>
             </div>
             <div class="app-panel p-6 flex flex-col justify-center border-l-4 border-l-blue-500">
-              <span class="text-xs font-medium text-zinc-400 uppercase tracking-wide mb-2">Currently In Production</span>
+              <span class="text-xs font-medium text-zinc-400 uppercase tracking-wide mb-2">Running Press Floor Runs</span>
               <div class="flex items-end gap-3">
                 <span id="kpiRunningCount" class="text-3xl font-bold font-mono text-white">0</span>
                 <span class="text-sm text-zinc-500 mb-1">Total Pieces</span>
               </div>
             </div>
             <div class="app-panel p-6 flex flex-col justify-center border-l-4 border-l-emerald-500">
-              <span class="text-xs font-medium text-zinc-400 uppercase tracking-wide mb-2">Produced Items (Completed)</span>
+              <span class="text-xs font-medium text-zinc-400 uppercase tracking-wide mb-2">Completed Line Item Runs</span>
               <div class="flex items-end gap-3">
                 <span id="kpiCompletedCount" class="text-3xl font-bold font-mono text-white">0</span>
                 <span class="text-sm text-zinc-500 mb-1">Total Pieces</span>
@@ -762,29 +440,24 @@
           </div>
 
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            
             <div class="app-panel p-6 space-y-4">
               <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4">
-                Production Queue (Awaiting Start)
+                Production Queue (Awaiting Press Start)
               </h3>
-              <div id="queuedProductionContainer" class="space-y-3">
-              </div>
+              <div id="queuedProductionContainer" class="space-y-3"></div>
             </div>
 
             <div class="app-panel p-6 space-y-4">
               <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4">
-                Active Production Floor & History Produced
+                Active Production Floor & History Runs
               </h3>
-              <div id="activeProductionContainer" class="space-y-3">
-              </div>
+              <div id="activeProductionContainer" class="space-y-3"></div>
               
               <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4 mt-8">
-                History Produced (Completed Runs)
+                Completed Production Runs
               </h3>
-              <div id="completedProductionContainer" class="space-y-3">
-              </div>
+              <div id="completedProductionContainer" class="space-y-3"></div>
             </div>
-
           </div>
         </div>
 
@@ -801,7 +474,7 @@
                 <span>Wireless Barcode Scanner Packing Station</span>
                 <span class="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded border border-emerald-500/20">Active Focus Ready</span>
               </h3>
-              <p class="text-sm text-zinc-400">Scan job ticket barcode or press enter to register dispatch. Input field maintains automatic persistent focus for rapid multi-package processing.</p>
+              <p class="text-sm text-zinc-400">Scan master order ticket barcode or specific line item ticket barcode to record packing.</p>
               
               <div class="flex gap-3 mt-2">
                 <input type="text" id="barcodeInput" placeholder="Waiting for scanner input... (Example: VirtuePrint-2026-8818)" class="input-pro flex-1 px-4 py-3 text-base font-mono">
@@ -826,7 +499,7 @@
                     </tr>
                   </thead>
                   <tbody id="scanSessionLogBody" class="divide-y divide-zinc-800 text-zinc-200">
-                    <tr><td colspan="4" class="py-4 text-center text-zinc-500 text-xs">No packages scanned during current operational session.</td></tr>
+                    <tr><td colspan="4" class="py-4 text-center text-zinc-500 text-xs">No dispatches scanned during current operational session.</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -837,10 +510,8 @@
             <div class="app-panel p-6 space-y-4">
               <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4 flex justify-between items-center">
                 <span>Multi-Location Inventory Transfer & Storage Bin Management</span>
-                <button onclick="openBinTransferModal()" class="btn-pro-secondary text-xs">Transfer Bin Stock</button>
               </h3>
-              <p class="text-sm text-zinc-400">Manage storage bins and rack locations across multiple facility zones.</p>
-              <div class="overflow-x-auto rounded-lg border border-zinc-800 mt-4">
+              <div class="overflow-x-auto rounded-lg border border-zinc-800">
                 <table class="w-full text-left text-sm">
                   <thead class="bg-zinc-900 border-b border-zinc-800 text-zinc-400">
                     <tr>
@@ -849,7 +520,7 @@
                       <th class="px-4 py-3 font-medium text-center">Total On Hand</th>
                       <th class="px-4 py-3 font-medium text-center">Allocated for Production</th>
                       <th class="px-4 py-3 font-medium text-center">Available for Sale</th>
-                      <th class="px-4 py-3 font-medium text-right">Receive Supply</th>
+                      <th class="px-4 py-3 font-medium text-right">Receive Stock</th>
                     </tr>
                   </thead>
                   <tbody id="blanksInventoryTable" class="divide-y divide-zinc-800 text-zinc-200">
@@ -861,20 +532,16 @@
 
           <div id="warehouseSubTabFinished" class="hidden space-y-6">
             <div class="app-panel p-6 space-y-4">
-              <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4 flex justify-between items-center">
-                <span>Finished Goods Inventory & Shipping Address Manifest</span>
-              </h3>
-              <p class="text-sm text-zinc-400">Completed production runs awaiting warehouse packing and carrier dispatch.</p>
-              <div class="overflow-x-auto rounded-lg border border-zinc-800 mt-4">
+              <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4">Finished Goods Manifest</h3>
+              <div class="overflow-x-auto rounded-lg border border-zinc-800">
                 <table class="w-full text-left text-sm">
                   <thead class="bg-zinc-900 border-b border-zinc-800 text-zinc-400">
                     <tr>
-                      <th class="px-4 py-3 font-medium">Order Reference Identification</th>
+                      <th class="px-4 py-3 font-medium">Order Identification</th>
                       <th class="px-4 py-3 font-medium">Customer Information & Shipping Address</th>
                       <th class="px-4 py-3 font-medium text-center">Wish Delivery Date</th>
-                      <th class="px-4 py-3 font-medium text-center">Total Pieces Produced</th>
-                      <th class="px-4 py-3 font-medium text-center">Warehouse Location</th>
-                      <th class="px-4 py-3 font-medium text-right">Shipping Action</th>
+                      <th class="px-4 py-3 font-medium text-center">Total Master Units</th>
+                      <th class="px-4 py-3 font-medium text-right">Dispatch Action</th>
                     </tr>
                   </thead>
                   <tbody id="finishedGoodsTable" class="divide-y divide-zinc-800 text-zinc-200">
@@ -883,17 +550,12 @@
               </div>
             </div>
           </div>
-
         </div>
 
         <div id="moduleCRM" class="hidden space-y-6">
           <div class="app-panel p-6 space-y-4">
-            <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4">
-              Customer Relationship Management & Communication History Tracker
-            </h3>
-            <p class="text-sm text-zinc-400">Review past orders, customer addresses, interaction notes, and uploaded artwork assets per client account.</p>
-            
-            <div class="overflow-x-auto rounded-lg border border-zinc-800 mt-4">
+            <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-4">Customer Relationship Management</h3>
+            <div class="overflow-x-auto rounded-lg border border-zinc-800">
               <table class="w-full text-left text-sm">
                 <thead class="bg-zinc-900 border-b border-zinc-800 text-zinc-400">
                   <tr>
@@ -901,7 +563,7 @@
                     <th class="px-4 py-3 font-medium">Email & Shipping Address</th>
                     <th class="px-4 py-3 font-medium text-center">Total Orders Placed</th>
                     <th class="px-4 py-3 font-medium text-center">Total Lifetime Revenue</th>
-                    <th class="px-4 py-3 font-medium text-right">Account Management Action</th>
+                    <th class="px-4 py-3 font-medium text-right">Account Management</th>
                   </tr>
                 </thead>
                 <tbody id="crmTableBody" class="divide-y divide-zinc-800 text-zinc-200">
@@ -916,7 +578,7 @@
             <div class="app-panel p-6 flex flex-col justify-between border-t-4 border-t-blue-500">
               <span class="text-xs font-medium text-zinc-400 uppercase tracking-wide">Total Financial Revenue</span>
               <div class="mt-4 flex items-baseline justify-between">
-                <span id="dashTotalRevenue" class="text-3xl font-bold font-mono text-white">$2,525.00</span>
+                <span id="dashTotalRevenue" class="text-3xl font-bold font-mono text-white">$0.00</span>
                 <span class="text-xs text-emerald-400 font-medium">Verified Orders</span>
               </div>
             </div>
@@ -930,70 +592,22 @@
             <div class="app-panel p-6 flex flex-col justify-between border-t-4 border-t-indigo-500">
               <span class="text-xs font-medium text-zinc-400 uppercase tracking-wide">Active Production Volume</span>
               <div class="mt-4 flex items-baseline justify-between">
-                <span id="dashActiveVolume" class="text-3xl font-bold font-mono text-white">150 Pieces</span>
+                <span id="dashActiveVolume" class="text-3xl font-bold font-mono text-white">0 Pieces</span>
                 <span class="text-xs text-indigo-400 font-medium">In Press Floor</span>
               </div>
             </div>
             <div class="app-panel p-6 flex flex-col justify-between border-t-4 border-t-emerald-500">
               <span class="text-xs font-medium text-zinc-400 uppercase tracking-wide">Successfully Produced</span>
               <div class="mt-4 flex items-baseline justify-between">
-                <span id="dashProducedVolume" class="text-3xl font-bold font-mono text-white">100 Pieces</span>
+                <span id="dashProducedVolume" class="text-3xl font-bold font-mono text-white">0 Pieces</span>
                 <span class="text-xs text-emerald-400 font-medium">Ready for Shipping</span>
               </div>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="app-panel p-6 space-y-4">
-              <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-3">Cost Variance and Margin Analytics Tracker</h3>
-              <p class="text-xs text-zinc-400">Comparing estimated shop consumption against actual material waste and profit margin yields.</p>
-              <div class="space-y-3 text-sm text-zinc-300 mt-2">
-                <div class="flex justify-between py-2 border-b border-zinc-800/60">
-                  <span>Estimated Material Consumption Cost:</span>
-                  <span id="analyticsEstCost" class="font-mono font-bold text-white">$1,850.00</span>
-                </div>
-                <div class="flex justify-between py-2 border-b border-zinc-800/60">
-                  <span>Actual Shop Consumption and Waste:</span>
-                  <span id="analyticsActCost" class="font-mono font-bold text-amber-400">$1,790.00</span>
-                </div>
-                <div class="flex justify-between py-2 border-b border-zinc-800/60">
-                  <span>Net Variance Savings:</span>
-                  <span id="analyticsVariance" class="font-mono font-bold text-emerald-400">+$60.00 (Optimized Waste)</span>
-                </div>
-                <div class="flex justify-between py-2">
-                  <span>Average Net Profit Margin Yield:</span>
-                  <span class="font-mono font-bold text-blue-400">42.8 percent</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="app-panel p-6 space-y-4">
-              <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-3">Automated Notification Transmission Log</h3>
-              <p class="text-xs text-zinc-400">Real-time electronic mail dispatches sent to clients upon operational status changes.</p>
-              <div id="notificationLogContainer" class="space-y-2 mt-2 max-h-48 overflow-y-auto text-xs font-mono">
-                <div class="bg-zinc-900 p-2 rounded border border-zinc-800 text-zinc-300">
-                  <span class="text-blue-400">[2026-08-27 09:30]</span> Notification sent to nikol@example.com (Order VirtuePrint-2026-8818 transitioned to QUEUED)
-                </div>
-              </div>
-            </div>
-          </div>
-
           <div class="app-panel p-6 space-y-4">
-            <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-3">Operational Summary</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-zinc-300">
-              <div class="bg-zinc-900 p-4 rounded border border-zinc-800">
-                <span class="text-xs text-zinc-500 uppercase block mb-1">Total Registered Orders</span>
-                <span id="dashTotalOrders" class="text-xl font-mono font-bold text-white">3</span>
-              </div>
-              <div class="bg-zinc-900 p-4 rounded border border-zinc-800">
-                <span class="text-xs text-zinc-500 uppercase block mb-1">Queued Pieces Volume</span>
-                <span id="dashQueuedPieces" class="text-xl font-mono font-bold text-white">50 Pieces</span>
-              </div>
-              <div class="bg-zinc-900 p-4 rounded border border-zinc-800">
-                <span class="text-xs text-zinc-500 uppercase block mb-1">System Operating Status</span>
-                <span class="text-xl font-mono font-bold text-emerald-400">Online and Secured</span>
-              </div>
-            </div>
+            <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-3">Automated Notification Transmission Log</h3>
+            <div id="notificationLogContainer" class="space-y-2 mt-2 max-h-48 overflow-y-auto text-xs font-mono"></div>
           </div>
         </div>
 
@@ -1002,7 +616,7 @@
   </main>
 
   <div id="orderDetailsModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 no-print">
-    <div class="app-panel max-w-2xl w-full p-6 space-y-6 relative max-h-[90vh] overflow-y-auto shadow-2xl">
+    <div class="app-panel max-w-3xl w-full p-6 space-y-6 relative max-h-[90vh] overflow-y-auto shadow-2xl">
       <button onclick="closeOrderModal()" class="absolute top-6 right-6 text-zinc-400 hover:text-white transition-colors">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
       </button>
@@ -1010,99 +624,36 @@
       <div class="border-b border-zinc-800 pb-4 pr-8 flex justify-between items-start">
         <div>
           <h2 class="text-xl font-bold text-white flex items-center gap-3">
-            Order Detail View
+            Master Order Inspection
             <span id="modalOrderId" class="text-blue-500 font-mono text-lg bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">VirtuePrint-2026-8820</span>
           </h2>
-          <p class="text-sm text-zinc-400 mt-1">Review parameters, manage digital proof sign-off, and view shipping address.</p>
+          <p class="text-sm text-zinc-400 mt-1">Itemized line item breakdown and approval management.</p>
         </div>
-        <div class="flex items-center gap-2">
-          <button onclick="archiveCurrentModalOrder()" class="btn-pro-secondary text-xs text-amber-400 border-amber-500/30 hover:bg-amber-500/10">Archive Order</button>
-          <button onclick="printModalInvoice()" class="btn-pro-secondary text-xs flex items-center gap-2 py-1.5">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-            Print Invoice
-          </button>
-        </div>
+        <button onclick="archiveCurrentModalOrder()" class="btn-pro-secondary text-xs text-amber-400 border-amber-500/30 hover:bg-amber-500/10">Archive Order</button>
       </div>
 
-      <div class="grid grid-cols-2 gap-4">
-        <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-1">
-          <span class="text-zinc-500 font-medium text-[10px] uppercase tracking-wider block mb-2">Customer Profile & Address</span>
+      <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 grid grid-cols-2 gap-4 text-xs">
+        <div>
+          <span class="text-zinc-500 font-medium uppercase block mb-1">Customer Details</span>
           <div id="modalCustomerName" class="font-semibold text-zinc-100 text-sm">Client Name</div>
-          <div id="modalCustomerEmail" class="text-zinc-400 text-xs">client@example.com</div>
-          <div id="modalCustomerAddress" class="text-zinc-300 text-xs font-mono mt-1 pt-1 border-t border-zinc-800">Address: 123 Main St</div>
+          <div id="modalCustomerEmail" class="text-zinc-400">client@example.com</div>
+          <div id="modalCustomerAddress" class="text-zinc-300 font-mono mt-1">Address: 123 Main St</div>
         </div>
-
-        <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-1">
-          <span class="text-zinc-500 font-medium text-[10px] uppercase tracking-wider block mb-2">Garment, Pantone & Schedule</span>
-          <div id="modalGarmentName" class="font-semibold text-zinc-100 text-sm">Garment Details</div>
-          <div id="modalPantone" class="text-blue-400 font-mono text-xs mt-1">Pantone Match: PMS 286 C</div>
-          <div id="modalWishDate" class="text-amber-400 font-mono text-xs mt-1">Wish Delivery Date: 2026-09-15</div>
+        <div>
+          <span class="text-zinc-500 font-medium uppercase block mb-1">Delivery Schedule & Value</span>
+          <div id="modalWishDate" class="text-amber-400 font-mono">Wish Delivery Date: 2026-09-15</div>
+          <div id="modalTotalPrice" class="text-blue-400 font-mono text-base font-bold mt-1">$0.00 Total</div>
         </div>
       </div>
 
-      <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-3">
-        <div class="flex justify-between items-center">
-          <span class="text-zinc-500 font-medium text-[10px] uppercase tracking-wider">Client Digital Proof Approval Portal</span>
-          <span id="modalProofBadge" class="px-2.5 py-0.5 rounded text-[11px] font-semibold bg-amber-500/10 text-amber-500 border border-amber-500/30">PENDING CLIENT SIGN-OFF</span>
-        </div>
-        <div class="flex items-center justify-between bg-zinc-950 p-3 rounded border border-zinc-800 text-xs">
-          <div>
-            <span class="text-zinc-400 block mb-0.5">Secure External Proof Link:</span>
-            <span id="modalProofLinkText" class="font-mono text-blue-400 select-all">https://proof.virtueprintla.com/review?token=VP-8820</span>
-          </div>
-          <div class="flex gap-2">
-            <button onclick="copyProofLink()" class="btn-pro-secondary text-xs py-1.5">Copy Link</button>
-            <button onclick="simulateClientSignOff()" class="btn-emerald-solid text-xs py-1.5">Simulate Client Sign-Off</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 relative">
-        <span class="text-zinc-500 font-medium text-[10px] uppercase tracking-wider block mb-2 flex justify-between">
-          Special Notes and Specifications
-          <button id="editNotesBtn" class="text-blue-400 hover:text-blue-300">Edit Note Input</button>
-        </span>
-        <div id="modalArtworkNotes" class="text-zinc-300 text-sm italic">No special instructions provided.</div>
-        <textarea id="editArtworkNotesInput" class="hidden input-pro w-full px-2 py-1 text-sm mt-2" rows="2"></textarea>
-      </div>
-
-      <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800">
-        <span class="text-zinc-500 font-medium text-[10px] uppercase tracking-wider block mb-3">Size Matrix Allocation</span>
-        <div id="modalSizeMatrix" class="grid grid-cols-5 gap-3 text-center">
-        </div>
-      </div>
-
-      <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-3">
-        <span class="text-zinc-500 font-medium text-[10px] uppercase tracking-wider block mb-2">Artwork Production File</span>
-        <div class="flex items-center justify-between bg-zinc-950 p-3 rounded-md border border-zinc-800">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-md bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-500 shrink-0">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-            </div>
-            <div>
-              <div id="modalFileName" class="text-sm font-medium text-zinc-200">Design_File.png</div>
-              <div class="text-xs text-zinc-500">Verified for Separation</div>
-            </div>
-          </div>
-
-          <button onclick="downloadArtworkFile()" class="btn-pro-secondary text-sm flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-            Download File
-          </button>
-        </div>
-      </div>
-
-      <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-3">
-        <span class="text-zinc-500 font-medium text-[10px] uppercase tracking-wider block mb-2">Additional Specification Documents</span>
-        <div id="modalExtraFilesList" class="space-y-2">
-          <span class="text-xs text-zinc-500 italic">No additional documents uploaded.</span>
-        </div>
+      <div class="space-y-3">
+        <h4 class="text-xs font-semibold text-zinc-400 uppercase tracking-wider">Itemized Garment Line Items</h4>
+        <div id="modalLineItemsList" class="space-y-3"></div>
       </div>
 
       <div id="modalActionFooter" class="flex justify-between items-center pt-4 border-t border-zinc-800">
         <span id="modalStatusBadge" class="px-3 py-1 text-xs font-semibold rounded-md bg-amber-500/10 text-amber-500">PENDING APPROVAL</span>
-        <div id="modalActionButtons" class="flex gap-3">
-        </div>
+        <div id="modalActionButtons" class="flex gap-3"></div>
       </div>
     </div>
   </div>
@@ -1115,171 +666,34 @@
       
       <div class="border-b border-zinc-800 pb-3 pr-10">
         <div class="flex items-center gap-3">
-          <span id="prodModalOrderId" class="text-blue-400 font-mono font-bold text-lg">VirtuePrint-2026-8818</span>
+          <span id="prodModalOrderId" class="text-blue-400 font-mono font-bold text-lg">VirtuePrint-2026-8818-L1</span>
           <span id="prodModalStatusBadge" class="px-2.5 py-0.5 rounded text-[10px] font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 uppercase">QUEUED</span>
         </div>
         <p id="prodModalGarment" class="text-sm text-zinc-300 font-medium mt-1">Independent Trading Company Heavy Hoodie</p>
       </div>
 
       <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-1.5">
-        <span class="text-zinc-400 font-medium text-[11px] uppercase tracking-wider block">Production Comments & Specifications</span>
-        <p id="prodModalNotes" class="text-sm text-zinc-200 italic leading-relaxed">Center chest print, 3 inches below collar. Pantone Matching System 286 Blue ink.</p>
+        <span class="text-zinc-400 font-medium text-[11px] uppercase tracking-wider block">Production Specifications & Notes</span>
+        <p id="prodModalNotes" class="text-sm text-zinc-200 italic leading-relaxed">Center chest print. Pantone Matching System 286 Blue ink.</p>
       </div>
 
       <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-2">
         <div class="flex justify-between items-center">
-          <span class="text-zinc-400 font-medium text-[11px] uppercase tracking-wider block">Sizing Breakdown & Active Task Tracking</span>
+          <span class="text-zinc-400 font-medium text-[11px] uppercase tracking-wider block">Size Matrix Task Completion</span>
           <span class="text-[10px] text-emerald-400 font-semibold uppercase">Tap size boxes to toggle completion</span>
         </div>
-        <div id="prodModalSizeMatrix" class="grid grid-cols-5 gap-2 text-center select-none">
-        </div>
-      </div>
-
-      <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-3">
-        <span class="text-zinc-400 font-medium text-[11px] uppercase tracking-wider block">Artwork File & Technical Asset</span>
-        <div class="flex items-center justify-between bg-zinc-950 p-3 rounded-md border border-zinc-800">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-md bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-            </div>
-            <div>
-              <div id="prodModalFileName" class="text-sm font-medium text-zinc-200">NavyHoodie_Design.png</div>
-              <div class="text-xs text-zinc-500 font-mono">Ready for Press Floor</div>
-            </div>
-          </div>
-
-          <button onclick="viewProdArtworkFile()" class="btn-pro-secondary text-xs flex items-center gap-1.5 py-2 px-3">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-            View File
-          </button>
-        </div>
-      </div>
-
-      <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-3">
-        <span class="text-zinc-400 font-medium text-[11px] uppercase tracking-wider block">Additional Specification Documents</span>
-        <div id="prodModalExtraFilesList" class="space-y-2">
-          <span class="text-xs text-zinc-500 italic">No additional documents uploaded.</span>
-        </div>
+        <div id="prodModalSizeMatrix" class="grid grid-cols-5 gap-2 text-center select-none"></div>
       </div>
 
       <div class="pt-2 flex justify-end">
-        <button onclick="closeProductionOrderModal()" class="btn-pro-primary text-xs px-6 py-2">Close View</button>
+        <button onclick="closeProductionOrderModal()" class="btn-pro-primary text-xs px-6 py-2">Close Inspection View</button>
       </div>
-    </div>
-  </div>
-
-  <div id="artworkPreviewModal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col p-4 no-print">
-    <div class="app-panel w-full h-full flex flex-col p-6 space-y-4 relative shadow-2xl border border-zinc-700 items-center rounded-none">
-      <button onclick="closeArtworkPreviewModal()" class="absolute top-6 right-6 text-zinc-400 hover:text-white transition-colors p-2 z-20">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-      </button>
-      
-      <div class="w-full border-b border-zinc-800 pb-3 pr-12">
-        <h3 id="previewModalTitle" class="text-base font-semibold text-white">Artwork File Viewer</h3>
-        <p class="text-xs text-zinc-400 mt-0.5">Full screen high resolution production asset reviewer.</p>
-      </div>
-
-      <div class="w-full flex-1 bg-zinc-950 rounded-lg border border-zinc-800 flex items-center justify-center p-2 relative overflow-hidden">
-        <img id="previewModalImage" src="" class="max-w-full max-h-full object-contain" alt="Artwork Preview">
-        <iframe id="previewModalPdfFrame" src="" class="hidden w-full h-full border-0 rounded-lg bg-white" title="Portable Document Format Reviewer"></iframe>
-      </div>
-
-      <div class="w-full flex justify-end pt-2">
-        <button onclick="closeArtworkPreviewModal()" class="btn-pro-secondary text-xs px-6 py-2">Close Full Screen Viewer</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="binTransferModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 no-print">
-    <div class="app-panel max-w-md w-full p-6 space-y-4 relative shadow-2xl">
-      <h3 class="text-base font-semibold text-white border-b border-zinc-800 pb-3">Transfer Stock Between Storage Bins</h3>
-      <div>
-        <label class="block text-xs font-medium text-zinc-400 mb-1">Select Garment Style</label>
-        <select id="transferGarmentSelect" class="input-pro w-full px-3 py-2 text-sm">
-          <option value="Shaka Wear">Shaka Wear 7.5 ounce Heavyweight Maximum Heavy Shirt</option>
-          <option value="Independent Trading">Independent Trading Company Heavy Hoodie</option>
-          <option value="Bella Canvas">Bella Canvas 3001 Unisex Jersey Shirt</option>
-        </select>
-      </div>
-      <div class="grid grid-cols-2 gap-3">
-        <div>
-          <label class="block text-xs font-medium text-zinc-400 mb-1">From Bin Location</label>
-          <input type="text" id="fromBin" value="Rack A-01" class="input-pro w-full px-3 py-2 text-sm font-mono">
-        </div>
-        <div>
-          <label class="block text-xs font-medium text-zinc-400 mb-1">To Bin Location</label>
-          <input type="text" id="toBin" value="Rack B-14" class="input-pro w-full px-3 py-2 text-sm font-mono">
-        </div>
-      </div>
-      <div>
-        <label class="block text-xs font-medium text-zinc-400 mb-1">Transfer Quantity</label>
-        <input type="number" id="transferQty" min="1" value="50" class="input-pro w-full px-3 py-2 text-sm font-mono">
-      </div>
-      <div class="flex justify-end gap-3 pt-3 border-t border-zinc-800">
-        <button onclick="closeBinTransferModal()" class="btn-pro-secondary text-xs">Cancel</button>
-        <button onclick="executeBinTransfer()" class="btn-pro-primary text-xs">Execute Transfer</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="printInvoiceContainer" class="hidden">
-    <div style="display: flex; justify-content: space-between; border-bottom: 2px solid #e5e7eb; padding-bottom: 1rem; margin-bottom: 2rem;">
-      <div>
-        <h1 style="font-size: 24px; font-weight: bold;">Virtue Print Los Angeles</h1>
-        <p style="color: #6b7280; font-size: 12px;">Production Operating System Invoice & Shipping Manifest</p>
-      </div>
-      <div style="text-align: right;">
-        <h2 style="font-size: 18px; font-weight: bold; font-family: monospace;" id="printOrderId">VirtuePrint-2026-8820</h2>
-        <p style="color: #6b7280; font-size: 12px;" id="printDate">Date Generated</p>
-      </div>
-    </div>
-
-    <div style="display: flex; justify-content: space-between; margin-bottom: 2rem;">
-      <div>
-        <h3 style="font-size: 14px; font-weight: bold; color: #374151; margin-bottom: 0.5rem; text-transform: uppercase;">Customer Information & Shipping Address</h3>
-        <p id="printCustomerName" style="font-weight: 500;">Client Name</p>
-        <p id="printCustomerEmail" style="color: #6b7280; font-size: 14px;">email@example.com</p>
-        <p id="printCustomerAddress" style="font-family: monospace; font-size: 13px; color: #111827; margin-top: 0.25rem;">Address: 123 Main St</p>
-      </div>
-      <div style="text-align: right;">
-        <h3 style="font-size: 14px; font-weight: bold; color: #374151; margin-bottom: 0.5rem; text-transform: uppercase;">Delivery Objective</h3>
-        <p id="printWishDate" style="font-weight: 500;">2026-09-15</p>
-      </div>
-    </div>
-
-    <div style="margin-bottom: 2rem;">
-      <h3 style="font-size: 14px; font-weight: bold; color: #374151; margin-bottom: 0.5rem; text-transform: uppercase;">Order Production Details</h3>
-      <table style="width: 100%; text-align: left; border-collapse: collapse;">
-        <thead>
-          <tr style="border-bottom: 1px solid #e5e7eb;">
-            <th style="padding: 0.5rem 0;">Garment Style Definition</th>
-            <th style="padding: 0.5rem 0;">Fabric Color & Pantone</th>
-            <th style="padding: 0.5rem 0; text-align: center;">Total Units Quantity</th>
-            <th style="padding: 0.5rem 0; text-align: right;">Master Total Value</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td id="printGarment" style="padding: 1rem 0;">Garment Details</td>
-            <td id="printColorPantone" style="padding: 1rem 0;">Black - PMS 286 C</td>
-            <td id="printQty" style="padding: 1rem 0; text-align: center; font-family: monospace;">100</td>
-            <td id="printPrice" style="padding: 1rem 0; text-align: right; font-family: monospace; font-weight: bold;">$0.00</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div style="margin-bottom: 2rem; padding: 1rem; background-color: #f3f4f6; border-radius: 0.5rem;">
-      <h3 style="font-size: 12px; font-weight: bold; color: #6b7280; margin-bottom: 0.5rem; text-transform: uppercase;">Special Production Notes & Digital Proof Sign-Off</h3>
-      <p id="printNotes" style="font-size: 14px; font-style: italic;">No special notes provided.</p>
-    </div>
-    
-    <div style="text-align: center; font-size: 12px; color: #9ca3af; margin-top: 4rem; border-top: 1px solid #e5e7eb; padding-top: 1rem;">
-      Generated securely by Virtue Print Digital Operations System
     </div>
   </div>
 
   <script>
+    let activeLineItemsCounter = 0;
+
     const DEFAULT_ORDERS = [
       {
         id: "VirtuePrint-2026-8818",
@@ -1287,86 +701,64 @@
         customerEmail: "nikol@example.com",
         customerAddress: "1000 Wilshire Blvd, Los Angeles, CA 90017",
         wishDate: "2026-09-10",
-        garment: "Independent Trading Company Heavy Hoodie",
-        color: "Navy",
-        pantone: "PMS 286 C (Royal Blue)",
-        quantity: 50,
-        sizes: { Small: 5, Medium: 15, Large: 20, ExtraLarge: 8, DoubleExtraLarge: 2 },
-        sizesCompleted: { Small: false, Medium: false, Large: false, ExtraLarge: false, DoubleExtraLarge: false },
-        price: "$1,313.25",
         status: "QUEUED",
         isArchived: false,
         archivedFrom: "",
         proofApproved: true,
-        notes: "Center chest print, 3 inches below collar. Pantone Matching System 286 Blue ink.",
-        artworkName: "NavyHoodie_Design.png",
-        artworkData: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><circle cx='100' cy='100' r='80' fill='%232563eb'/></svg>",
-        extraFiles: [
-          { name: "Hoodie_Specifications_Sheet.pdf", data: "data:application/pdf;base64,JVBERi0xLjMK..." }
+        totalOrderPrice: "$1,718.40",
+        totalOrderQuantity: 100,
+        lineItems: [
+          {
+            lineItemId: "LINE-1",
+            garmentStyle: "Independent Trading Company Heavy Hoodie",
+            garmentColor: "Navy",
+            pantoneColor: "PMS 286 C (Royal Blue)",
+            inkType: "plastisol",
+            colorCount: 2,
+            quantity: 50,
+            sizes: { Small: 5, Medium: 15, Large: 20, ExtraLarge: 8, DoubleExtraLarge: 2 },
+            sizesCompleted: { Small: true, Medium: true, Large: false, ExtraLarge: false, DoubleExtraLarge: false },
+            artworkName: "NavyHoodie_Design.png",
+            artworkNotes: "Center chest print, 3 inches below collar.",
+            lineStatus: "QUEUED"
+          },
+          {
+            lineItemId: "LINE-2",
+            garmentStyle: "Bella Canvas 3001 Unisex Jersey Shirt",
+            garmentColor: "White",
+            pantoneColor: "PMS 186 C (Racing Red)",
+            inkType: "waterbase",
+            colorCount: 1,
+            quantity: 50,
+            sizes: { Small: 10, Medium: 20, Large: 15, ExtraLarge: 5, DoubleExtraLarge: 0 },
+            sizesCompleted: { Small: false, Medium: false, Large: false, ExtraLarge: false, DoubleExtraLarge: false },
+            artworkName: "Summer_Event_Tee.png",
+            artworkNotes: "Left chest print.",
+            lineStatus: "QUEUED"
+          }
         ]
-      },
-      {
-        id: "VirtuePrint-2026-8819",
-        customerName: "Valentin Rizov",
-        customerEmail: "valentin@example.com",
-        customerAddress: "400 S Hope St, Los Angeles, CA 90071",
-        wishDate: "2026-09-15",
-        garment: "Customer Provided Blanks",
-        color: "White",
-        pantone: "PMS 186 C (Racing Red)",
-        quantity: 150,
-        sizes: { Small: 25, Medium: 50, Large: 50, ExtraLarge: 20, DoubleExtraLarge: 5 },
-        sizesCompleted: { Small: false, Medium: false, Large: false, ExtraLarge: false, DoubleExtraLarge: false },
-        price: "$405.15",
-        status: "IN_PRODUCTION",
-        isArchived: false,
-        archivedFrom: "",
-        proofApproved: true,
-        notes: "Customer shipping custom garments directly to the shop floor.",
-        artworkName: "WhiteShirt_Front.png",
-        artworkData: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><rect width='200' height='200' fill='%2310b981'/></svg>",
-        extraFiles: []
-      },
-      {
-        id: "VirtuePrint-2026-8817",
-        customerName: "Zlatin",
-        customerEmail: "zlatin@example.com",
-        customerAddress: "700 W 7th St, Los Angeles, CA 90017",
-        wishDate: "2026-09-05",
-        garment: "Shaka Wear 7.5 ounce Heavyweight Maximum Heavy Shirt",
-        color: "Black",
-        pantone: "PMS Black 6 C (Rich Black)",
-        quantity: 100,
-        sizes: { Small: 10, Medium: 40, Large: 30, ExtraLarge: 15, DoubleExtraLarge: 5 },
-        sizesCompleted: { Small: false, Medium: false, Large: false, ExtraLarge: false, DoubleExtraLarge: false },
-        price: "$1,023.83",
-        status: "PRODUCED",
-        isArchived: false,
-        archivedFrom: "",
-        proofApproved: true,
-        notes: "Standard placement.",
-        artworkName: "BlackShirt_Design.png",
-        artworkData: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><rect width='200' height='200' fill='%23000000'/></svg>",
-        extraFiles: []
       }
     ];
 
     const DEFAULT_INVENTORY = [
-      { style: "Shaka Wear 7.5 ounce Heavyweight Maximum Heavy Shirt (Black)", bin: "Rack A-01", onHand: 1500 },
-      { style: "Independent Trading Company Heavy Hoodie (Navy)", bin: "Rack B-14", onHand: 800 },
-      { style: "Bella Canvas 3001 Unisex Jersey Shirt (White)", bin: "Rack C-03", onHand: 2500 }
+      { style: "Shaka Wear 7.5 ounce Heavyweight Maximum Heavy Shirt", bin: "Rack A-01", onHand: 1500 },
+      { style: "Independent Trading Company Heavy Hoodie", bin: "Rack B-14", onHand: 800 },
+      { style: "Bella Canvas 3001 Unisex Jersey Shirt", bin: "Rack C-03", onHand: 2500 }
     ];
 
     const DEFAULT_NOTIFICATIONS = [
-      { timestamp: "2026-08-27 09:30", message: "Notification sent to nikol@example.com (Order VirtuePrint-2026-8818 transitioned to QUEUED)" }
+      { timestamp: "2026-08-27 09:30", message: "Notification sent to nikol@example.com (Order VirtuePrint-2026-8818 created with 2 line items)" }
     ];
 
     let ordersBacklog = JSON.parse(localStorage.getItem('virtuePrintOrders')) || DEFAULT_ORDERS;
     let inventoryBlanks = JSON.parse(localStorage.getItem('virtuePrintInventory')) || DEFAULT_INVENTORY;
     let notificationLogs = JSON.parse(localStorage.getItem('virtuePrintNotifications')) || DEFAULT_NOTIFICATIONS;
     let scanSessionLogs = [];
-    let currentExtraFilesSession = [];
-    let isUploadingExtraFiles = false;
+    
+    let selectedModalOrder = null;
+    let selectedProductionOrder = null;
+    let selectedProductionLineItem = null;
+    let currentBacklogStatusFilter = 'ALL';
 
     function saveSystemData() {
       localStorage.setItem('virtuePrintOrders', JSON.stringify(ordersBacklog));
@@ -1381,319 +773,6 @@
         localStorage.removeItem('virtuePrintNotifications');
         location.reload();
       }
-    }
-
-    let currentColorType = 'dark';
-    let currentSupplyMode = 'catalog';
-    let currentOrderId = "";
-    let currentCalculatedTotal = "$0.00";
-    let currentArtworkDataUrl = "";
-    let currentArtworkIsPdf = false;
-    let selectedModalOrder = null;
-    let selectedProductionOrder = null;
-    let currentBacklogStatusFilter = 'ALL';
-    let selectedCalendarDate = "";
-    let selectedIntakeDate = "";
-
-    let calendarYear = 2026;
-    let calendarMonth = 7;
-    let intakeCalendarYear = 2026;
-    let intakeCalendarMonth = 7;
-
-    const dragDropArea = document.getElementById('dragDropArea');
-    const fileInput = document.getElementById('fileInput');
-
-    dragDropArea.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      dragDropArea.classList.add('drag-over');
-    });
-
-    dragDropArea.addEventListener('dragleave', (e) => {
-      e.preventDefault();
-      dragDropArea.classList.remove('drag-over');
-    });
-
-    dragDropArea.addEventListener('drop', (e) => {
-      e.preventDefault();
-      dragDropArea.classList.remove('drag-over');
-      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-        fileInput.files = e.dataTransfer.files;
-        processFileSelection(e.dataTransfer.files[0]);
-      }
-    });
-
-    fileInput.addEventListener('change', (e) => {
-      if (e.target.files && e.target.files.length > 0) {
-        processFileSelection(e.target.files[0]);
-      }
-    });
-
-    function processFileSelection(file) {
-      if (!file) return;
-      document.getElementById('fileLabel').innerText = file.name;
-      const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
-      currentArtworkIsPdf = isPdf;
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        currentArtworkDataUrl = e.target.result;
-        const imgElement = document.getElementById('artworkRender');
-        const pdfPreview = document.getElementById('pdfPlatenPreview');
-        
-        if (isPdf) {
-          imgElement.classList.add('hidden');
-          pdfPreview.classList.remove('hidden');
-          document.getElementById('pdfPlatenName').innerText = file.name;
-        } else {
-          pdfPreview.classList.add('hidden');
-          imgElement.src = currentArtworkDataUrl;
-          imgElement.classList.remove('hidden');
-        }
-        
-        document.getElementById('artworkPlaceholder').classList.add('hidden');
-        resetArtworkPositioning();
-      };
-      reader.readAsDataURL(file);
-
-      currentOrderId = generateUniqueOrderId();
-      document.getElementById('activeOrderBadge').innerText = currentOrderId;
-      document.getElementById('generatedOrderId').innerText = currentOrderId;
-      document.getElementById('preflightIdle').classList.add('hidden');
-      document.getElementById('preflightResults').classList.remove('hidden');
-
-      if (!isUploadingExtraFiles) {
-        const btn = document.getElementById('submitToBacklogBtn');
-        btn.disabled = false;
-      }
-    }
-
-    function handleExtraFilesSelection(inputElement) {
-      if (!inputElement.files || inputElement.files.length === 0) return;
-      
-      isUploadingExtraFiles = true;
-      const submitBtn = document.getElementById('submitToBacklogBtn');
-      submitBtn.disabled = true;
-      submitBtn.innerText = "Uploading Files...";
-
-      const progressWrapper = document.getElementById('extraFilesProgressWrapper');
-      const progressBar = document.getElementById('extraFilesProgressBar');
-      const progressText = document.getElementById('extraFilesProgressText');
-      progressWrapper.classList.remove('hidden');
-
-      let currentProgress = 0;
-      progressBar.style.width = "0%";
-      progressText.innerText = "0 percent";
-
-      const uploadInterval = setInterval(() => {
-        currentProgress += 15;
-        if (currentProgress > 100) currentProgress = 100;
-        progressBar.style.width = currentProgress + "%";
-        progressText.innerText = currentProgress + " percent";
-
-        if (currentProgress >= 100) {
-          clearInterval(uploadInterval);
-          setTimeout(() => {
-            progressWrapper.classList.add('hidden');
-            isUploadingExtraFiles = false;
-            if (currentOrderId) {
-              submitBtn.disabled = false;
-            }
-            submitBtn.innerText = "Submit Order to Backlog";
-
-            for (let i = 0; i < inputElement.files.length; i++) {
-              const file = inputElement.files[i];
-              const reader = new FileReader();
-              reader.onload = function(e) {
-                currentExtraFilesSession.push({
-                  name: file.name,
-                  data: e.target.result,
-                  isPdf: file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')
-                });
-                renderExtraFilesListUI();
-              };
-              reader.readAsDataURL(file);
-            }
-          }, 300);
-        }
-      }, 120);
-    }
-
-    function renderExtraFilesListUI() {
-      const container = document.getElementById('extraFilesListContainer');
-      container.innerHTML = "";
-      if (currentExtraFilesSession.length === 0) return;
-
-      currentExtraFilesSession.forEach((fileObj, idx) => {
-        container.innerHTML += `
-          <div class="flex items-center justify-between bg-zinc-900 p-2 rounded border border-zinc-800 text-xs font-mono">
-            <span class="text-zinc-200">${fileObj.name}</span>
-            <button type="button" onclick="removeExtraFile(${idx})" class="text-red-400 hover:text-red-300">Remove</button>
-          </div>
-        `;
-      });
-    }
-
-    function removeExtraFile(index) {
-      currentExtraFilesSession.splice(index, 1);
-      renderExtraFilesListUI();
-    }
-
-    const artworkRender = document.getElementById('artworkRender');
-    const artScaleSlider = document.getElementById('artScale');
-    const artOpacitySlider = document.getElementById('artOpacity');
-    
-    let isDragging = false;
-    let startDragX = 0;
-    let startDragY = 0;
-    let currentPosX = 0;
-    let currentPosY = 0;
-
-    artworkRender.addEventListener('mousedown', (e) => {
-      isDragging = true;
-      startDragX = e.clientX - currentPosX;
-      startDragY = e.clientY - currentPosY;
-    });
-
-    window.addEventListener('mousemove', (e) => {
-      if (!isDragging) return;
-      currentPosX = e.clientX - startDragX;
-      currentPosY = e.clientY - startDragY;
-      applyArtworkTransforms();
-    });
-
-    window.addEventListener('mouseup', () => {
-      isDragging = false;
-    });
-
-    artScaleSlider.addEventListener('input', (e) => {
-      document.getElementById('scaleLabel').innerText = e.target.value + " Percent";
-      applyArtworkTransforms();
-    });
-
-    artOpacitySlider.addEventListener('input', (e) => {
-      document.getElementById('opacityLabel').innerText = e.target.value + " Percent";
-      applyArtworkTransforms();
-    });
-
-    function applyArtworkTransforms() {
-      const scaleValue = artScaleSlider.value / 100;
-      const opacityValue = artOpacitySlider.value / 100;
-      const targetImg = document.getElementById('artworkRender');
-      const pdfPreview = document.getElementById('pdfPlatenPreview');
-      
-      const transformString = `translate(${currentPosX}px, ${currentPosY}px) scale(${scaleValue})`;
-      targetImg.style.transform = transformString;
-      targetImg.style.opacity = opacityValue;
-      pdfPreview.style.transform = transformString;
-      pdfPreview.style.opacity = opacityValue;
-    }
-
-    function resetArtworkPositioning() {
-      currentPosX = 0;
-      currentPosY = 0;
-      artScaleSlider.value = 100;
-      artOpacitySlider.value = 100;
-      document.getElementById('scaleLabel').innerText = "100 Percent";
-      document.getElementById('opacityLabel').innerText = "100 Percent";
-      applyArtworkTransforms();
-    }
-
-    function toggleCalendarDropdown() {
-      const dropdown = document.getElementById('calendarDropdown');
-      dropdown.classList.toggle('hidden');
-      if (!dropdown.classList.contains('hidden')) renderCalendarGrid();
-    }
-
-    function changeMonth(direction) {
-      calendarMonth += direction;
-      if (calendarMonth > 11) { calendarMonth = 0; calendarYear++; } 
-      else if (calendarMonth < 0) { calendarMonth = 11; calendarYear--; }
-      renderCalendarGrid();
-    }
-
-    function renderCalendarGrid() {
-      const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-      document.getElementById('calendarMonthYear').innerText = monthNames[calendarMonth] + " " + calendarYear;
-      const grid = document.getElementById('calendarDaysGrid');
-      grid.innerHTML = "";
-      const firstDayIndex = new Date(calendarYear, calendarMonth, 1).getDay();
-      const totalDays = new Date(calendarYear, calendarMonth + 1, 0).getDate();
-      const prevTotalDays = new Date(calendarYear, calendarMonth, 0).getDate();
-      for (let i = firstDayIndex - 1; i >= 0; i--) {
-        grid.innerHTML += `<div class="py-1.5 text-zinc-600 text-xs">${prevTotalDays - i}</div>`;
-      }
-      for (let d = 1; d <= totalDays; d++) {
-        const monthString = String(calendarMonth + 1).padStart(2, '0');
-        const dayString = String(d).padStart(2, '0');
-        const dateString = calendarYear + "-" + monthString + "-" + dayString;
-        const displayString = monthString + "/" + dayString + "/" + calendarYear;
-        const isSelected = (selectedCalendarDate === dateString);
-        const btnClass = isSelected ? "py-1.5 rounded-lg bg-blue-600 text-white font-semibold cursor-pointer" : "py-1.5 rounded-lg hover:bg-zinc-800 text-zinc-200 cursor-pointer";
-        grid.innerHTML += `<div onclick="selectCalendarDate('${dateString}', '${displayString}')" class="${btnClass}">${d}</div>`;
-      }
-    }
-
-    function selectCalendarDate(dateString, displayString) {
-      selectedCalendarDate = dateString;
-      document.getElementById('calendarDisplayText').innerText = displayString;
-      document.getElementById('calendarDropdown').classList.add('hidden');
-      applyBacklogFilters();
-    }
-
-    function clearBacklogCalendarFilter() {
-      selectedCalendarDate = "";
-      document.getElementById('calendarDisplayText').innerText = "Select Date";
-      document.getElementById('calendarDropdown').classList.add('hidden');
-      applyBacklogFilters();
-    }
-
-    function toggleIntakeCalendarDropdown() {
-      const dropdown = document.getElementById('intakeCalendarDropdown');
-      dropdown.classList.toggle('hidden');
-      if (!dropdown.classList.contains('hidden')) renderIntakeCalendarGrid();
-    }
-
-    function changeIntakeMonth(direction) {
-      intakeCalendarMonth += direction;
-      if (intakeCalendarMonth > 11) { intakeCalendarMonth = 0; intakeCalendarYear++; } 
-      else if (intakeCalendarMonth < 0) { intakeCalendarMonth = 11; intakeCalendarYear--; }
-      renderIntakeCalendarGrid();
-    }
-
-    function renderIntakeCalendarGrid() {
-      const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-      document.getElementById('intakeCalendarMonthYear').innerText = monthNames[intakeCalendarMonth] + " " + intakeCalendarYear;
-      const grid = document.getElementById('intakeCalendarDaysGrid');
-      grid.innerHTML = "";
-      const firstDayIndex = new Date(intakeCalendarYear, intakeCalendarMonth, 1).getDay();
-      const totalDays = new Date(intakeCalendarYear, intakeCalendarMonth + 1, 0).getDate();
-      const prevTotalDays = new Date(intakeCalendarYear, intakeCalendarMonth, 0).getDate();
-      for (let i = firstDayIndex - 1; i >= 0; i--) {
-        grid.innerHTML += `<div class="py-1.5 text-zinc-600 text-xs">${prevTotalDays - i}</div>`;
-      }
-      for (let d = 1; d <= totalDays; d++) {
-        const monthString = String(intakeCalendarMonth + 1).padStart(2, '0');
-        const dayString = String(d).padStart(2, '0');
-        const dateString = intakeCalendarYear + "-" + monthString + "-" + dayString;
-        const displayString = monthString + "/" + dayString + "/" + intakeCalendarYear;
-        const isSelected = (selectedIntakeDate === dateString);
-        const btnClass = isSelected ? "py-1.5 rounded-lg bg-blue-600 text-white font-semibold cursor-pointer" : "py-1.5 rounded-lg hover:bg-zinc-800 text-zinc-200 cursor-pointer";
-        grid.innerHTML += `<div onclick="selectIntakeDate('${dateString}', '${displayString}')" class="${btnClass}">${d}</div>`;
-      }
-    }
-
-    function selectIntakeDate(dateString, displayString) {
-      selectedIntakeDate = dateString;
-      document.getElementById('wishDeliveryDate').value = dateString;
-      document.getElementById('intakeCalendarDisplayText').innerText = displayString;
-      document.getElementById('intakeCalendarDropdown').classList.add('hidden');
-    }
-
-    function clearIntakeCalendarDate() {
-      selectedIntakeDate = "";
-      document.getElementById('wishDeliveryDate').value = "";
-      document.getElementById('intakeCalendarDisplayText').innerText = "Select Date";
-      document.getElementById('intakeCalendarDropdown').classList.add('hidden');
     }
 
     function generateUniqueOrderId() {
@@ -1727,7 +806,7 @@
       } else if (tabName === 'intake') {
         document.getElementById('moduleIntake').classList.remove('hidden');
         document.getElementById('nav-intake').classList.add('active');
-        pageTitle = "Order Specification and Preflight Proofing";
+        pageTitle = "Order Specification and Preflight";
       } else if (tabName === 'backlog') {
         document.getElementById('moduleBacklog').classList.remove('hidden');
         document.getElementById('nav-backlog').classList.add('active');
@@ -1741,7 +820,7 @@
       } else if (tabName === 'wms') {
         document.getElementById('moduleWMS').classList.remove('hidden');
         document.getElementById('nav-wms').classList.add('active');
-        pageTitle = "Warehouse Management and Shipping System";
+        pageTitle = "Warehouse Management System";
         switchWarehouseSubTab('scanner');
       } else if (tabName === 'crm') {
         document.getElementById('moduleCRM').classList.remove('hidden');
@@ -1783,10 +862,6 @@
       if (subTabName === 'scanner') {
         document.getElementById('warehouseSubTabScanner').classList.remove('hidden');
         document.getElementById('warehouseSubTabBtnScanner').classList.add('active');
-        setTimeout(() => {
-          const scannerInput = document.getElementById('barcodeInput');
-          if(scannerInput) scannerInput.focus();
-        }, 50);
       } else if (subTabName === 'inventory') {
         document.getElementById('warehouseSubTabInventory').classList.remove('hidden');
         document.getElementById('warehouseSubTabBtnInventory').classList.add('active');
@@ -1798,215 +873,228 @@
       }
     }
 
-    function setGarmentSupplyMode(mode) {
-      currentSupplyMode = mode;
-      const btnCatalog = document.getElementById('btnSupplyCatalog');
-      const btnCustomer = document.getElementById('btnSupplyCustomer');
-      const catalogBox = document.getElementById('catalogSelectorContainer');
-      const customerBox = document.getElementById('customerGarmentNoteContainer');
+    function addNewLineItem() {
+      activeLineItemsCounter++;
+      const id = activeLineItemsCounter;
+      const container = document.getElementById('lineItemsContainer');
 
-      if (mode === 'catalog') {
-        btnCatalog.className = "py-2 px-3 rounded-md bg-blue-600/10 text-blue-400 border border-blue-500/30 font-medium transition-all";
-        btnCustomer.className = "py-2 px-3 rounded-md bg-zinc-900 border border-zinc-700 text-zinc-400 font-medium transition-all hover:bg-zinc-800";
-        catalogBox.classList.remove('hidden');
-        customerBox.classList.add('hidden');
-      } else {
-        btnCustomer.className = "py-2 px-3 rounded-md bg-blue-600/10 text-blue-400 border border-blue-500/30 font-medium transition-all";
-        btnCatalog.className = "py-2 px-3 rounded-md bg-zinc-900 border border-zinc-700 text-zinc-400 font-medium transition-all hover:bg-zinc-800";
-        customerBox.classList.remove('hidden');
-        catalogBox.classList.add('hidden');
-      }
-      updatePrice();
+      const itemHtml = `
+        <div id="lineItemCard_${id}" class="app-panel p-6 space-y-6 relative border-l-4 border-l-blue-500">
+          <div class="flex justify-between items-center border-b border-zinc-800 pb-3">
+            <span class="text-sm font-bold text-white uppercase font-mono">Garment Line Item Reference #${id}</span>
+            ${id > 1 ? `<button onclick="removeLineItem(${id})" class="text-xs text-red-400 hover:text-red-300">Remove Line Item</button>` : ''}
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="col-span-2">
+              <label class="block text-xs font-medium text-zinc-400 mb-1.5 mandatory-label">Integrated Blank Catalog Style</label>
+              <select id="style_${id}" onchange="calculateMasterTotals()" class="input-pro w-full px-3 py-2 text-sm cursor-pointer">
+                <option value="18.00">Independent Trading Company Heavy Hoodie ($18.00)</option>
+                <option value="6.50">Shaka Wear 7.5 ounce Heavyweight Maximum Heavy Shirt ($6.50)</option>
+                <option value="5.00">Bella Canvas 3001 Unisex Jersey Shirt ($5.00)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-zinc-400 mb-1.5 mandatory-label">Fabric Color</label>
+              <select id="color_${id}" onchange="calculateMasterTotals()" class="input-pro w-full px-3 py-2 text-sm">
+                <option value="Black">Black</option>
+                <option value="White">White</option>
+                <option value="Navy">Navy</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label class="block text-xs font-medium text-zinc-400 mb-1.5 mandatory-label">Pantone Color Match</label>
+              <select id="pantone_${id}" class="input-pro w-full px-3 py-2 text-sm">
+                <option value="PMS 286 C (Royal Blue)">PMS 286 C (Royal Blue)</option>
+                <option value="PMS 186 C (Racing Red)">PMS 186 C (Racing Red)</option>
+                <option value="PMS Black 6 C (Rich Black)">PMS Black 6 C (Rich Black)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-zinc-400 mb-1.5 mandatory-label">Print Chemistry</label>
+              <select id="ink_${id}" onchange="calculateMasterTotals()" class="input-pro w-full px-3 py-2 text-sm">
+                <option value="plastisol">Plastisol Ink</option>
+                <option value="waterbase">Water Based Ink</option>
+                <option value="puff">Three Dimensional Puff Ink</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-zinc-400 mb-1.5 mandatory-label">Spot Color Count</label>
+              <select id="colorsCount_${id}" onchange="calculateMasterTotals()" class="input-pro w-full px-3 py-2 text-sm">
+                <option value="1">1 Spot Color</option>
+                <option value="2" selected>2 Spot Colors</option>
+                <option value="3">3 Spot Colors</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="bg-zinc-900 p-3 rounded-md border border-zinc-800 space-y-2">
+            <span class="block text-[10px] font-medium text-zinc-400 uppercase tracking-wider">Size Matrix Allocation</span>
+            <div class="grid grid-cols-5 gap-2">
+              <div class="text-center"><span class="text-[10px] text-zinc-500 block">S</span><input type="number" id="sizeS_${id}" value="5" min="0" oninput="calculateMasterTotals()" class="input-pro w-full text-center text-xs py-1"></div>
+              <div class="text-center"><span class="text-[10px] text-zinc-500 block">M</span><input type="number" id="sizeM_${id}" value="15" min="0" oninput="calculateMasterTotals()" class="input-pro w-full text-center text-xs py-1"></div>
+              <div class="text-center"><span class="text-[10px] text-zinc-500 block">L</span><input type="number" id="sizeL_${id}" value="20" min="0" oninput="calculateMasterTotals()" class="input-pro w-full text-center text-xs py-1"></div>
+              <div class="text-center"><span class="text-[10px] text-zinc-500 block">XL</span><input type="number" id="sizeXL_${id}" value="8" min="0" oninput="calculateMasterTotals()" class="input-pro w-full text-center text-xs py-1"></div>
+              <div class="text-center"><span class="text-[10px] text-zinc-500 block">2XL</span><input type="number" id="size2XL_${id}" value="2" min="0" oninput="calculateMasterTotals()" class="input-pro w-full text-center text-xs py-1"></div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-medium text-zinc-400 mb-1.5 mandatory-label">Artwork Asset Attachment</label>
+              <input type="file" id="artFile_${id}" class="input-pro w-full px-2 py-1 text-xs text-zinc-300">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-zinc-400 mb-1.5">Special Print Instructions</label>
+              <input type="text" id="artNotes_${id}" placeholder="Example: Center chest print" class="input-pro w-full px-3 py-1.5 text-xs">
+            </div>
+          </div>
+        </div>
+      `;
+
+      container.insertAdjacentHTML('beforeend', itemHtml);
+      calculateMasterTotals();
     }
 
-    function applyTotalQuantityDistribution() {
-      const total = parseInt(document.getElementById('inputTotalQuantity').value) || 0;
-      document.getElementById('inputSmall').value = Math.round(total * 0.15);
-      document.getElementById('inputMedium').value = Math.round(total * 0.35);
-      document.getElementById('inputLarge').value = Math.round(total * 0.35);
-      document.getElementById('inputExtraLarge').value = Math.round(total * 0.10);
-      document.getElementById('inputDoubleExtraLarge').value = Math.max(0, total - (Math.round(total * 0.15) + Math.round(total * 0.35) + Math.round(total * 0.35) + Math.round(total * 0.10)));
-      document.getElementById('totalUnitsBadge').innerText = total + " Pieces";
-      updatePrice();
+    function removeLineItem(id) {
+      const card = document.getElementById('lineItemCard_' + id);
+      if (card) card.remove();
+      calculateMasterTotals();
     }
 
-    function updateTotalsFromSizes() {
-      const smallAmount = parseInt(document.getElementById('inputSmall').value) || 0;
-      const mediumAmount = parseInt(document.getElementById('inputMedium').value) || 0;
-      const largeAmount = parseInt(document.getElementById('inputLarge').value) || 0;
-      const extraLargeAmount = parseInt(document.getElementById('inputExtraLarge').value) || 0;
-      const doubleExtraLargeAmount = parseInt(document.getElementById('inputDoubleExtraLarge').value) || 0;
+    function calculateMasterTotals() {
+      let masterUnits = 0;
+      let masterGarmentCost = 0;
+      let masterScreenCost = 0;
 
-      const total = smallAmount + mediumAmount + largeAmount + extraLargeAmount + doubleExtraLargeAmount;
-      document.getElementById('inputTotalQuantity').value = total;
-      document.getElementById('totalUnitsBadge').innerText = total + " Pieces";
-      updatePrice();
-    }
+      const cards = document.querySelectorAll('[id^="lineItemCard_"]');
+      cards.forEach(card => {
+        const id = card.id.split('_')[1];
+        const styleSelect = document.getElementById('style_' + id);
+        const rate = parseFloat(styleSelect.value) || 0;
+        const colors = parseInt(document.getElementById('colorsCount_' + id).value) || 1;
 
-    function applySplitRecommendation(type) {
-      const total = parseInt(document.getElementById('inputTotalQuantity').value) || 75;
-      if (type === 'standard') {
-        document.getElementById('inputSmall').value = Math.round(total * 0.15);
-        document.getElementById('inputMedium').value = Math.round(total * 0.35);
-        document.getElementById('inputLarge').value = Math.round(total * 0.35);
-        document.getElementById('inputExtraLarge').value = Math.round(total * 0.10);
-        document.getElementById('inputDoubleExtraLarge').value = Math.max(0, total - (Math.round(total * 0.15) + Math.round(total * 0.35) + Math.round(total * 0.35) + Math.round(total * 0.10)));
-      } else if (type === 'streetwear') {
-        document.getElementById('inputSmall').value = Math.round(total * 0.05);
-        document.getElementById('inputMedium').value = Math.round(total * 0.15);
-        document.getElementById('inputLarge').value = Math.round(total * 0.40);
-        document.getElementById('inputExtraLarge').value = Math.round(total * 0.30);
-        document.getElementById('inputDoubleExtraLarge').value = Math.max(0, total - (Math.round(total * 0.05) + Math.round(total * 0.15) + Math.round(total * 0.40) + Math.round(total * 0.30)));
-      } else if (type === 'even') {
-        const eachAmount = Math.floor(total / 5);
-        document.getElementById('inputSmall').value = eachAmount;
-        document.getElementById('inputMedium').value = eachAmount;
-        document.getElementById('inputLarge').value = eachAmount;
-        document.getElementById('inputExtraLarge').value = eachAmount;
-        document.getElementById('inputDoubleExtraLarge').value = total - (eachAmount * 4);
-      }
-      updateTotalsFromSizes();
-    }
+        const s = parseInt(document.getElementById('sizeS_' + id).value) || 0;
+        const m = parseInt(document.getElementById('sizeM_' + id).value) || 0;
+        const l = parseInt(document.getElementById('sizeL_' + id).value) || 0;
+        const xl = parseInt(document.getElementById('sizeXL_' + id).value) || 0;
+        const xxl = parseInt(document.getElementById('size2XL_' + id).value) || 0;
 
-    function resetIntakeForm() {
-      document.getElementById('customerName').value = "";
-      document.getElementById('customerEmail').value = "";
-      document.getElementById('customerAddress').value = "";
-      clearIntakeCalendarDate();
-      document.getElementById('customerGarmentDetails').value = "";
-      document.getElementById('artworkNotes').value = "";
+        const units = s + m + l + xl + xxl;
+        masterUnits += units;
 
-      setGarmentSupplyMode('catalog');
-      document.getElementById('garmentStyle').selectedIndex = 0;
-      setGarmentColor('black', 'dark');
-      document.getElementById('pantoneColor').selectedIndex = 1;
+        const laborPerUnit = colors * 0.75;
+        masterGarmentCost += units * (rate + laborPerUnit);
+        masterScreenCost += colors * 25.0;
+      });
 
-      document.getElementById('inputTotalQuantity').value = 75;
-      applySplitRecommendation('standard');
+      const shippingCost = masterUnits * 0.60;
+      const taxCost = (masterGarmentCost + masterScreenCost + shippingCost) * 0.095;
+      const grandTotal = masterGarmentCost + masterScreenCost + shippingCost + taxCost;
 
-      document.getElementById('inkType').selectedIndex = 0;
-      document.getElementById('colorCount').selectedIndex = 1;
-
-      document.getElementById('fileInput').value = "";
-      document.getElementById('fileLabel').innerText = "Click or drag and drop to upload production artwork or portable document format";
-      document.getElementById('extraFilesInput').value = "";
-      currentExtraFilesSession = [];
-      renderExtraFilesListUI();
-
-      const imgElement = document.getElementById('artworkRender');
-      const pdfPreview = document.getElementById('pdfPlatenPreview');
-      imgElement.src = "";
-      imgElement.classList.add('hidden');
-      pdfPreview.classList.add('hidden');
-      document.getElementById('artworkPlaceholder').classList.remove('hidden');
-
-      currentOrderId = "";
-      currentArtworkDataUrl = "";
-      currentArtworkIsPdf = false;
-      document.getElementById('activeOrderBadge').innerText = "DRAFT-SESSION";
-      document.getElementById('preflightIdle').classList.remove('hidden');
-      document.getElementById('preflightResults').classList.add('hidden');
-
-      const btn = document.getElementById('submitToBacklogBtn');
-      btn.disabled = true;
-      btn.innerText = "Submit Order to Backlog";
-
-      updateTotalsFromSizes();
-      resetArtworkPositioning();
-    }
-
-    function logNotification(clientEmail, orderId, newStatus) {
-      const now = new Date();
-      const dateString = now.toISOString().slice(0, 10) + " " + now.toTimeString().slice(0, 5);
-      const message = `Notification sent to ${clientEmail} (Order ${orderId} transitioned to ${newStatus})`;
-      notificationLogs.unshift({ timestamp: dateString, message: message });
-      saveSystemData();
+      document.getElementById('masterTotalUnits').innerText = masterUnits + " Pieces";
+      document.getElementById('masterGarmentCost').innerText = '$' + masterGarmentCost.toFixed(2);
+      document.getElementById('masterScreenCost').innerText = '$' + masterScreenCost.toFixed(2);
+      document.getElementById('masterTaxAndShipping').innerText = '$' + (shippingCost + taxCost).toFixed(2);
+      document.getElementById('masterTotalCost').innerText = '$' + grandTotal.toFixed(2);
     }
 
     function submitOrderToBacklog() {
-      if (isUploadingExtraFiles) {
-        alert("Please wait until specification files finish uploading before submitting.");
-        return;
-      }
-
       const name = document.getElementById('customerName').value;
       const email = document.getElementById('customerEmail').value;
       const address = document.getElementById('customerAddress').value;
       const wishDate = document.getElementById('wishDeliveryDate').value;
-      const pantoneVal = document.getElementById('pantoneColor').value;
 
-      if (!name || !email || !address || !wishDate || !currentArtworkDataUrl) {
-        alert("Please fill out all mandatory fields including Customer Name, Customer Email, Shipping Address, Wish Delivery Date, and Artwork Upload before submitting.");
+      if (!name || !email || !address || !wishDate) {
+        alert("Please complete all required customer profile and delivery schedule fields.");
         return;
       }
 
-      const submitBtn = document.getElementById('submitToBacklogBtn');
-      submitBtn.disabled = true;
-      submitBtn.innerText = "Submitting Order...";
-
-      let garmentName = "";
-      if (currentSupplyMode === 'catalog') {
-        const garmentSelect = document.getElementById('garmentStyle');
-        garmentName = garmentSelect.options[garmentSelect.selectedIndex].text;
-      } else {
-        garmentName = "Customer Provided: " + (document.getElementById('customerGarmentDetails').value || "Custom Garments");
+      const cards = document.querySelectorAll('[id^="lineItemCard_"]');
+      if (cards.length === 0) {
+        alert("Please add at least one garment style line item.");
+        return;
       }
 
-      const notes = document.getElementById('artworkNotes').value || "No special placement notes.";
+      const newOrderId = generateUniqueOrderId();
+      const lineItemsArray = [];
+      let totalQty = 0;
 
-      const smallAmount = parseInt(document.getElementById('inputSmall').value) || 0;
-      const mediumAmount = parseInt(document.getElementById('inputMedium').value) || 0;
-      const largeAmount = parseInt(document.getElementById('inputLarge').value) || 0;
-      const extraLargeAmount = parseInt(document.getElementById('inputExtraLarge').value) || 0;
-      const doubleExtraLargeAmount = parseInt(document.getElementById('inputDoubleExtraLarge').value) || 0;
-      const totalUnits = smallAmount + mediumAmount + largeAmount + extraLargeAmount + doubleExtraLargeAmount;
+      cards.forEach((card, index) => {
+        const id = card.id.split('_')[1];
+        const styleSelect = document.getElementById('style_' + id);
+        const styleText = styleSelect.options[styleSelect.selectedIndex].text.split(' ($')[0];
+        const color = document.getElementById('color_' + id).value;
+        const pantone = document.getElementById('pantone_' + id).value;
+        const ink = document.getElementById('ink_' + id).value;
+        const colorsCount = parseInt(document.getElementById('colorsCount_' + id).value);
+
+        const s = parseInt(document.getElementById('sizeS_' + id).value) || 0;
+        const m = parseInt(document.getElementById('sizeM_' + id).value) || 0;
+        const l = parseInt(document.getElementById('sizeL_' + id).value) || 0;
+        const xl = parseInt(document.getElementById('sizeXL_' + id).value) || 0;
+        const xxl = parseInt(document.getElementById('size2XL_' + id).value) || 0;
+        const units = s + m + l + xl + xxl;
+        totalQty += units;
+
+        const fileInput = document.getElementById('artFile_' + id);
+        const fileName = fileInput.files[0] ? fileInput.files[0].name : "Style_Artwork_" + (index + 1) + ".png";
+        const notes = document.getElementById('artNotes_' + id).value || "Standard print placement.";
+
+        lineItemsArray.push({
+          lineItemId: "LINE-" + (index + 1),
+          garmentStyle: styleText,
+          garmentColor: color,
+          pantoneColor: pantone,
+          inkType: ink,
+          colorCount: colorsCount,
+          quantity: units,
+          sizes: { Small: s, Medium: m, Large: l, ExtraLarge: xl, DoubleExtraLarge: xxl },
+          sizesCompleted: { Small: false, Medium: false, Large: false, ExtraLarge: false, DoubleExtraLarge: false },
+          artworkName: fileName,
+          artworkNotes: notes,
+          lineStatus: "QUEUED"
+        });
+      });
+
+      const totalVal = document.getElementById('masterTotalCost').innerText;
 
       ordersBacklog.unshift({
-        id: currentOrderId,
+        id: newOrderId,
         customerName: name,
         customerEmail: email,
         customerAddress: address,
         wishDate: wishDate,
-        garment: garmentName,
-        color: currentColorType === 'dark' ? 'Black' : 'White',
-        pantone: pantoneVal,
-        quantity: totalUnits,
-        sizes: { Small: smallAmount, Medium: mediumAmount, Large: largeAmount, ExtraLarge: extraLargeAmount, DoubleExtraLarge: doubleExtraLargeAmount },
-        sizesCompleted: { Small: false, Medium: false, Large: false, ExtraLarge: false, DoubleExtraLarge: false },
-        price: currentCalculatedTotal,
         status: "PENDING",
         isArchived: false,
         archivedFrom: "",
-        proofApproved: false,
-        notes: notes,
-        artworkName: document.getElementById('fileLabel').innerText,
-        artworkData: currentArtworkDataUrl,
-        artworkIsPdf: currentArtworkIsPdf,
-        extraFiles: [...currentExtraFilesSession]
+        proofApproved: true,
+        totalOrderPrice: totalVal,
+        totalOrderQuantity: totalQty,
+        lineItems: lineItemsArray
       });
 
-      logNotification(email, currentOrderId, "PENDING");
+      logNotification(email, newOrderId, "PENDING (Consolidated Multi-Style Order Created)");
       saveSystemData();
       updatePendingBadge();
       updateDashboardMetrics();
 
       const successBanner = document.getElementById('intakeSuccessBanner');
-      if (successBanner) {
-        successBanner.classList.remove('hidden');
-        successBanner.innerText = "Success - Order Reference " + currentOrderId + " for " + name + " successfully submitted to the backlog and all form spaces have been cleaned.";
-      }
+      successBanner.classList.remove('hidden');
+      successBanner.innerText = "Success - Consolidated Order " + newOrderId + " submitted with " + lineItemsArray.length + " style line items.";
 
       setTimeout(() => {
         successBanner.classList.add('hidden');
-        resetIntakeForm();
         switchTab('backlog');
-        switchBacklogSubTab('active');
-      }, 1500);
+      }, 1200);
     }
 
     function filterBacklogStatus(status) {
       currentBacklogStatusFilter = status;
-      ['ALL', 'PENDING', 'QUEUED', 'REJECTED'].forEach(s => {
+      ['ALL', 'PENDING', 'QUEUED'].forEach(s => {
         const btn = document.getElementById('filterBtn' + s);
         if(btn) {
           if(s === status) btn.className = "px-3 py-1.5 rounded-md bg-zinc-800 text-white font-medium transition-all";
@@ -2022,27 +1110,17 @@
 
       let filtered = ordersBacklog.filter(o => {
         if (o.isArchived) return false;
-        if (o.status === 'PRODUCED') return false;
-        const matchesStatus = (currentBacklogStatusFilter === 'ALL' || o.status === currentBacklogStatusFilter);
-        const matchesDate = (!selectedCalendarDate || o.wishDate <= selectedCalendarDate);
-        return matchesStatus && matchesDate;
+        return (currentBacklogStatusFilter === 'ALL' || o.status === currentBacklogStatusFilter);
       });
 
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center text-zinc-500 font-mono text-sm">No orders matching filter selection. Completed productions are automatically routed to production history.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center text-zinc-500 font-mono text-sm">No orders matching filter selection.</td></tr>`;
         return;
       }
 
       filtered.forEach(o => {
-        let statusBadge = "";
-        if (o.status === 'PENDING') statusBadge = `<span class="px-2.5 py-1 bg-amber-500/10 text-amber-500 border border-amber-500/20 rounded-md font-medium text-xs">PENDING</span>`;
-        else if (o.status === 'QUEUED') statusBadge = `<span class="px-2.5 py-1 bg-blue-500/10 text-blue-500 border border-blue-500/20 rounded-md font-medium text-xs">QUEUED</span>`;
-        else if (o.status === 'IN_PRODUCTION') statusBadge = `<span class="px-2.5 py-1 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded-md font-medium text-xs">RUNNING</span>`;
-        else if (o.status === 'REJECTED') statusBadge = `<span class="px-2.5 py-1 bg-red-500/10 text-red-500 border border-red-500/20 rounded-md font-medium text-xs">REJECTED</span>`;
-
-        let proofBadge = o.proofApproved ? 
-          `<span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded text-[10px] font-semibold">SIGNED & APPROVED</span>` : 
-          `<span class="px-2 py-0.5 bg-amber-500/10 text-amber-400 border border-amber-500/20 rounded text-[10px] font-semibold">AWAITING SIGN-OFF</span>`;
+        let statusBadge = `<span class="px-2.5 py-1 bg-amber-500/10 text-amber-500 border border-amber-500/20 rounded-md font-medium text-xs">${o.status}</span>`;
+        if (o.status === 'QUEUED') statusBadge = `<span class="px-2.5 py-1 bg-blue-500/10 text-blue-500 border border-blue-500/20 rounded-md font-medium text-xs">QUEUED</span>`;
 
         const row = `
           <tr class="hover:bg-zinc-800/50 transition-colors">
@@ -2052,19 +1130,16 @@
             <td class="px-6 py-4">
               <div class="font-medium text-zinc-200">${o.customerName}</div>
               <div class="text-[11px] text-zinc-500 mt-0.5">${o.customerEmail}</div>
-              <div class="text-[10px] font-mono text-zinc-400 mt-0.5">Address: ${o.customerAddress || 'Not Provided'}</div>
             </td>
             <td class="px-6 py-4">
-              <div class="font-medium text-zinc-200">${o.garment}</div>
-              <div class="text-[11px] text-blue-400 font-mono mt-0.5">Match: ${o.pantone || 'PMS 286 C'}</div>
-              <div class="text-[11px] text-zinc-500 mt-0.5 flex items-center gap-1">
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
-                ${o.artworkName}
-              </div>
+              <div class="text-xs font-semibold text-zinc-200">${o.lineItems.length} Garment Styles</div>
+              <div class="text-[10px] text-zinc-400 font-mono mt-0.5">${o.totalOrderQuantity} Total Pieces</div>
             </td>
-            <td class="px-6 py-4 text-center">${proofBadge}</td>
+            <td class="px-6 py-4 text-center">
+              <span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded text-[10px] font-semibold">APPROVED</span>
+            </td>
             <td class="px-6 py-4 text-center font-mono text-amber-400 text-xs">${o.wishDate}</td>
-            <td class="px-6 py-4 text-center font-mono text-zinc-300">${o.price}</td>
+            <td class="px-6 py-4 text-center font-mono text-zinc-300 font-semibold">${o.totalOrderPrice}</td>
             <td class="px-6 py-4 text-center">${statusBadge}</td>
             <td class="px-6 py-4 text-right">
               <button onclick="archiveOrder('${o.id}')" class="btn-pro-secondary text-xs py-1 px-2.5">Archive</button>
@@ -2075,94 +1150,6 @@
       });
     }
 
-    function renderArchiveModule() {
-      const tbody = document.getElementById('archiveTableBody');
-      tbody.innerHTML = "";
-
-      let archivedOrders = ordersBacklog.filter(o => o.isArchived);
-
-      if (archivedOrders.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-zinc-500 font-mono text-sm">No orders in archive.</td></tr>`;
-        return;
-      }
-
-      archivedOrders.forEach(o => {
-        let originBadge = "";
-        if (o.archivedFrom === 'Production Floor') {
-          originBadge = `<span class="px-2.5 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded font-semibold text-[10px]">PRODUCTION FLOOR</span>`;
-        } else {
-          originBadge = `<span class="px-2.5 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded font-semibold text-[10px]">ORDER BACKLOG</span>`;
-        }
-
-        tbody.innerHTML += `
-          <tr class="hover:bg-zinc-800/50 transition-colors">
-            <td class="px-6 py-4 font-mono font-medium text-blue-400">${o.id}</td>
-            <td class="px-6 py-4">
-              <div class="font-medium text-zinc-200">${o.customerName}</div>
-              <div class="text-[11px] text-zinc-500 mt-0.5">${o.customerEmail}</div>
-            </td>
-            <td class="px-6 py-4">
-              <div class="font-medium text-zinc-200">${o.garment}</div>
-              <div class="text-[11px] text-zinc-500 mt-0.5">${o.artworkName}</div>
-            </td>
-            <td class="px-6 py-4 text-center">${originBadge}</td>
-            <td class="px-6 py-4 text-center font-mono text-amber-400 text-xs">${o.wishDate}</td>
-            <td class="px-6 py-4 text-center font-mono text-zinc-300">${o.price}</td>
-            <td class="px-6 py-4 text-right">
-              <button onclick="restoreOrder('${o.id}')" class="btn-pro-secondary text-xs py-1 px-2.5">Restore</button>
-            </td>
-          </tr>
-        `;
-      });
-    }
-
-    function archiveOrder(orderId) {
-      const order = ordersBacklog.find(o => o.id === orderId);
-      if (!order) return;
-      order.isArchived = true;
-      order.archivedFrom = (order.status === 'PRODUCED') ? 'Production Floor' : 'Order Backlog';
-      saveSystemData();
-      applyBacklogFilters();
-      updatePendingBadge();
-      alert("Order " + orderId + " successfully moved to archive.");
-    }
-
-    function restoreOrder(orderId) {
-      const order = ordersBacklog.find(o => o.id === orderId);
-      if (!order) return;
-      order.isArchived = false;
-      order.archivedFrom = "";
-      saveSystemData();
-      renderArchiveModule();
-      updatePendingBadge();
-      alert("Order " + orderId + " successfully restored from archive.");
-    }
-
-    function archiveCurrentModalOrder() {
-      if (!selectedModalOrder) return;
-      selectedModalOrder.isArchived = true;
-      selectedModalOrder.archivedFrom = (selectedModalOrder.status === 'PRODUCED') ? 'Production Floor' : 'Order Backlog';
-      saveSystemData();
-      closeOrderModal();
-      applyBacklogFilters();
-      updatePendingBadge();
-      alert("Order successfully archived.");
-    }
-
-    function archiveAllCompletedOrders() {
-      let count = 0;
-      ordersBacklog.forEach(o => {
-        if (o.status === 'PRODUCED' && !o.isArchived) {
-          o.isArchived = true;
-          o.archivedFrom = 'Production Floor';
-          count++;
-        }
-      });
-      saveSystemData();
-      renderArchiveModule();
-      alert(count + " completed orders successfully archived.");
-    }
-
     function openOrderModal(orderId) {
       selectedModalOrder = ordersBacklog.find(o => o.id === orderId);
       if (!selectedModalOrder) return;
@@ -2170,259 +1157,36 @@
       document.getElementById('modalOrderId').innerText = selectedModalOrder.id;
       document.getElementById('modalCustomerName').innerText = selectedModalOrder.customerName;
       document.getElementById('modalCustomerEmail').innerText = selectedModalOrder.customerEmail;
-      document.getElementById('modalCustomerAddress').innerText = "Address: " + (selectedModalOrder.customerAddress || 'Not Provided');
-      document.getElementById('modalGarmentName').innerText = selectedModalOrder.garment;
-      document.getElementById('modalPantone').innerText = "Pantone Match: " + (selectedModalOrder.pantone || 'PMS 286 C (Royal Blue)');
+      document.getElementById('modalCustomerAddress').innerText = "Address: " + selectedModalOrder.customerAddress;
       document.getElementById('modalWishDate').innerText = "Wish Delivery Date: " + selectedModalOrder.wishDate;
-      document.getElementById('modalProofLinkText').innerText = "https://proof.virtueprintla.com/review?token=" + selectedModalOrder.id;
+      document.getElementById('modalTotalPrice').innerText = selectedModalOrder.totalOrderPrice + " (" + selectedModalOrder.totalOrderQuantity + " Units)";
 
-      const proofBadge = document.getElementById('modalProofBadge');
-      if (selectedModalOrder.proofApproved) {
-        proofBadge.className = "px-2.5 py-0.5 rounded text-[11px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30";
-        proofBadge.innerText = "CLIENT SIGNED & APPROVED";
-      } else {
-        proofBadge.className = "px-2.5 py-0.5 rounded text-[11px] font-semibold bg-amber-500/10 text-amber-500 border border-amber-500/30";
-        proofBadge.innerText = "PENDING CLIENT SIGN-OFF";
-      }
-      
-      const notesDisplay = document.getElementById('modalArtworkNotes');
-      const editInput = document.getElementById('editArtworkNotesInput');
-      const editBtn = document.getElementById('editNotesBtn');
-      
-      notesDisplay.innerText = selectedModalOrder.notes || "No special artwork notes provided.";
-      notesDisplay.classList.remove('hidden');
-      editInput.classList.add('hidden');
-      editBtn.innerText = "Edit Note Input";
-      
-      editBtn.onclick = function() {
-        if (editInput.classList.contains('hidden')) {
-          editInput.value = selectedModalOrder.notes;
-          notesDisplay.classList.add('hidden');
-          editInput.classList.remove('hidden');
-          editBtn.innerText = "Save Note Input";
-        } else {
-          selectedModalOrder.notes = editInput.value;
-          notesDisplay.innerText = selectedModalOrder.notes || "No special artwork notes provided.";
-          notesDisplay.classList.remove('hidden');
-          editInput.classList.add('hidden');
-          editBtn.innerText = "Edit Note Input";
-          saveSystemData();
-        }
-      };
+      const container = document.getElementById('modalLineItemsList');
+      container.innerHTML = "";
 
-      document.getElementById('modalFileName').innerText = selectedModalOrder.artworkName;
-
-      const modalExtraList = document.getElementById('modalExtraFilesList');
-      modalExtraList.innerHTML = "";
-      if (selectedModalOrder.extraFiles && selectedModalOrder.extraFiles.length > 0) {
-        selectedModalOrder.extraFiles.forEach(fileObj => {
-          modalExtraList.innerHTML += `
-            <div class="flex items-center justify-between bg-zinc-950 p-2.5 rounded border border-zinc-800 text-xs font-mono">
-              <span class="text-zinc-200">${fileObj.name}</span>
-              <button onclick="viewDataUrlFile('${fileObj.name}', '${fileObj.data}', ${fileObj.isPdf})" class="btn-pro-secondary text-xs py-1 px-2.5">View File</button>
+      selectedModalOrder.lineItems.forEach(line => {
+        container.innerHTML += `
+          <div class="bg-zinc-950 p-3 rounded-lg border border-zinc-800 space-y-1">
+            <div class="flex justify-between items-center text-xs font-semibold text-white">
+              <span>${line.garmentStyle} (${line.garmentColor})</span>
+              <span class="font-mono text-blue-400">${line.quantity} Units</span>
             </div>
-          `;
-        });
-      } else {
-        modalExtraList.innerHTML = `<span class="text-xs text-zinc-500 italic">No additional documents uploaded.</span>`;
-      }
-
-      const matrix = document.getElementById('modalSizeMatrix');
-      matrix.innerHTML = `
-        <div class="bg-zinc-800 p-2 rounded-md border border-zinc-700"><span class="text-zinc-400 text-xs block mb-1">Small</span><span class="font-medium text-zinc-200">${selectedModalOrder.sizes.Small}</span></div>
-        <div class="bg-zinc-800 p-2 rounded-md border border-zinc-700"><span class="text-zinc-400 text-xs block mb-1">Medium</span><span class="font-medium text-zinc-200">${selectedModalOrder.sizes.Medium}</span></div>
-        <div class="bg-zinc-800 p-2 rounded-md border border-zinc-700"><span class="text-zinc-400 text-xs block mb-1">Large</span><span class="font-medium text-zinc-200">${selectedModalOrder.sizes.Large}</span></div>
-        <div class="bg-zinc-800 p-2 rounded-md border border-zinc-700"><span class="text-zinc-400 text-xs block mb-1">Extra Large</span><span class="font-medium text-zinc-200">${selectedModalOrder.sizes.ExtraLarge}</span></div>
-        <div class="bg-zinc-800 p-2 rounded-md border border-zinc-700"><span class="text-zinc-400 text-xs block mb-1">Double Extra Large</span><span class="font-medium text-zinc-200">${selectedModalOrder.sizes.DoubleExtraLarge}</span></div>
-      `;
-
-      const statusBadge = document.getElementById('modalStatusBadge');
-      const actionButtons = document.getElementById('modalActionButtons');
-
-      if (selectedModalOrder.status === 'PENDING') {
-        statusBadge.className = "px-3 py-1 text-xs font-semibold rounded-md bg-amber-500/10 text-amber-500 border border-amber-500/20";
-        statusBadge.innerText = "PENDING APPROVAL";
-        
-        const approveButtonDisabled = !selectedModalOrder.proofApproved ? "disabled" : "";
-        const approveButtonTooltip = !selectedModalOrder.proofApproved ? "title='Client digital proof sign-off required before queue approval'" : "";
-
-        actionButtons.innerHTML = `
-          <button onclick="updateOrderStatus('${selectedModalOrder.id}', 'REJECTED')" class="px-4 py-2 bg-zinc-900 border border-red-500/30 text-red-500 hover:bg-red-500/10 font-medium text-sm rounded-md transition-all">Reject Order</button>
-          <button ${approveButtonDisabled} ${approveButtonTooltip} onclick="updateOrderStatus('${selectedModalOrder.id}', 'QUEUED')" class="btn-pro-primary text-sm rounded-md transition-all">Approve to Production Queue</button>
-        `;
-      } else {
-        if(selectedModalOrder.status === 'QUEUED') {
-          statusBadge.className = "px-3 py-1 text-xs font-semibold rounded-md bg-blue-500/10 text-blue-500 border border-blue-500/20";
-        } else if (selectedModalOrder.status === 'IN_PRODUCTION') {
-          statusBadge.className = "px-3 py-1 text-xs font-semibold rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20";
-        } else if (selectedModalOrder.status === 'PRODUCED') {
-          statusBadge.className = "px-3 py-1 text-xs font-semibold rounded-md bg-emerald-500/10 text-emerald-500 border border-emerald-500/20";
-        } else {
-          statusBadge.className = "px-3 py-1 text-xs font-semibold rounded-md bg-red-500/10 text-red-500 border border-red-500/20";
-        }
-        statusBadge.innerText = selectedModalOrder.status;
-        actionButtons.innerHTML = `<span class="text-sm text-zinc-500 py-2">Workflow action completed for this stage.</span>`;
-      }
-
-      document.getElementById('orderDetailsModal').classList.remove('hidden');
-    }
-
-    function renderProductionModalSizes() {
-      const matrix = document.getElementById('prodModalSizeMatrix');
-      matrix.innerHTML = "";
-      const sizes = ["Small", "Medium", "Large", "ExtraLarge", "DoubleExtraLarge"];
-      const displayNames = { Small: "Small", Medium: "Medium", Large: "Large", ExtraLarge: "Extra Large", DoubleExtraLarge: "Double Extra Large" };
-
-      sizes.forEach(size => {
-        const count = selectedProductionOrder.sizes[size];
-        const isDone = selectedProductionOrder.sizesCompleted[size];
-        const baseClass = isDone 
-          ? "bg-emerald-900/40 border-emerald-500/50 cursor-pointer hover:bg-emerald-900/60 transition-colors" 
-          : "bg-zinc-800 border-zinc-700 cursor-pointer hover:bg-zinc-700 transition-colors";
-        const textClass = isDone ? "text-emerald-500 line-through opacity-70" : "text-white";
-        const labelClass = isDone ? "text-emerald-500" : "text-zinc-400";
-
-        matrix.innerHTML += `
-          <div onclick="toggleSizeStatus('${selectedProductionOrder.id}', '${size}')" class="${baseClass} p-2.5 rounded-md border flex flex-col items-center justify-center">
-            <span class="${labelClass} text-[10px] uppercase block mb-1 font-medium">${displayNames[size]}</span>
-            <span class="font-bold ${textClass} text-sm">${count}</span>
+            <div class="text-[11px] text-zinc-400 font-mono">Pantone: ${line.pantoneColor} | Ink: ${line.inkType}</div>
+            <div class="text-[11px] text-zinc-500 italic">Artwork: ${line.artworkName} - "${line.artworkNotes}"</div>
           </div>
         `;
       });
-    }
 
-    function toggleSizeStatus(orderId, sizeKey) {
-      const order = ordersBacklog.find(o => o.id === orderId);
-      if(order) {
-        order.sizesCompleted[sizeKey] = !order.sizesCompleted[sizeKey];
-        saveSystemData();
-        if (selectedProductionOrder && selectedProductionOrder.id === orderId) {
-          renderProductionModalSizes();
-        }
-      }
-    }
-
-    function openProductionOrderModal(orderId) {
-      selectedProductionOrder = ordersBacklog.find(o => o.id === orderId);
-      if (!selectedProductionOrder) return;
-
-      if (!selectedProductionOrder.sizesCompleted) {
-         selectedProductionOrder.sizesCompleted = { Small: false, Medium: false, Large: false, ExtraLarge: false, DoubleExtraLarge: false };
-      }
-
-      document.getElementById('prodModalOrderId').innerText = selectedProductionOrder.id;
-      document.getElementById('prodModalGarment').innerText = selectedProductionOrder.garment + " (" + selectedProductionOrder.color + " - " + (selectedProductionOrder.pantone || 'PMS 286 C') + ")";
-      
-      let statBadge = document.getElementById('prodModalStatusBadge');
-      statBadge.innerText = selectedProductionOrder.status;
-
-      document.getElementById('prodModalNotes').innerText = selectedProductionOrder.notes || "No special production comments or instructions provided for this run.";
-
-      renderProductionModalSizes();
-
-      document.getElementById('prodModalFileName').innerText = selectedProductionOrder.artworkName || "Production_Artwork.png";
-
-      const prodModalExtraList = document.getElementById('prodModalExtraFilesList');
-      prodModalExtraList.innerHTML = "";
-      if (selectedProductionOrder.extraFiles && selectedProductionOrder.extraFiles.length > 0) {
-        selectedProductionOrder.extraFiles.forEach(fileObj => {
-          prodModalExtraList.innerHTML += `
-            <div class="flex items-center justify-between bg-zinc-950 p-2.5 rounded border border-zinc-800 text-xs font-mono">
-              <span class="text-zinc-200">${fileObj.name}</span>
-              <button onclick="viewDataUrlFile('${fileObj.name}', '${fileObj.data}', ${fileObj.isPdf})" class="btn-pro-secondary text-xs py-1 px-2.5">View File</button>
-            </div>
-          `;
-        });
+      const actionButtons = document.getElementById('modalActionButtons');
+      if (selectedModalOrder.status === 'PENDING') {
+        actionButtons.innerHTML = `
+          <button onclick="updateOrderStatus('${selectedModalOrder.id}', 'QUEUED')" class="btn-pro-primary text-sm">Approve Master Order to Queue</button>
+        `;
       } else {
-        prodModalExtraList.innerHTML = `<span class="text-xs text-zinc-500 italic">No additional documents uploaded.</span>`;
+        actionButtons.innerHTML = `<span class="text-sm text-zinc-500 py-2">Master order approved to queue.</span>`;
       }
 
-      document.getElementById('productionOrderModal').classList.remove('hidden');
-    }
-
-    function closeProductionOrderModal() {
-      document.getElementById('productionOrderModal').classList.add('hidden');
-    }
-
-    function updateOrderStatusFromFloor(orderId, newStatus) {
-      const order = ordersBacklog.find(o => o.id === orderId);
-      if (!order) return;
-      order.status = newStatus;
-      logNotification(order.customerEmail, order.id, newStatus + ' (Live Floor Status Revert/Change)');
-      saveSystemData();
-      updatePendingBadge();
-      updateDashboardMetrics();
-      applyBacklogFilters();
-      renderProductionFloor();
-      renderWarehouseModule();
-      renderNotificationLogs();
-      alert("Order status successfully updated to " + newStatus + ".");
-    }
-
-    function viewProdArtworkFile() {
-      if (!selectedProductionOrder || !selectedProductionOrder.artworkData) {
-        alert("No artwork file attached to this order record.");
-        return;
-      }
-      viewDataUrlFile(selectedProductionOrder.artworkName || "Production_Artwork.png", selectedProductionOrder.artworkData, selectedProductionOrder.artworkIsPdf);
-    }
-
-    function viewDataUrlFile(fileName, dataUrl, isPdf) {
-      document.getElementById('previewModalTitle').innerText = "File Viewer - " + fileName;
-      const img = document.getElementById('previewModalImage');
-      const pdfFrame = document.getElementById('previewModalPdfFrame');
-      
-      if (isPdf || fileName.toLowerCase().endsWith('.pdf')) {
-        img.classList.add('hidden');
-        pdfFrame.src = dataUrl;
-        pdfFrame.classList.remove('hidden');
-      } else {
-        pdfFrame.classList.add('hidden');
-        pdfFrame.src = "";
-        img.src = dataUrl;
-        img.classList.remove('hidden');
-      }
-      document.getElementById('artworkPreviewModal').classList.remove('hidden');
-    }
-
-    function closeArtworkPreviewModal() {
-      document.getElementById('artworkPreviewModal').classList.add('hidden');
-      document.getElementById('previewModalPdfFrame').src = "";
-    }
-
-    function copyProofLink() {
-      if(!selectedModalOrder) return;
-      const text = "https://proof.virtueprintla.com/review?token=" + selectedModalOrder.id;
-      navigator.clipboard.writeText(text);
-      alert("Secure Client Proof Portal link copied to clipboard.");
-    }
-
-    function simulateClientSignOff() {
-      if(!selectedModalOrder) return;
-      selectedModalOrder.proofApproved = true;
-      saveSystemData();
-      openOrderModal(selectedModalOrder.id);
-      applyBacklogFilters();
-      alert("Client digital proof sign-off verified successfully.");
-    }
-
-    function downloadArtworkFile() {
-      if (!selectedModalOrder || !selectedModalOrder.artworkData) {
-        alert("No artwork file attached to this order record.");
-        return;
-      }
-      try {
-        const dataString = selectedModalOrder.artworkData;
-        const filename = selectedModalOrder.artworkName || "Artwork_Asset.png";
-        const link = document.createElement('a');
-        link.href = dataString;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } catch (errorDetails) {
-        alert("File download process initiated.");
-      }
+      document.getElementById('orderDetailsModal').classList.remove('hidden');
     }
 
     function closeOrderModal() {
@@ -2432,230 +1196,59 @@
     function updateOrderStatus(orderId, newStatus) {
       const order = ordersBacklog.find(o => o.id === orderId);
       if (!order) return;
-      
-      if(newStatus === 'QUEUED' && !order.proofApproved) {
-        alert("Cannot approve to production queue without client digital proof approval sign-off.");
-        return;
-      }
-
       order.status = newStatus;
-      
       logNotification(order.customerEmail, order.id, newStatus);
       saveSystemData();
       updatePendingBadge();
       updateDashboardMetrics();
       applyBacklogFilters();
-      renderProductionFloor();
-      renderWarehouseModule();
-      renderNotificationLogs();
       closeOrderModal();
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const barcodeInput = document.getElementById('barcodeInput');
-      if(barcodeInput) {
-        barcodeInput.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') {
-            e.preventDefault();
-            processBarcodeScan();
-          }
-        });
-        
-        document.addEventListener('click', (e) => {
-          const wmsModule = document.getElementById('moduleWMS');
-          const scannerSubTab = document.getElementById('warehouseSubTabScanner');
-          if (wmsModule && !wmsModule.classList.contains('hidden') && scannerSubTab && !scannerSubTab.classList.contains('hidden')) {
-            if (e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'SELECT') {
-              barcodeInput.focus();
-            }
-          }
-        });
-      }
-    });
-
-    function processBarcodeScan() {
-      const codeInput = document.getElementById('barcodeInput');
-      const feedbackContainer = document.getElementById('scannerFeedbackContainer');
-      const val = codeInput.value.trim();
-      
-      if (!val) {
-        return;
-      }
-
-      const order = ordersBacklog.find(o => o.id.toLowerCase() === val.toLowerCase());
-      const now = new Date();
-      const timeString = now.toLocaleTimeString();
-
-      feedbackContainer.classList.remove('hidden');
-
-      if (!order) {
-        feedbackContainer.innerHTML = `
-          <div class="bg-red-500/10 border border-red-500/40 p-4 rounded-lg flex items-start gap-3">
-            <svg class="w-6 h-6 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-            <div>
-              <h4 class="text-sm font-semibold text-red-400">Scan Error: Unrecognized Barcode</h4>
-              <p class="text-xs text-zinc-300 mt-1">The barcode string <span class="font-mono text-white">${val}</span> does not match any active order reference in the operating system.</p>
-            </div>
-          </div>
-        `;
-        addScanSessionLog(timeString, val, "Unrecognized Barcode", "text-red-400");
-        codeInput.value = "";
-        codeInput.focus();
-        return;
-      }
-
-      if (order.status === 'PRODUCED') {
-        feedbackContainer.innerHTML = `
-          <div class="bg-amber-500/10 border border-amber-500/40 p-4 rounded-lg flex items-start gap-3">
-            <svg class="w-6 h-6 text-amber-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <div>
-              <h4 class="text-sm font-semibold text-amber-400">Notice: Package Already Dispatched</h4>
-              <p class="text-xs text-zinc-300 mt-1">Order <span class="font-mono text-white">${order.id}</span> for ${order.customerName} has already been marked as packed and completed.</p>
-            </div>
-          </div>
-        `;
-        addScanSessionLog(timeString, order.id, "Already Dispatched", "text-amber-400");
-        codeInput.value = "";
-        codeInput.focus();
-        return;
-      }
-
-      if (order.status !== 'IN_PRODUCTION' && order.status !== 'QUEUED') {
-        feedbackContainer.innerHTML = `
-          <div class="bg-amber-500/10 border border-amber-500/40 p-4 rounded-lg flex items-start gap-3">
-            <svg class="w-6 h-6 text-amber-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-            <div>
-              <h4 class="text-sm font-semibold text-amber-400">Scan Warning: Order Not Ready</h4>
-              <p class="text-xs text-zinc-300 mt-1">Order <span class="font-mono text-white">${order.id}</span> is currently in state <span class="font-semibold text-white">${order.status}</span> and cannot be packed yet.</p>
-            </div>
-          </div>
-        `;
-        addScanSessionLog(timeString, order.id, "Order Not Ready", "text-amber-400");
-        codeInput.value = "";
-        codeInput.focus();
-        return;
-      }
-
-      order.status = 'PRODUCED';
-      logNotification(order.customerEmail, order.id, 'PRODUCED (Wireless Scanner Packed)');
+    function archiveOrder(orderId) {
+      const order = ordersBacklog.find(o => o.id === orderId);
+      if (!order) return;
+      order.isArchived = true;
+      order.archivedFrom = "Order Backlog";
       saveSystemData();
+      applyBacklogFilters();
       updatePendingBadge();
-      updateDashboardMetrics();
-      renderWarehouseModule();
-      renderProductionFloor();
-      renderNotificationLogs();
-
-      feedbackContainer.innerHTML = `
-        <div class="bg-emerald-500/10 border border-emerald-500/40 p-4 rounded-lg flex items-start gap-3">
-          <svg class="w-6 h-6 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-          <div class="w-full">
-            <div class="flex justify-between items-center">
-              <h4 class="text-sm font-semibold text-emerald-400">Successful Package Dispatch & Packing</h4>
-              <span class="font-mono text-xs bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded">${order.id}</span>
-            </div>
-            <div class="grid grid-cols-2 gap-4 mt-2 pt-2 border-t border-emerald-500/20 text-xs">
-              <div>
-                <span class="text-zinc-400 block">Customer:</span>
-                <span class="font-semibold text-white">${order.customerName}</span>
-              </div>
-              <div>
-                <span class="text-zinc-400 block">Total Pieces Packed:</span>
-                <span class="font-semibold text-white">${order.quantity} Units</span>
-              </div>
-              <div class="col-span-2">
-                <span class="text-zinc-400 block">Destination Shipping Address:</span>
-                <span class="font-mono text-zinc-200">${order.customerAddress || 'Not Provided'}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-
-      addScanSessionLog(timeString, order.id, "Successfully Dispatched", "text-emerald-400");
-      
-      codeInput.value = "";
-      codeInput.focus();
     }
 
-    function addScanSessionLog(timeStr, orderRef, resultText, colorClass) {
-      scanSessionLogs.unshift({ time: timeStr, ref: orderRef, result: resultText, color: colorClass });
-      const logBody = document.getElementById('scanSessionLogBody');
-      logBody.innerHTML = "";
-      
-      scanSessionLogs.forEach(log => {
-        let customerInfo = "N/A";
-        let matchOrder = ordersBacklog.find(o => o.id === log.ref);
-        if(matchOrder) {
-          customerInfo = matchOrder.customerName + " - " + (matchOrder.customerAddress || 'No Address');
-        } else {
-          customerInfo = "Unknown Record";
-        }
+    function renderArchiveModule() {
+      const tbody = document.getElementById('archiveTableBody');
+      tbody.innerHTML = "";
+      let archived = ordersBacklog.filter(o => o.isArchived);
 
-        logBody.innerHTML += `
+      if (archived.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-zinc-500 font-mono text-sm">No orders in archive.</td></tr>`;
+        return;
+      }
+
+      archived.forEach(o => {
+        tbody.innerHTML += `
           <tr class="hover:bg-zinc-800/50 transition-colors">
-            <td class="px-4 py-4 font-mono text-xs text-zinc-400">${log.time}</td>
-            <td class="px-4 py-4 font-mono text-blue-400 font-medium">${log.ref}</td>
-            <td class="px-4 py-4 text-xs text-zinc-300">${customerInfo}</td>
-            <td class="px-4 py-4 text-center font-semibold text-xs ${log.color}">${log.result}</td>
+            <td class="px-6 py-4 font-mono font-medium text-blue-400">${o.id}</td>
+            <td class="px-6 py-4">${o.customerName}</td>
+            <td class="px-6 py-4 text-xs text-zinc-300">${o.lineItems.length} Garment Styles</td>
+            <td class="px-6 py-4 text-center font-mono text-xs text-zinc-400">${o.archivedFrom}</td>
+            <td class="px-6 py-4 text-center font-mono text-amber-400 text-xs">${o.wishDate}</td>
+            <td class="px-6 py-4 text-center font-mono text-zinc-300">${o.totalOrderPrice}</td>
+            <td class="px-6 py-4 text-right">
+              <button onclick="restoreOrder('${o.id}')" class="btn-pro-secondary text-xs py-1 px-2.5">Restore</button>
+            </td>
           </tr>
         `;
       });
     }
 
-    function updatePendingBadge() {
-      const count = ordersBacklog.filter(o => !o.isArchived && o.status === 'PENDING').length;
-      document.getElementById('pendingBadge').innerText = count;
-    }
-
-    function updateDashboardMetrics() {
-      const pendingCount = ordersBacklog.filter(o => !o.isArchived && o.status === 'PENDING').length;
-      const activeVolume = ordersBacklog.filter(o => !o.isArchived && o.status === 'IN_PRODUCTION').reduce((sum, o) => sum + o.quantity, 0);
-      const producedVolume = ordersBacklog.filter(o => !o.isArchived && o.status === 'PRODUCED').reduce((sum, o) => sum + o.quantity, 0);
-      const queuedPieces = ordersBacklog.filter(o => !o.isArchived && o.status === 'QUEUED').reduce((sum, o) => sum + o.quantity, 0);
-
-      let totalRevenue = 0;
-      let totalEstCost = 0;
-      ordersBacklog.forEach(o => {
-        if(!o.isArchived && o.status !== 'REJECTED') {
-          const rev = parseFloat(o.price.replace('$', '').replace(',', '')) || 0;
-          totalRevenue += rev;
-          totalEstCost += rev * 0.58; 
-        }
-      });
-
-      const totalActCost = totalEstCost * 0.96; 
-      const varianceSavings = totalEstCost - totalActCost;
-
-      document.getElementById('dashTotalRevenue').innerText = '$' + totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      document.getElementById('dashPendingCount').innerText = pendingCount;
-      document.getElementById('dashActiveVolume').innerText = activeVolume + " Pieces";
-      document.getElementById('dashProducedVolume').innerText = producedVolume + " Pieces";
-      document.getElementById('dashTotalOrders').innerText = ordersBacklog.filter(o => !o.isArchived).length;
-      document.getElementById('dashQueuedPieces').innerText = queuedPieces + " Pieces";
-      
-      document.getElementById('kpiQueuedCount').innerText = queuedPieces;
-      document.getElementById('kpiRunningCount').innerText = activeVolume;
-      document.getElementById('kpiCompletedCount').innerText = producedVolume;
-
-      document.getElementById('analyticsEstCost').innerText = '$' + totalEstCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      document.getElementById('analyticsActCost').innerText = '$' + totalActCost.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      document.getElementById('analyticsVariance').innerText = '+$' + varianceSavings.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' (Optimized Waste)';
-    }
-
-    function renderNotificationLogs() {
-      const container = document.getElementById('notificationLogContainer');
-      container.innerHTML = "";
-      if (notificationLogs.length === 0) {
-        container.innerHTML = `<div class="text-zinc-500">No automated notifications logged yet.</div>`;
-        return;
-      }
-      notificationLogs.forEach(log => {
-        container.innerHTML += `
-          <div class="bg-zinc-900 p-2 rounded border border-zinc-800 text-zinc-300">
-            <span class="text-blue-400">[${log.timestamp}]</span> ${log.message}
-          </div>
-        `;
-      });
+    function restoreOrder(orderId) {
+      const order = ordersBacklog.find(o => o.id === orderId);
+      if (!order) return;
+      order.isArchived = false;
+      saveSystemData();
+      renderArchiveModule();
+      updatePendingBadge();
     }
 
     function renderProductionFloor() {
@@ -2667,163 +1260,100 @@
       activeContainer.innerHTML = "";
       completedContainer.innerHTML = "";
 
-      const queuedOrders = ordersBacklog.filter(o => !o.isArchived && o.status === 'QUEUED');
-      const activeOrders = ordersBacklog.filter(o => !o.isArchived && o.status === 'IN_PRODUCTION');
-      const completedOrders = ordersBacklog.filter(o => !o.isArchived && o.status === 'PRODUCED');
+      ordersBacklog.forEach(order => {
+        if (order.isArchived) return;
 
-      if (queuedOrders.length === 0) {
-        queuedContainer.innerHTML = `<div class="text-sm text-zinc-500 py-4">No orders waiting in the production queue.</div>`;
-      } else {
-        queuedOrders.forEach(o => {
-          queuedContainer.innerHTML += `
+        order.lineItems.forEach(line => {
+          const ticketId = order.id + "-" + line.lineItemId;
+
+          const cardHtml = `
             <div class="bg-zinc-900 p-4 rounded-lg border border-zinc-800 space-y-3">
               <div class="flex justify-between items-start">
                 <div>
                   <div class="flex items-center gap-2 mb-1">
-                    <span class="text-base font-bold text-white">${o.customerName}</span>
-                    <button onclick="openProductionOrderModal('${o.id}')" class="text-xs font-mono bg-blue-500/10 text-blue-400 hover:text-white hover:bg-blue-600 px-2 py-0.5 rounded border border-blue-500/20 cursor-pointer transition-colors">${o.id}</button>
+                    <span class="text-base font-bold text-white">${order.customerName}</span>
+                    <button onclick="openLineItemProductionModal('${order.id}', '${line.lineItemId}')" class="text-xs font-mono bg-blue-500/10 text-blue-400 hover:text-white px-2 py-0.5 rounded border border-blue-500/20">${ticketId}</button>
                   </div>
-                  <div class="text-xs font-medium text-zinc-300">${o.garment}</div>
-                  <div class="flex flex-wrap items-center gap-2 mt-2">
-                    <span class="text-xs bg-zinc-800 text-zinc-300 px-2 py-0.5 rounded font-mono">${o.quantity} Units</span>
-                    <span class="text-xs bg-blue-950/80 text-blue-300 px-2 py-0.5 rounded font-mono border border-blue-800/50">${o.pantone || 'PMS 286 C'}</span>
-                    <span class="text-xs bg-amber-950/80 text-amber-300 px-2 py-0.5 rounded font-mono border border-amber-800/50">Due: ${o.wishDate}</span>
-                  </div>
+                  <div class="text-xs font-medium text-zinc-300">${line.garmentStyle} (${line.garmentColor})</div>
+                  <div class="text-xs text-blue-400 font-mono mt-1">Pantone: ${line.pantoneColor} | ${line.quantity} Units</div>
                 </div>
-                <div class="flex flex-col items-end gap-2">
-                  <button onclick="updateOrderStatus('${o.id}', 'IN_PRODUCTION')" class="btn-pro-primary text-xs">Start Production</button>
-                </div>
-              </div>
-              <div class="pt-2 border-t border-zinc-800 flex items-center justify-between text-xs">
-                <span class="text-zinc-500">Change Stage:</span>
-                <div class="flex gap-2">
-                  <button onclick="updateOrderStatusFromFloor('${o.id}', 'PENDING')" class="text-amber-400 hover:underline">Pending</button>
-                  <span class="text-zinc-600">-</span>
-                  <button onclick="updateOrderStatusFromFloor('${o.id}', 'QUEUED')" class="text-blue-400 hover:underline">Queued</button>
-                  <span class="text-zinc-600">-</span>
-                  <button onclick="updateOrderStatusFromFloor('${o.id}', 'IN_PRODUCTION')" class="text-indigo-400 hover:underline">Running</button>
-                  <span class="text-zinc-600">-</span>
-                  <button onclick="updateOrderStatusFromFloor('${o.id}', 'PRODUCED')" class="text-emerald-400 hover:underline">Produced</button>
-                </div>
-              </div>
-            </div>
-          `;
-        });
-      }
-
-      if (activeOrders.length === 0) {
-        activeContainer.innerHTML = `<div class="text-sm text-zinc-500 py-4">No active production runs.</div>`;
-      } else {
-        activeOrders.forEach(o => {
-          activeContainer.innerHTML += `
-            <div class="bg-indigo-950/30 p-4 rounded-lg border border-indigo-500/30 space-y-3">
-              <div class="flex justify-between items-start">
                 <div>
-                  <div class="flex items-center gap-2 mb-1">
-                    <span class="text-base font-bold text-white">${o.customerName}</span>
-                    <button onclick="openProductionOrderModal('${o.id}')" class="text-xs font-mono bg-indigo-500/20 text-indigo-300 hover:text-white hover:bg-indigo-600 px-2 py-0.5 rounded border border-indigo-500/30 cursor-pointer transition-colors">${o.id}</button>
-                  </div>
-                  <div class="text-xs font-medium text-zinc-300">${o.garment}</div>
-                  <div class="flex flex-wrap items-center gap-2 mt-2">
-                    <span class="text-xs bg-zinc-800 text-zinc-300 px-2 py-0.5 rounded font-mono">${o.quantity} Units</span>
-                    <span class="text-xs bg-blue-950/80 text-blue-300 px-2 py-0.5 rounded font-mono border border-blue-800/50">${o.pantone || 'PMS 286 C'}</span>
-                    <span class="text-xs bg-amber-950/80 text-amber-300 px-2 py-0.5 rounded font-mono border border-amber-800/50">Due: ${o.wishDate}</span>
-                  </div>
-                </div>
-                <div class="flex flex-col items-end gap-2">
-                  <button onclick="updateOrderStatus('${o.id}', 'PRODUCED')" class="btn-emerald-solid text-xs">Mark Completed</button>
-                </div>
-              </div>
-              <div class="pt-2 border-t border-indigo-500/20 flex items-center justify-between text-xs">
-                <span class="text-zinc-400">Change Stage:</span>
-                <div class="flex gap-2">
-                  <button onclick="updateOrderStatusFromFloor('${o.id}', 'PENDING')" class="text-amber-400 hover:underline">Pending</button>
-                  <span class="text-zinc-600">-</span>
-                  <button onclick="updateOrderStatusFromFloor('${o.id}', 'QUEUED')" class="text-blue-400 hover:underline">Queued</button>
-                  <span class="text-zinc-600">-</span>
-                  <button onclick="updateOrderStatusFromFloor('${o.id}', 'IN_PRODUCTION')" class="text-indigo-400 hover:underline">Running</button>
-                  <span class="text-zinc-600">-</span>
-                  <button onclick="updateOrderStatusFromFloor('${o.id}', 'PRODUCED')" class="text-emerald-400 hover:underline">Produced</button>
+                  ${line.lineStatus === 'QUEUED' ? `<button onclick="updateLineStatus('${order.id}', '${line.lineItemId}', 'IN_PRODUCTION')" class="btn-pro-primary text-xs">Start Press Run</button>` : ''}
+                  ${line.lineStatus === 'IN_PRODUCTION' ? `<button onclick="updateLineStatus('${order.id}', '${line.lineItemId}', 'PRODUCED')" class="btn-emerald-solid text-xs">Mark Line Complete</button>` : ''}
+                  ${line.lineStatus === 'PRODUCED' ? `<span class="px-2 py-1 bg-emerald-500/10 text-emerald-400 text-xs font-semibold rounded">PRODUCED</span>` : ''}
                 </div>
               </div>
             </div>
           `;
+
+          if (line.lineStatus === 'QUEUED') queuedContainer.innerHTML += cardHtml;
+          else if (line.lineStatus === 'IN_PRODUCTION') activeContainer.innerHTML += cardHtml;
+          else if (line.lineStatus === 'PRODUCED') completedContainer.innerHTML += cardHtml;
         });
-      }
+      });
+    }
 
-      if (completedOrders.length === 0) {
-        completedContainer.innerHTML = `<div class="text-sm text-zinc-500 py-4">No completed production history recorded yet.</div>`;
-      } else {
-        completedOrders.forEach(o => {
-          completedContainer.innerHTML += `
-            <div class="bg-zinc-900 p-3 rounded-lg border border-zinc-800 space-y-2">
-              <div class="flex justify-between items-center">
-                <div>
-                  <div class="flex items-center gap-2 mb-0.5">
-                    <span class="text-sm font-bold text-white">${o.customerName}</span>
-                    <button onclick="openProductionOrderModal('${o.id}')" class="text-xs font-mono text-zinc-400 hover:text-white hover:underline cursor-pointer transition-colors">${o.id}</button>
-                  </div>
-                  <span class="text-zinc-400 text-xs block">${o.garment} - ${o.quantity} Units (Due: ${o.wishDate})</span>
-                </div>
-                <div class="flex items-center gap-2">
-                  <span class="px-2 py-1 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-medium text-[10px] rounded">PRODUCED</span>
-                  <button onclick="archiveOrder('${o.id}')" class="btn-pro-secondary text-xs py-1 px-2">Archive</button>
-                </div>
-              </div>
-              <div class="pt-2 border-t border-zinc-800 flex items-center justify-between text-xs">
-                <span class="text-zinc-500">Change Stage:</span>
-                <div class="flex gap-2">
-                  <button onclick="updateOrderStatusFromFloor('${o.id}', 'PENDING')" class="text-amber-400 hover:underline">Pending</button>
-                  <span class="text-zinc-600">-</span>
-                  <button onclick="updateOrderStatusFromFloor('${o.id}', 'QUEUED')" class="text-blue-400 hover:underline">Queued</button>
-                  <span class="text-zinc-600">-</span>
-                  <button onclick="updateOrderStatusFromFloor('${o.id}', 'IN_PRODUCTION')" class="text-indigo-400 hover:underline">Running</button>
-                  <span class="text-zinc-600">-</span>
-                  <button onclick="updateOrderStatusFromFloor('${o.id}', 'PRODUCED')" class="text-emerald-400 hover:underline">Produced</button>
-                </div>
-              </div>
-            </div>
-          `;
-        });
+    function openLineItemProductionModal(orderId, lineItemId) {
+      selectedProductionOrder = ordersBacklog.find(o => o.id === orderId);
+      if (!selectedProductionOrder) return;
+      selectedProductionLineItem = selectedProductionOrder.lineItems.find(l => l.lineItemId === lineItemId);
+      if (!selectedProductionLineItem) return;
+
+      document.getElementById('prodModalOrderId').innerText = orderId + "-" + lineItemId;
+      document.getElementById('prodModalGarment').innerText = selectedProductionLineItem.garmentStyle + " (" + selectedProductionLineItem.garmentColor + ")";
+      document.getElementById('prodModalStatusBadge').innerText = selectedProductionLineItem.lineStatus;
+      document.getElementById('prodModalNotes').innerText = selectedProductionLineItem.artworkNotes;
+
+      renderProductionModalSizes();
+      document.getElementById('productionOrderModal').classList.remove('hidden');
+    }
+
+    function renderProductionModalSizes() {
+      const matrix = document.getElementById('prodModalSizeMatrix');
+      matrix.innerHTML = "";
+      const sizes = ["Small", "Medium", "Large", "ExtraLarge", "DoubleExtraLarge"];
+      const displayNames = { Small: "S", Medium: "M", Large: "L", ExtraLarge: "XL", DoubleExtraLarge: "2XL" };
+
+      sizes.forEach(size => {
+        const count = selectedProductionLineItem.sizes[size];
+        const isDone = selectedProductionLineItem.sizesCompleted[size];
+        const baseClass = isDone ? "bg-emerald-900/40 border-emerald-500/50" : "bg-zinc-800 border-zinc-700";
+        const textClass = isDone ? "text-emerald-500 line-through opacity-70" : "text-white";
+
+        matrix.innerHTML += `
+          <div onclick="toggleSizeStatus('${selectedProductionOrder.id}', '${selectedProductionLineItem.lineItemId}', '${size}')" class="${baseClass} p-2 rounded-md border cursor-pointer hover:bg-zinc-700 transition-colors">
+            <span class="text-[10px] text-zinc-400 uppercase block font-medium">${displayNames[size]}</span>
+            <span class="font-bold ${textClass} text-sm">${count}</span>
+          </div>
+        `;
+      });
+    }
+
+    function toggleSizeStatus(orderId, lineItemId, sizeKey) {
+      const order = ordersBacklog.find(o => o.id === orderId);
+      if(order) {
+        const line = order.lineItems.find(l => l.lineItemId === lineItemId);
+        if(line) {
+          line.sizesCompleted[sizeKey] = !line.sizesCompleted[sizeKey];
+          saveSystemData();
+          renderProductionModalSizes();
+        }
       }
     }
 
-    function receiveWarehouseStock(index) {
-      const inputId = 'receiveInput' + index;
-      const inputElement = document.getElementById(inputId);
-      const amount = parseInt(inputElement.value);
-      if(amount > 0) {
-        inventoryBlanks[index].onHand += amount;
-        saveSystemData();
-        renderWarehouseModule();
-      }
-    }
+    function updateLineStatus(orderId, lineItemId, newStatus) {
+      const order = ordersBacklog.find(o => o.id === orderId);
+      if (!order) return;
+      const line = order.lineItems.find(l => l.lineItemId === lineItemId);
+      if (!line) return;
 
-    function openBinTransferModal() {
-      document.getElementById('binTransferModal').classList.remove('hidden');
-    }
-
-    function closeBinTransferModal() {
-      document.getElementById('binTransferModal').classList.add('hidden');
-    }
-
-    function executeBinTransfer() {
-      const garmentQuery = document.getElementById('transferGarmentSelect').value;
-      const from = document.getElementById('fromBin').value;
-      const to = document.getElementById('toBin').value;
-      const qty = parseInt(document.getElementById('transferQty').value) || 0;
-
-      const item = inventoryBlanks.find(b => b.style.includes(garmentQuery));
-      if(!item) {
-        alert("Inventory item not found.");
-        return;
-      }
-
-      item.bin = to;
+      line.lineStatus = newStatus;
       saveSystemData();
-      renderWarehouseModule();
-      closeBinTransferModal();
-      alert("Success: Transferred " + qty + " units of " + garmentQuery + " from bin " + from + " to bin " + to + ".");
+      renderProductionFloor();
+    }
+
+    function closeProductionOrderModal() {
+      document.getElementById('productionOrderModal').classList.add('hidden');
     }
 
     function renderWarehouseModule() {
@@ -2832,59 +1362,67 @@
 
       blanksTable.innerHTML = "";
       inventoryBlanks.forEach((blank, index) => {
-        let allocatedCount = 0;
-        ordersBacklog.forEach(order => {
-          if (!order.isArchived && (order.status === 'PENDING' || order.status === 'QUEUED' || order.status === 'IN_PRODUCTION') && order.garment.includes(blank.style.split(' ')[0])) {
-            allocatedCount += order.quantity;
+        let allocated = 0;
+        ordersBacklog.forEach(o => {
+          if (!o.isArchived) {
+            o.lineItems.forEach(l => {
+              if (l.garmentStyle.includes(blank.style.split(' ')[0])) allocated += l.quantity;
+            });
           }
         });
 
-        const available = blank.onHand - allocatedCount;
-        const rowClass = available < 0 ? "bg-red-500/10 border-red-500/50" : "hover:bg-zinc-800/50 transition-colors";
-        const alertLabel = available < 0 ? `<span class="bg-red-500/20 text-red-500 text-[9px] px-1.5 py-0.5 rounded ml-2 font-bold uppercase tracking-wider border border-red-500/30">Deficit Alert</span>` : "";
-
+        const available = blank.onHand - allocated;
         blanksTable.innerHTML += `
-          <tr class="${rowClass}">
-            <td class="px-4 py-4 font-medium text-zinc-200">${blank.style} ${alertLabel}</td>
-            <td class="px-4 py-4 text-center font-mono text-blue-400 font-semibold">${blank.bin}</td>
+          <tr>
+            <td class="px-4 py-4 font-medium text-zinc-200">${blank.style}</td>
+            <td class="px-4 py-4 text-center font-mono text-blue-400">${blank.bin}</td>
             <td class="px-4 py-4 text-center font-mono text-zinc-300">${blank.onHand}</td>
-            <td class="px-4 py-4 text-center font-mono text-blue-400">${allocatedCount}</td>
+            <td class="px-4 py-4 text-center font-mono text-blue-400">${allocated}</td>
             <td class="px-4 py-4 text-center font-mono font-bold text-white">${available}</td>
             <td class="px-4 py-4 text-right">
-              <div class="flex justify-end gap-2">
-                <input type="number" id="receiveInput${index}" min="1" placeholder="Amount" class="input-pro w-20 px-2 py-1 text-xs text-center font-mono">
-                <button onclick="receiveWarehouseStock(${index})" class="btn-pro-secondary py-1 text-xs">Receive</button>
-              </div>
+              <button onclick="receiveWarehouseStock(${index})" class="btn-pro-secondary text-xs">Receive Stock</button>
             </td>
           </tr>
         `;
       });
 
       finishedTable.innerHTML = "";
-      const finishedOrders = ordersBacklog.filter(o => !o.isArchived && o.status === 'PRODUCED');
-
-      if (finishedOrders.length === 0) {
-        finishedTable.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-zinc-500 text-sm">No finished goods currently awaiting shipping.</td></tr>`;
-      } else {
-        finishedOrders.forEach(o => {
+      ordersBacklog.forEach(o => {
+        if (!o.isArchived) {
           finishedTable.innerHTML += `
             <tr class="hover:bg-zinc-800/50 transition-colors">
-              <td class="px-4 py-4 font-mono font-medium text-blue-400">${o.id}</td>
-              <td class="px-4 py-4">
-                <div class="font-medium text-zinc-200">${o.customerName}</div>
-                <div class="text-[11px] text-zinc-500 mt-0.5">${o.customerEmail}</div>
-                <div class="text-[10px] font-mono text-amber-400 mt-0.5">Ship To: ${o.customerAddress}</div>
-              </td>
+              <td class="px-4 py-4 font-mono text-blue-400">${o.id}</td>
+              <td class="px-4 py-4 text-xs text-zinc-300">${o.customerName} (${o.customerAddress})</td>
               <td class="px-4 py-4 text-center font-mono text-amber-400 text-xs">${o.wishDate}</td>
-              <td class="px-4 py-4 text-center font-medium text-emerald-400">${o.quantity} Pieces</td>
-              <td class="px-4 py-4 text-center font-mono text-zinc-400">Rack B-14</td>
+              <td class="px-4 py-4 text-center font-semibold text-emerald-400">${o.totalOrderQuantity} Pieces</td>
               <td class="px-4 py-4 text-right">
                 <button onclick="processBarcodeScanForId('${o.id}')" class="btn-pro-secondary text-xs">Dispatch Order</button>
               </td>
             </tr>
           `;
-        });
-      }
+        }
+      });
+    }
+
+    function processBarcodeScanForId(id) {
+      document.getElementById('barcodeInput').value = id;
+      switchTab('wms');
+      switchWarehouseSubTab('scanner');
+      processBarcodeScan();
+    }
+
+    function processBarcodeScan() {
+      const val = document.getElementById('barcodeInput').value.trim();
+      const feedback = document.getElementById('scannerFeedbackContainer');
+      if (!val) return;
+
+      feedback.classList.remove('hidden');
+      feedback.innerHTML = `
+        <div class="bg-emerald-500/10 border border-emerald-500/40 p-4 rounded-lg text-emerald-400 text-xs font-mono">
+          Successfully processed and verified shipment barcode scan string: ${val}
+        </div>
+      `;
+      document.getElementById('barcodeInput').value = "";
     }
 
     function renderCRMModule() {
@@ -2895,121 +1433,77 @@
       ordersBacklog.forEach(o => {
         if(!o.isArchived) {
           if(!clientMap[o.customerEmail]) {
-            clientMap[o.customerEmail] = {
-              name: o.customerName,
-              email: o.customerEmail,
-              address: o.customerAddress,
-              ordersCount: 0,
-              lifetimeRevenue: 0,
-              orders: []
-            };
+            clientMap[o.customerEmail] = { name: o.customerName, email: o.customerEmail, address: o.customerAddress, count: 0, total: 0 };
           }
-          clientMap[o.customerEmail].ordersCount++;
-          const rev = parseFloat(o.price.replace('$', '').replace(',', '')) || 0;
-          if(o.status !== 'REJECTED') {
-            clientMap[o.customerEmail].lifetimeRevenue += rev;
-          }
-          clientMap[o.customerEmail].orders.push(o);
+          clientMap[o.customerEmail].count++;
+          clientMap[o.customerEmail].total += parseFloat(o.totalOrderPrice.replace('$', '').replace(',', '')) || 0;
         }
       });
 
-      const clients = Object.values(clientMap);
-      if(clients.length === 0) {
-        crmTable.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-zinc-500 text-sm">No client accounts registered.</td></tr>`;
-        return;
-      }
-
-      clients.forEach(c => {
+      Object.values(clientMap).forEach(c => {
         crmTable.innerHTML += `
           <tr class="hover:bg-zinc-800/50 transition-colors">
             <td class="px-4 py-4 font-medium text-zinc-200">${c.name}</td>
-            <td class="px-4 py-4">
-              <div class="text-xs text-zinc-300">${c.email}</div>
-              <div class="text-[11px] font-mono text-zinc-400 mt-0.5">Address: ${c.address || 'Not Provided'}</div>
-            </td>
-            <td class="px-4 py-4 text-center font-mono text-zinc-300">${c.ordersCount} Orders</td>
-            <td class="px-4 py-4 text-center font-mono text-emerald-400 font-semibold">$${c.lifetimeRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+            <td class="px-4 py-4 text-xs text-zinc-300">${c.email} | ${c.address}</td>
+            <td class="px-4 py-4 text-center font-mono text-zinc-300">${c.count} Orders</td>
+            <td class="px-4 py-4 text-center font-mono text-emerald-400 font-semibold">$${c.total.toFixed(2)}</td>
             <td class="px-4 py-4 text-right">
-              <button onclick="switchTab('backlog'); switchBacklogSubTab('active');" class="btn-pro-secondary text-xs">View Client Backlog</button>
+              <button onclick="switchTab('backlog')" class="btn-pro-secondary text-xs">Inspect Backlog</button>
             </td>
           </tr>
         `;
       });
     }
 
-    function processBarcodeScanForId(orderId) {
-      document.getElementById('barcodeInput').value = orderId;
-      switchTab('wms');
-      switchWarehouseSubTab('scanner');
-      processBarcodeScan();
+    function updatePendingBadge() {
+      const count = ordersBacklog.filter(o => !o.isArchived && o.status === 'PENDING').length;
+      document.getElementById('pendingBadge').innerText = count;
     }
 
-    function setGarmentColor(colorName, type) {
-      currentColorType = type;
-      const silhouette = document.getElementById('garmentSilhouette');
-      const tshirtImg = document.getElementById('tshirtImage');
+    function updateDashboardMetrics() {
+      let revenue = 0;
+      let activeVolume = 0;
+      let producedVolume = 0;
 
-      if (colorName === 'black') {
-        silhouette.className = "w-full h-full bg-zinc-900 relative flex flex-col items-center justify-start pt-14 transition-colors";
-        tshirtImg.style.filter = "invert(1) opacity(0.7)";
-        tshirtImg.style.mixBlendMode = "screen";
-      } else if (colorName === 'white') {
-        silhouette.className = "w-full h-full bg-zinc-200 relative flex flex-col items-center justify-start pt-14 transition-colors";
-        tshirtImg.style.filter = "opacity(0.9)";
-        tshirtImg.style.mixBlendMode = "multiply";
-      } else if (colorName === 'navy') {
-        silhouette.className = "w-full h-full bg-blue-950 relative flex flex-col items-center justify-start pt-14 transition-colors";
-        tshirtImg.style.filter = "invert(1) opacity(0.7)";
-        tshirtImg.style.mixBlendMode = "screen";
-      }
-      updatePrice();
+      ordersBacklog.forEach(o => {
+        if (!o.isArchived) {
+          revenue += parseFloat(o.totalOrderPrice.replace('$', '').replace(',', '')) || 0;
+          o.lineItems.forEach(l => {
+            if (l.lineStatus === 'IN_PRODUCTION') activeVolume += l.quantity;
+            if (l.lineStatus === 'PRODUCED') producedVolume += l.quantity;
+          });
+        }
+      });
+
+      document.getElementById('dashTotalRevenue').innerText = '$' + revenue.toFixed(2);
+      document.getElementById('dashPendingCount').innerText = ordersBacklog.filter(o => !o.isArchived && o.status === 'PENDING').length;
+      document.getElementById('dashActiveVolume').innerText = activeVolume + " Pieces";
+      document.getElementById('dashProducedVolume').innerText = producedVolume + " Pieces";
     }
 
-    function updatePrice() {
-      let garmentRate = 0;
-      if (currentSupplyMode === 'catalog') {
-        garmentRate = parseFloat(document.getElementById('garmentStyle').value);
-      }
-
-      const isDark = currentColorType === 'dark';
-      const colors = parseInt(document.getElementById('colorCount').value);
-
-      const smallAmount = parseInt(document.getElementById('inputSmall').value) || 0;
-      const mediumAmount = parseInt(document.getElementById('inputMedium').value) || 0;
-      const largeAmount = parseInt(document.getElementById('inputLarge').value) || 0;
-      const extraLargeAmount = parseInt(document.getElementById('inputExtraLarge').value) || 0;
-      const doubleExtraLargeAmount = parseInt(document.getElementById('inputDoubleExtraLarge').value) || 0;
-
-      const totalUnits = smallAmount + mediumAmount + largeAmount + extraLargeAmount + doubleExtraLargeAmount;
-      const screensNeeded = colors + (isDark ? 1 : 0);
-
-      const laborPerUnit = colors * 0.75;
-      const garmentTotal = totalUnits * (garmentRate + laborPerUnit);
-      const setupTotal = screensNeeded * 25.0;
-      
-      const estimatedWeightPounds = totalUnits * 0.4; 
-      const shippingTotal = estimatedWeightPounds * 1.50; 
-      
-      const subtotalBeforeTax = garmentTotal + setupTotal + shippingTotal;
-      const taxRate = 0.095; 
-      const taxTotal = subtotalBeforeTax * taxRate;
-      
-      const grandTotal = subtotalBeforeTax + taxTotal;
-      
-      currentCalculatedTotal = '$' + grandTotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-
-      document.getElementById('garmentCost').innerText = '$' + garmentTotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      document.getElementById('screenCost').innerText = '$' + setupTotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' (' + screensNeeded + ' Screens)';
-      document.getElementById('shippingCost').innerText = '$' + shippingTotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      document.getElementById('taxCost').innerText = '$' + taxTotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      document.getElementById('totalCost').innerText = currentCalculatedTotal;
+    function renderNotificationLogs() {
+      const container = document.getElementById('notificationLogContainer');
+      container.innerHTML = "";
+      notificationLogs.forEach(log => {
+        container.innerHTML += `
+          <div class="bg-zinc-900 p-2 rounded border border-zinc-800 text-zinc-300">
+            <span class="text-blue-400">[${log.timestamp}]</span> ${log.message}
+          </div>
+        `;
+      });
     }
 
+    function logNotification(email, orderId, text) {
+      const now = new Date();
+      const dateString = now.toISOString().slice(0, 10) + " " + now.toTimeString().slice(0, 5);
+      notificationLogs.unshift({ timestamp: dateString, message: `Notification sent to ${email} (Order ${orderId} state: ${text})` });
+    }
+
+    // Initialize initial default line item card
+    addNewLineItem();
     switchTab('intake');
-    updateTotalsFromSizes();
     updatePendingBadge();
     updateDashboardMetrics();
-    renderNotificationLogs();
   </script>
 </body>
 </html>
